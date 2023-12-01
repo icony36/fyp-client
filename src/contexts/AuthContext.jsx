@@ -22,11 +22,13 @@ const getAuthFromToken = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  const [auth, setAuth] = useState({});
-
-  useEffect(() => {
-    resetAuth();
-  }, []);
+  const [auth, setAuth] = useState(() => {
+    try {
+      return getAuthFromToken();
+    } catch (err) {
+      return {};
+    }
+  });
 
   const resetAuth = () => {
     try {

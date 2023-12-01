@@ -1,12 +1,29 @@
-import React, { useContext } from "react";
+import React, { useEffect, useContext } from "react";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
 
 import { AuthContext } from "../contexts";
+import { setTokenHeader } from "../services/api";
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { auth } = useContext(AuthContext);
+  const { auth, logout, resetAuth } = useContext(AuthContext);
 
   const location = useLocation();
+
+  useEffect(() => {
+    checkForToken();
+  }, []);
+
+  const checkForToken = () => {
+    if (localStorage.jwtToken) {
+      setTokenHeader(localStorage.jwtToken);
+
+      try {
+        resetAuth();
+      } catch (err) {
+        logout();
+      }
+    }
+  };
 
   const getComponent = () => {
     if (auth.isAuth && localStorage.getItem("jwtToken")) {

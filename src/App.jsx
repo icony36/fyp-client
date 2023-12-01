@@ -1,5 +1,5 @@
-import React, { useContext, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
@@ -7,8 +7,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, pink } from "@mui/material/colors";
 import "./App.css";
 
-import { setTokenHeader } from "./services/api";
-import { AuthContext } from "./contexts";
 import { ROLE } from "./constants";
 
 import Navbar from "./components/Navbar";
@@ -36,24 +34,6 @@ const theme = createTheme({
 });
 
 const App = () => {
-  const { logout, resetAuth } = useContext(AuthContext);
-
-  useEffect(() => {
-    checkForToken();
-  }, []);
-
-  const checkForToken = () => {
-    if (localStorage.jwtToken) {
-      setTokenHeader(localStorage.jwtToken);
-
-      try {
-        resetAuth();
-      } catch (err) {
-        logout();
-      }
-    }
-  };
-
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
