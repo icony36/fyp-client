@@ -17,6 +17,7 @@ import UserNewPage from "./pages/UserNewPage";
 import KnowledgesPage from "./pages/KnowledgesPage";
 import KnowledgeNewPage from "./pages/KnowledgeNewPage";
 import HomePage from "./pages/HomePage";
+import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./pages/ProtectedRoute";
 
 const queryClient = new QueryClient({
@@ -63,10 +64,14 @@ const App = () => {
             <Route path="/login" element={<LoginPage />} />
             <Route element={<ProtectedRoute />}>
               <Route path="/" element={<HomePage />} />
+              <Route path="/users/" element={<NotFoundPage />} />
+              <Route path="/tickets/" element={<NotFoundPage />} />
+              <Route path="/profile/" element={<NotFoundPage />} />
               <Route path="/users/new" element={<UserNewPage />} />
               <Route path="/knowledges" element={<KnowledgesPage />} />
               <Route path="/knowledges/new" element={<KnowledgeNewPage />} />
             </Route>
+            <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </ThemeProvider>
       </BrowserRouter>
