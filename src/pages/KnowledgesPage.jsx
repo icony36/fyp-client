@@ -102,10 +102,6 @@ const KnowledgesPage = () => {
     console.log(id);
   };
 
-  const handleCreateKnowledge = () => {
-    navigate("/knowledges/new");
-  };
-
   return (
     <div className="list-page">
       <ToastContainer
@@ -161,7 +157,7 @@ const KnowledgesPage = () => {
           <Button
             sx={{ m: 4 }}
             variant="contained"
-            onClick={handleCreateKnowledge}
+            onClick={() => navigate("/knowledges/new")}
           >
             New Knowledge
           </Button>

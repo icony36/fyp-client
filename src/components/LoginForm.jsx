@@ -15,6 +15,7 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { toast } from "react-toastify";
 
 import { AuthContext } from "../contexts";
+import Toast from "./Toast";
 
 const LoginForm = () => {
   const [loginData, setLoginData] = useState({
@@ -49,59 +50,62 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="form-page">
-      <Paper className="paper" sx={{ minWidth: 325, minHeight: 400 }}>
-        <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
-          <h1>Login</h1>
-          <div>
-            <FormControl sx={{ width: "25ch" }} margin="normal">
-              <TextField
-                id="username"
-                name="username"
-                label="Username"
-                variant="outlined"
-                value={loginData.username}
-                onChange={handleChange}
-                required
-              />
-            </FormControl>
-          </div>
+    <>
+      <Toast />
+      <div className="form-page">
+        <Paper className="paper" sx={{ minWidth: 325, minHeight: 400 }}>
+          <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
+            <h1>Login</h1>
+            <div>
+              <FormControl sx={{ width: "25ch" }} margin="normal">
+                <TextField
+                  id="username"
+                  name="username"
+                  label="Username"
+                  variant="outlined"
+                  value={loginData.username}
+                  onChange={handleChange}
+                  required
+                />
+              </FormControl>
+            </div>
 
-          <div>
-            <FormControl sx={{ width: "25ch" }} margin="normal">
-              <InputLabel htmlFor="password" required>
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                label="Password"
-                value={loginData.password}
-                type={showPassword ? "text" : "password"}
-                onChange={handleChange}
-                required
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((show) => !show)}
-                      onMouseDown={(event) => event.preventDefault()}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-          </div>
+            <div>
+              <FormControl sx={{ width: "25ch" }} margin="normal">
+                <InputLabel htmlFor="password" required>
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="password"
+                  name="password"
+                  label="Password"
+                  value={loginData.password}
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  required
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((show) => !show)}
+                        onMouseDown={(event) => event.preventDefault()}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </div>
 
-          <div style={{ marginTop: "12px" }}>
-            <Button variant="contained" size="large" type="submit">
-              Login
-            </Button>
-          </div>
-        </form>
-      </Paper>
-    </div>
+            <div style={{ marginTop: "12px" }}>
+              <Button variant="contained" size="large" type="submit">
+                Login
+              </Button>
+            </div>
+          </form>
+        </Paper>
+      </div>
+    </>
   );
 };
 

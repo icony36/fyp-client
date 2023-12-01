@@ -21,7 +21,6 @@ const pages = [
   { name: "Profile", link: "/profile" },
   { name: "All Users", link: "/users" },
   { name: "Create User", link: "/users/new" },
-  { name: "Login", link: "/login" },
 ];
 
 const Navbar = () => {

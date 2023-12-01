@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 
 import { createUser, updateUser, fetchUser } from "../services/user";
 import { ROLE } from "../constants";
+import Toast from "../components/Toast";
 
 const roles = Object.values(ROLE);
 
@@ -29,19 +30,29 @@ const UserForm = ({ isEdit }) => {
     username: "",
     password: "",
     role: "",
-    name: "",
+    firstName: "",
+    lastName: "",
     isSuspended: false,
+  });
+
+  const [studentData, setStudentData] = useState({
+    course: "",
+    enrollments: [],
+    outstandingFee: 0,
+    studentId: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
 
   const { id } = useParams();
 
-  useEffect(() => {
-    if (isEdit) {
-      handleFetchData();
-    }
-  }, []);
+  const navigate = useNavigate();
+
+  // useEffect(() => {
+  //   if (isEdit) {
+  //     handleFetchData();
+  //   }
+  // }, []);
 
   const handleFetchData = async () => {
     try {
@@ -50,7 +61,8 @@ const UserForm = ({ isEdit }) => {
       setUserData({
         username: res.data.username,
         role: res.data.role,
-        name: res.data.name,
+        firstName: res.data.firstName,
+        lastName: res.data.lastName,
         isSuspended: res.data.isSuspended,
       });
     } catch (err) {
@@ -70,9 +82,17 @@ const UserForm = ({ isEdit }) => {
     event.preventDefault();
 
     if (isEdit) {
-      handleCreateUser(userData);
-    } else {
       handleUpdateUser(userData);
+
+      if (userData.role === ROLE.student) {
+        handleUpdateStudent(studentData);
+      }
+    } else {
+      handleCreateUser(userData);
+
+      if (userData.role === ROLE.student) {
+        handleCreateStudent(studentData);
+      }
     }
   };
 
@@ -82,7 +102,15 @@ const UserForm = ({ isEdit }) => {
 
       toast.success(res.message);
     } catch (err) {
-      toast.error(err.messsage);
+      toast.error(err.message);
+    }
+  };
+
+  const handleCreateStudent = async (studentData) => {
+    try {
+      // create student profile
+    } catch (err) {
+      toast.error(err);
     }
   };
 
@@ -92,105 +120,138 @@ const UserForm = ({ isEdit }) => {
 
       toast.success(res.message);
     } catch (err) {
-      toast.error(err.messsage);
+      toast.error(err.message);
     }
   };
 
-  const navigate = useNavigate();
+  const handleUpdateStudent = async (studentData) => {
+    try {
+      // update student profile
+    } catch (err) {
+      toast.error(err);
+    }
+  };
 
   return (
-    <div className="form-page">
-      <Paper className="paper" sx={{ minWidth: 700, minHeight: 300 }}>
-        <form
-          className="register-form"
-          name="registerForm"
-          onSubmit={handleSubmit}
-        >
-          <h1>Create User</h1>
-          <div>
-            <FormControl sx={{ m: "8px", width: "25ch" }}>
-              <TextField
-                id="username"
-                name="username"
-                label="Username"
-                variant="outlined"
-                value={userData.username}
-                onChange={handleChange}
-                required
-              />
-            </FormControl>
+    <>
+      <Toast />
+      <div className="form-page">
+        <Paper className="paper" sx={{ minWidth: 700, minHeight: 300 }}>
+          <form
+            className="register-form"
+            name="registerForm"
+            onSubmit={handleSubmit}
+          >
+            <h1>Create User</h1>
+            <div>
+              <FormControl sx={{ m: "8px", width: "52ch" }}>
+                <TextField
+                  id="username"
+                  name="username"
+                  label="Username"
+                  variant="outlined"
+                  value={userData.username}
+                  onChange={handleChange}
+                  required
+                />
+              </FormControl>
+            </div>
 
-            <FormControl sx={{ m: "8px", width: "25ch" }}>
-              <InputLabel htmlFor="password" required>
-                Password
-              </InputLabel>
-              <OutlinedInput
-                id="password"
-                name="password"
-                label="Password"
-                value={userData.password}
-                type={showPassword ? "text" : "password"}
-                onChange={handleChange}
-                required
-                endAdornment={
-                  <InputAdornment position="end">
-                    <IconButton
-                      onClick={() => setShowPassword((show) => !show)}
-                      onMouseDown={(event) => event.preventDefault()}
-                    >
-                      {showPassword ? <VisibilityOff /> : <Visibility />}
-                    </IconButton>
-                  </InputAdornment>
-                }
-              />
-            </FormControl>
-          </div>
+            <div>
+              <FormControl sx={{ m: "8px", width: "52ch" }}>
+                <InputLabel htmlFor="password" required>
+                  Password
+                </InputLabel>
+                <OutlinedInput
+                  id="password"
+                  name="password"
+                  label="Password"
+                  value={userData.password}
+                  type={showPassword ? "text" : "password"}
+                  onChange={handleChange}
+                  required
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        onClick={() => setShowPassword((show) => !show)}
+                        onMouseDown={(event) => event.preventDefault()}
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            </div>
 
-          <div>
-            <FormControl sx={{ m: "8px", width: "25ch" }}>
-              <InputLabel htmlFor="role" required>
-                Role
-              </InputLabel>
-              <Select
-                id="role"
-                name="role"
-                label="role"
-                onChange={handleChange}
-                value={userData.role}
-              >
-                {roles.map((role) => {
-                  let text = role.charAt(0).toUpperCase() + role.slice(1);
+            <div>
+              <FormControl sx={{ m: "8px", width: "52ch" }}>
+                <InputLabel htmlFor="role" required>
+                  Role
+                </InputLabel>
+                <Select
+                  id="role"
+                  name="role"
+                  label="role"
+                  onChange={handleChange}
+                  value={userData.role}
+                >
+                  {roles.map((role) => {
+                    let text = role.charAt(0).toUpperCase() + role.slice(1);
 
-                  return (
-                    <MenuItem key={role} value={role}>
-                      {text}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                    return (
+                      <MenuItem key={role} value={role}>
+                        {text}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            </div>
 
-            <FormControl sx={{ m: "8px", width: "25ch" }}>
-              <TextField
-                id="name"
-                name="name"
-                label="Name"
-                variant="outlined"
-                value={userData.name}
-                onChange={handleChange}
-                required
-              />
-            </FormControl>
-          </div>
+            <div>
+              <FormControl sx={{ m: "8px", width: "25ch" }}>
+                <TextField
+                  id="firstName"
+                  name="firstName"
+                  label="First Name"
+                  variant="outlined"
+                  value={userData.firstName}
+                  onChange={handleChange}
+                  required
+                />
+              </FormControl>
 
-          <div style={{ marginTop: "12px" }}>
-            <Button variant="contained" size="large" type="submit">
-              Submit
-            </Button>
-          </div>
-        </form>
-      </Paper>
-    </div>
+              <FormControl sx={{ m: "8px", width: "25ch" }}>
+                <TextField
+                  id="lastName"
+                  name="lastName"
+                  label="Last Name"
+                  variant="outlined"
+                  value={userData.lastName}
+                  onChange={handleChange}
+                  required
+                />
+              </FormControl>
+            </div>
+
+            {userData.role === ROLE.student ? (
+              <>
+                <h1>Student Profile Form</h1>
+              </>
+            ) : (
+              <></>
+            )}
+
+            <div style={{ marginTop: "12px" }}>
+              <Button variant="contained" size="large" type="submit">
+                Submit
+              </Button>
+            </div>
+          </form>
+        </Paper>
+      </div>
+    </>
   );
 };
 
