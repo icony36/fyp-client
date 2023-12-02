@@ -15,16 +15,50 @@ import { AuthContext } from "../contexts";
 import { ROLE } from "../constants";
 import LogoutButton from "./LogoutButton";
 
-const pages = [
-  { name: "Knowledges", link: "/knowledges" },
-  { name: "Tickets", link: "/tickets" },
+const adminPages = [
+  { name: "Users", link: "/users" },
   { name: "Profile", link: "/profile" },
-  { name: "All Users", link: "/users" },
-  { name: "Create User", link: "/users/new" },
+];
+
+const staffPages = [
+  { name: "Tickets", link: "/tickets" },
+  { name: "Knowledges", link: "/knowledges" },
+  { name: "Profile", link: "/profile" },
+];
+
+const studentPages = [
+  { name: "Chatbot", link: "/chatbot" },
+  { name: "Profile", link: "/profile" },
 ];
 
 const Navbar = () => {
   const { auth } = useContext(AuthContext);
+
+  const renderRoleBasedNav = () => {
+    switch (auth.role) {
+      case ROLE.admin:
+        return getNavLinks(adminPages);
+      case ROLE.staff:
+        return getNavLinks(staffPages);
+      case ROLE.student:
+        return getNavLinks(studentPages);
+      default:
+        return <></>;
+    }
+  };
+
+  const getNavLinks = (arr) => {
+    if (arr.length <= 0) return <></>;
+
+    return arr.map((el) => (
+      <Button
+        key={el.name}
+        sx={{ my: 2, color: "#bbdefb", display: "block", fontWeight: "900" }}
+      >
+        <NavLink to={el.link}>{el.name}</NavLink>
+      </Button>
+    ));
+  };
 
   return (
     <AppBar className="navbar" position="relative">
@@ -36,19 +70,7 @@ const Navbar = () => {
           {auth.isAuth ? (
             <>
               <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                {pages.map((page) => (
-                  <Button
-                    key={page.name}
-                    sx={{
-                      my: 2,
-                      color: "white",
-                      display: "block",
-                      fontWeight: "900",
-                    }}
-                  >
-                    <NavLink to={page.link}>{page.name}</NavLink>
-                  </Button>
-                ))}
+                {renderRoleBasedNav()}
               </Box>
               <LogoutButton />
             </>

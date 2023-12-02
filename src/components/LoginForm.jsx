@@ -12,7 +12,7 @@ import {
   Button,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { toast } from "react-toastify";
+import { toast } from "react-hot-toast";
 
 import { AuthContext } from "../contexts";
 import Toast from "./Toast";

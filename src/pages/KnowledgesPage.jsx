@@ -8,8 +8,6 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 
 import KnowledgeList from "../components/KnowledgeList";
 
@@ -104,19 +102,6 @@ const KnowledgesPage = () => {
 
   return (
     <div className="list-page">
-      <ToastContainer
-        position="top-center"
-        autoClose={3000}
-        hideProgressBar
-        limit={1}
-        newestOnTop={false}
-        closeOnClick={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-      />
-
       <Container className="container">
         <div className="knowledge-actions">
           <Autocomplete

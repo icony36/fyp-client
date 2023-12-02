@@ -7,14 +7,8 @@ import {
   TableRow,
   TableCell,
   TableBody,
-  Chip,
-  Stack,
-  Button,
-  Menu,
-  MenuItem,
-  Typography,
 } from "@mui/material";
-import { NavLink } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const header = ["Title"];
 
@@ -35,8 +29,8 @@ const KnowledgeList = ({ data, handleClick }) => {
         <TableBody>
           {data.map((row, i) => (
             <TableRow key={i}>
-              <TableCell component={NavLink} to={`/knowledge/${i}`}>
-                {row.title}
+              <TableCell>
+                <Link to={`/knowledge/${i}`}>{row.title}</Link>
               </TableCell>
             </TableRow>
           ))}
