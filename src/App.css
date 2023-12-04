@@ -31,6 +31,7 @@ textarea:focus {
 
 .navbar {
   z-index: 10;
+  margin-bottom: 20px;
 }
 
 .container {
@@ -40,7 +41,8 @@ textarea:focus {
 
 .paper {
   width: max-content;
-  margin: 40px 0px;
+  margin: 16px 0px;
+  padding: 32px;
 }
 
 .form-page {
@@ -54,19 +56,11 @@ textarea:focus {
   padding: 64px;
 }
 
-.register-form {
-  padding: 32px;
-}
-
 .list-page {
   display: flex;
 }
 
-.profile {
-  text-align: left;
-  padding: 32px;
-}
-
 .profile-group {
   display: flex;
+  justify-content: space-between;
 }

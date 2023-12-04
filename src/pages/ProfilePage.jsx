@@ -1,11 +1,13 @@
 import React from "react";
 
-import Profile from "../features/users/Profile";
+import ProfileInfo from "../features/profiles/ProfileInfo";
+import StudentProfileInfo from "../features/profiles/StudentProfileInfo";
 
 const ProfilePage = () => {
   return (
     <>
-      <Profile />
+      <ProfileInfo />
+      <StudentProfileInfo />
     </>
   );
 };

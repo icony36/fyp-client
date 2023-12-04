@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-
-import { deleteUser as apiDeleteUser } from "../../services/user";
 import { useToast } from "../../hooks/useToast";
 
-export const useDeleteUser = (options = {}) => {
+import { updateProfile } from "../../services/user";
+
+export const useEditProfile = (options = {}) => {
   const { onSuccess } = options;
 
   const queryClient = useQueryClient();
@@ -11,16 +11,16 @@ export const useDeleteUser = (options = {}) => {
   const { toast } = useToast();
 
   const {
-    mutate: deleteUser,
-    isLoading: isDeleting,
-    status: deleteUserStatus,
+    mutate: editProfile,
+    isLoading: isEditing,
+    status: editProfileStatus,
   } = useMutation({
-    mutationFn: apiDeleteUser,
+    mutationFn: ({ profileData, id }) => updateProfile(profileData, id),
     onSuccess: (data) => {
       toast.success(data.message);
 
-      // Invalidate the query to refetch the 'users' query after successful mutation
-      queryClient.invalidateQueries({ queryKey: ["users"] });
+      // Invalidate the query to refetch the 'profile' query after successful mutation
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
 
       if (onSuccess && typeof onSuccess === "function") onSuccess();
     },
@@ -29,5 +29,5 @@ export const useDeleteUser = (options = {}) => {
     },
   });
 
-  return { deleteUser, isDeleting, deleteUserStatus };
+  return { editProfile, isEditing, editProfileStatus };
 };

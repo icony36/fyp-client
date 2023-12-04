@@ -8,8 +8,7 @@ export const useToast = () => {
   const location = useLocation();
 
   useEffect(() => {
-    toast.dismiss();
-    // console.log("remove");
+    // toast.remove();
   }, []);
 
   return { toast, Toast };

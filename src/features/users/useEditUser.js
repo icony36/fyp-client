@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
 
 import { updateUser } from "../../services/user";
 import { updateStudentProfile } from "../../services/studentProfile";
 import { ROLE } from "../../constants";
+import { useToast } from "../../hooks/useToast";
 
 const handleUpdateUser = async ({ id, profileId, data }) => {
   try {
@@ -33,6 +33,8 @@ export const useEditUser = (options = {}) => {
 
   const queryClient = useQueryClient();
 
+  const { toast } = useToast();
+
   const {
     mutate: editUser,
     isLoading: isEditing,
@@ -42,7 +44,7 @@ export const useEditUser = (options = {}) => {
     onSuccess: (data) => {
       toast.success(data.message);
 
-      // Invalidate the query to refetch the 'todos' query after successful mutation
+      // Invalidate the query to refetch the 'users' query after successful mutation
       queryClient.invalidateQueries({ queryKey: ["users"] });
 
       if (onSuccess && typeof onSuccess === "function") onSuccess();

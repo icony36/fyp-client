@@ -1,12 +1,14 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
 
 import { suspendUser as apiSuspendUser } from "../../services/user";
+import { useToast } from "../../hooks/useToast";
 
 export const useSuspendUser = (options = {}) => {
   const { onSuccess } = options;
 
   const queryClient = useQueryClient();
+
+  const { toast } = useToast();
 
   const {
     mutate: suspendUser,
@@ -17,7 +19,7 @@ export const useSuspendUser = (options = {}) => {
     onSuccess: (data) => {
       toast.success(data.message);
 
-      // Invalidate the query to refetch the 'todos' query after successful mutation
+      // Invalidate the query to refetch the 'users' query after successful mutation
       queryClient.invalidateQueries({ queryKey: ["users"] });
 
       if (onSuccess && typeof onSuccess === "function") onSuccess();

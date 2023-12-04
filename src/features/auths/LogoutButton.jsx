@@ -23,7 +23,7 @@ const LogoutButton = () => {
 
     navigate("/login");
 
-    toast.success("You have successfully logged out.");
+    // toast.success("You have successfully logged out.");
   };
 
   return (

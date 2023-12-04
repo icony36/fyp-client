@@ -24,7 +24,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
     };
 
     checkForToken();
-  }, [logout, resetAuth]);
+  }, []);
 
   const getComponent = () => {
     if (auth.isAuth && localStorage.getItem("jwtToken")) {

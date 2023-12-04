@@ -40,6 +40,16 @@ export const updateUser = async (userData, id) => {
   }
 };
 
+export const updateProfile = async (userData, id) => {
+  try {
+    const res = await apiCall("put", `/api/users/profile/${id}`, userData);
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const suspendUser = async (userData, id) => {
   try {
     const res = await apiCall("patch", `/api/users/${id}`, userData);

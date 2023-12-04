@@ -19,6 +19,8 @@ import UserEditPage from "./pages/UserEditPage";
 import KnowledgesPage from "./pages/KnowledgesPage";
 import KnowledgeNewPage from "./pages/KnowledgeNewPage";
 import ProfilePage from "./pages/ProfilePage";
+import ProfileEditPage from "./pages/ProfileEditPage";
+import StudentProfileEditPage from "./pages/StudentProfileEditPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./pages/ProtectedRoute";
@@ -53,6 +55,7 @@ const App = () => {
               <Route element={<ProtectedRoute />}>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profile/" element={<ProfilePage />} />
+                <Route path="/profile/edit" element={<ProfileEditPage />} />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={[ROLE.admin]} />}>
                 <Route path="/users" element={<UsersPage />} />
@@ -67,6 +70,10 @@ const App = () => {
                 <Route path="/knowledges/:id" element={<NotFoundPage />} />
               </Route>
               <Route element={<ProtectedRoute allowedRoles={[ROLE.student]} />}>
+                <Route
+                  path="/profile/student/edit"
+                  element={<StudentProfileEditPage />}
+                />
                 <Route path="/chatbot/" element={<NotFoundPage />} />
               </Route>
               <Route path="*" element={<NotFoundPage />} />

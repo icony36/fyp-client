@@ -54,6 +54,20 @@ export const updateStudentProfile = async (studentData, id) => {
   }
 };
 
+export const updateOwnStudentProfile = async (studentData, id) => {
+  try {
+    const res = await apiCall(
+      "put",
+      `/api/student-profiles/student/${id}`,
+      studentData
+    );
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
 export const deleteStudentProfile = async (id) => {
   try {
     const res = await apiCall("delete", `/api/student-profiles/${id}`);

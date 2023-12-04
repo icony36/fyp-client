@@ -161,19 +161,19 @@ const UserForm = ({ isEditSession }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const data = {
+    const toSubmit = {
       userData: formData.userData,
       studentData: formData.studentData,
     };
 
     if (isEditSession) {
-      if (!data.userData.password) {
-        delete data.userData.password;
+      if (!toSubmit.userData.password) {
+        delete toSubmit.userData.password;
       }
 
-      editUser({ id, data, profileId: formData.profileId });
+      editUser({ id, data: toSubmit, profileId: formData.profileId });
     } else {
-      createUser(data);
+      createUser(toSubmit);
     }
   };
 
@@ -181,11 +181,7 @@ const UserForm = ({ isEditSession }) => {
     <>
       <div className="form-page">
         <Paper className="paper" sx={{ minWidth: 700, minHeight: 300 }}>
-          <form
-            className="register-form"
-            name="registerForm"
-            onSubmit={handleSubmit}
-          >
+          <form className="login-form" onSubmit={handleSubmit}>
             <h1>{isEditSession ? "Edit User" : "Create User"}</h1>
 
             <div>
