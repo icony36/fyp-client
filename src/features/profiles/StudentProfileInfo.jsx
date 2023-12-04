@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 
 import { AuthContext } from "../../contexts";
-import { ROLE } from "../../constants";
 import { useFetchStudentProfile } from "./useFetchStudentProfile";
 
 const StudentProfileInfo = () => {
@@ -21,10 +20,6 @@ const StudentProfileInfo = () => {
   const { studentProfile, isFetching } = useFetchStudentProfile({
     id: auth.id,
   });
-
-  if (auth.role !== ROLE.student) {
-    return <></>;
-  }
 
   return (
     <>
@@ -88,7 +83,7 @@ const StudentProfileInfo = () => {
                 size="small"
                 onClick={() => navigate(`/profile/student/edit`)}
               >
-                Update Enrollments
+                Update
               </Button>
             </div>
           </CardContent>

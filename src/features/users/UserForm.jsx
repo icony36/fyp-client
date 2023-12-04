@@ -33,9 +33,9 @@ const UserForm = ({ isEditSession }) => {
 
   const { toast } = useToast();
 
-  const { users, usersStatus, isFetching } = useFetchUsers(
-    isEditSession ? { enabled: true } : { enabled: false }
-  );
+  const { users, usersStatus, isFetching } = useFetchUsers({
+    enabled: isEditSession ? true : false,
+  });
   const { createUser, isCreating } = useCreateUser({
     onSuccess: () => setFormData(defaultValues),
   });
@@ -99,7 +99,11 @@ const UserForm = ({ isEditSession }) => {
     if (userData.role === ROLE.student) {
       try {
         const res = await fetchStudentProfileByUser(id);
-        const studentData = res.data[0];
+        const studentData = res.data;
+
+        if (!studentData) {
+          throw Error("Can't get student profile.");
+        }
 
         setFormData((prevState) => ({
           ...prevState,
@@ -320,7 +324,7 @@ const UserForm = ({ isEditSession }) => {
                       variant="outlined"
                       required
                       name="studentData.course"
-                      value={formData.studentData.course}
+                      value={formData.studentData?.course}
                       onChange={handleChange}
                     />
                   </FormControl>
@@ -333,7 +337,7 @@ const UserForm = ({ isEditSession }) => {
                       type="number"
                       required
                       name="studentData.outstandingFee"
-                      value={formData.studentData.outstandingFee}
+                      value={formData.studentData?.outstandingFee}
                       onChange={handleChange}
                     />
                   </FormControl>
@@ -377,7 +381,7 @@ const UserForm = ({ isEditSession }) => {
                     flexWrap="wrap"
                     spacing={1}
                   >
-                    {formData.studentData.enrollments.map((el, index) => {
+                    {formData.studentData?.enrollments.map((el, index) => {
                       return (
                         <Chip
                           onDelete={() => handleRemoveEnrollment(el)}

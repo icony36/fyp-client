@@ -11,6 +11,9 @@ const ListActions = ({
   handleButtonClicked,
   searchLabel,
   buttonLabel,
+  isOptionEqualToValue,
+  getOptionLabel,
+  searchBarWidth = "40ch",
 }) => {
   const onChange = (event, value) => {
     if (!value) {
@@ -31,11 +34,9 @@ const ListActions = ({
       disableGutters
     >
       <Autocomplete
-        sx={{ width: "40ch" }}
-        isOptionEqualToValue={(option, value) =>
-          option.username === value.username
-        }
-        getOptionLabel={(option) => option.username}
+        sx={{ width: searchBarWidth }}
+        isOptionEqualToValue={isOptionEqualToValue}
+        getOptionLabel={getOptionLabel}
         options={options}
         loading={isLoading}
         renderInput={(params) => <TextField {...params} label={searchLabel} />}

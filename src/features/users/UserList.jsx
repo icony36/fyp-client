@@ -24,11 +24,11 @@ const UsersList = () => {
   const { users, isFetching, usersStatus } = useFetchUsers();
   const { suspendUser, isSuspending } = useSuspendUser();
 
-  const [options, setOptions] = useState([]);
+  const [searchOptions, setSearchOptions] = useState([]);
 
   useEffect(() => {
     if (usersStatus === "success") {
-      setOptions(users.data);
+      setSearchOptions(users.data);
     }
   }, [usersStatus, users]);
 
@@ -43,6 +43,14 @@ const UsersList = () => {
       return (
         <TableRow>
           <TableCell>Loading...</TableCell>
+        </TableRow>
+      );
+    }
+
+    if (!users || !users.data || users.data.length < 1) {
+      return (
+        <TableRow>
+          <TableCell>No user available</TableCell>
         </TableRow>
       );
     }
@@ -94,12 +102,16 @@ const UsersList = () => {
       <div className="list-page">
         <Container className="container">
           <ListActions
-            options={options}
+            options={searchOptions}
             isLoading={isFetching}
             handleSearchClicked={(id) => navigate(`/users/${id}`)}
             handleButtonClicked={() => navigate("/users/new")}
             searchLabel="Search by username"
             buttonLabel="Create User"
+            isOptionEqualToValue={(option, value) =>
+              option.username === value.username
+            }
+            getOptionLabel={(option) => option.username}
           />
 
           <TableContainer>

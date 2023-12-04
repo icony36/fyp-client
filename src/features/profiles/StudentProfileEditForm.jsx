@@ -143,7 +143,7 @@ const StudentProfileEditForm = () => {
                 size="large"
                 type="submit"
               >
-                Update Enrollments
+                Update
               </Button>
             </div>
           </form>

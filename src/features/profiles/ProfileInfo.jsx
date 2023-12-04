@@ -95,7 +95,7 @@ const ProfileInfo = () => {
                 size="small"
                 onClick={() => navigate(`/profile/edit`)}
               >
-                Update Profile
+                Update
               </Button>
             </div>
           </CardContent>

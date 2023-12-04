@@ -2,12 +2,12 @@ import React from "react";
 
 import KnowledgeForm from "../features/knowledges/KnowledgeForm";
 
-const KnowledgeNewPage = () => {
+const KnowledgeEditPage = () => {
   return (
     <>
-      <KnowledgeForm />
+      <KnowledgeForm isEditSession />
     </>
   );
 };
 
-export default KnowledgeNewPage;
+export default KnowledgeEditPage;
