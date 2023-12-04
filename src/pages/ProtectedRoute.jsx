@@ -1,8 +1,9 @@
 import React, { useEffect, useContext } from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
-import { AuthContext } from "../contexts";
 import { setTokenHeader } from "../services/api";
+import { AuthContext } from "../contexts";
+import AppLayout from "./AppLayout";
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { auth, logout, resetAuth } = useContext(AuthContext);
@@ -10,31 +11,31 @@ const ProtectedRoute = ({ allowedRoles }) => {
   const location = useLocation();
 
   useEffect(() => {
-    checkForToken();
-  }, []);
+    const checkForToken = () => {
+      if (localStorage.jwtToken) {
+        setTokenHeader(localStorage.jwtToken);
 
-  const checkForToken = () => {
-    if (localStorage.jwtToken) {
-      setTokenHeader(localStorage.jwtToken);
-
-      try {
-        resetAuth();
-      } catch (err) {
-        logout();
+        try {
+          resetAuth();
+        } catch (err) {
+          logout();
+        }
       }
-    }
-  };
+    };
+
+    checkForToken();
+  }, [logout, resetAuth]);
 
   const getComponent = () => {
     if (auth.isAuth && localStorage.getItem("jwtToken")) {
       if (allowedRoles) {
         if (allowedRoles.includes(auth.role)) {
-          return <Outlet />;
+          return <AppLayout />;
         } else {
           return <Navigate to="/" state={{ from: location }} replace />;
         }
       } else {
-        return <Outlet />;
+        return <AppLayout />;
       }
     }
 

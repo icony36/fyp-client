@@ -1,10 +1,14 @@
 import React from "react";
 
-import UsersList from "../components/UserList";
+import { useToast } from "../hooks/useToast";
+import UsersList from "../features/users/UserList";
 
 const UsersPage = () => {
+  // const { Toast } = useToast();
+
   return (
     <>
+      {/* <Toast /> */}
       <UsersList />
     </>
   );

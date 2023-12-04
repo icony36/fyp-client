@@ -16,7 +16,11 @@ export const apiCall = (method, path, data) => {
         return resolve(res.data);
       })
       .catch((err) => {
-        return reject(err.response.data);
+        if (err.response) {
+          return reject(err.response.data);
+        }
+
+        return reject(err);
       });
   });
 };

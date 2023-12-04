@@ -13,7 +13,7 @@ import SmartToyIcon from "@mui/icons-material/SmartToy";
 
 import { AuthContext } from "../contexts";
 import { ROLE } from "../constants";
-import LogoutButton from "./LogoutButton";
+import LogoutButton from "../features/auths/LogoutButton";
 
 const adminPages = [
   { name: "Users", link: "/users" },

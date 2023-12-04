@@ -12,22 +12,23 @@ import {
   Button,
 } from "@mui/material";
 import { Visibility, VisibilityOff } from "@mui/icons-material";
-import { toast } from "react-hot-toast";
 
-import { AuthContext } from "../contexts";
-import Toast from "./Toast";
+import { AuthContext } from "../../contexts";
+import { useToast } from "../../hooks/useToast";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
+  const { toast } = useToast();
+
+  const { login } = useContext(AuthContext);
+
   const [loginData, setLoginData] = useState({
     username: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const { login } = useContext(AuthContext);
-
-  const navigate = useNavigate();
 
   const handleChange = (event) => {
     setLoginData((prevState) => ({
@@ -51,7 +52,6 @@ const LoginForm = () => {
 
   return (
     <>
-      <Toast />
       <div className="form-page">
         <Paper className="paper" sx={{ minWidth: 325, minHeight: 400 }}>
           <form className="login-form" name="loginForm" onSubmit={handleSubmit}>

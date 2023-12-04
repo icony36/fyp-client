@@ -2,12 +2,22 @@ import React, { useContext } from "react";
 import { Navigate } from "react-router-dom";
 
 import { AuthContext } from "../contexts";
-import LoginForm from "../components/LoginForm";
+import LoginForm from "../features/auths/LoginForm";
+import { useToast } from "../hooks/useToast";
 
 const LoginPage = () => {
   const { auth } = useContext(AuthContext);
 
-  return auth.isAuth ? <Navigate to="/" /> : <LoginForm />;
+  const { Toast } = useToast();
+
+  return auth.isAuth ? (
+    <Navigate to="/" />
+  ) : (
+    <>
+      <Toast />
+      <LoginForm />;
+    </>
+  );
 };
 
 export default LoginPage;

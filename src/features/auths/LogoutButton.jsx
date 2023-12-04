@@ -1,26 +1,29 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
-import toast from "react-hot-toast";
 
 import { Button } from "@mui/material";
 
-import { AuthContext } from "../contexts";
+import { useToast } from "../../hooks/useToast";
+import { AuthContext } from "../../contexts";
 
 const LogoutButton = () => {
+  const navigate = useNavigate();
+
+  const { toast } = useToast();
+
   const { logout } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
-  const navigate = useNavigate();
-
   const handleLogout = async () => {
-    queryClient.removeQueries();
-    toast.remove();
-
     await logout();
 
-    navigate("/login", { replace: true });
+    queryClient.removeQueries();
+
+    navigate("/login");
+
+    toast.success("You have successfully logged out.");
   };
 
   return (

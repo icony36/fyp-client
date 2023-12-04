@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useFieldArray, useForm } from "react-hook-form";
+import { useParams, useNavigate } from "react-router-dom";
 
 import {
   Paper,
@@ -18,147 +16,175 @@ import {
   Chip,
 } from "@mui/material";
 import { Visibility, VisibilityOff, AddCircle } from "@mui/icons-material";
-import { toast } from "react-hot-toast";
 
-import {
-  createUser,
-  updateUser,
-  fetchUser,
-  deleteUser,
-} from "../services/user";
-import {
-  createStudentProfile,
-  fetchStudentProfileByUser,
-  updateStudentProfile,
-} from "../services/studentProfile";
-import { ROLE } from "../constants";
-import Toast from "../components/Toast";
+import { fetchStudentProfileByUser } from "../../services/studentProfile";
+import { ROLE } from "../../constants";
+import { useToast } from "../../hooks/useToast";
+import { useFetchUsers } from "./useFetchUsers";
+import { useCreateUser } from "./useCreateUser";
+import { useEditUser } from "./useEditUser";
+import { useDeleteUser } from "./useDeleteUser";
 
 const roles = Object.values(ROLE);
 
-const handleCreateUser = async (data) => {
-  try {
-    const res = await createUser(data.userData);
-
-    if (data.userData.role === ROLE.student) {
-      try {
-        const studentRes = await createStudentProfile({
-          ...data.studentData,
-          studentId: res.userId,
-        });
-
-        return studentRes;
-      } catch (err) {
-        await deleteUser(res.userId);
-
-        throw err;
-      }
-    }
-
-    return res;
-  } catch (err) {
-    throw err;
-  }
-};
-
-const handleUpdateUser = async ({ id, profileId, data }) => {
-  try {
-    const res = await updateUser(id, data.userData);
-
-    if (data.userData.role === ROLE.student) {
-      try {
-        const studentRes = await updateStudentProfile(
-          data.studentData,
-          profileId
-        );
-
-        return studentRes;
-      } catch (err) {
-        throw err;
-      }
-    }
-
-    return res;
-  } catch (err) {
-    throw err;
-  }
-};
-
 const UserForm = ({ isEditSession }) => {
-  const { register, handleSubmit, reset, control } = useForm({
-    defaultValues: {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  const { toast } = useToast();
+
+  const { users, usersStatus, isFetching } = useFetchUsers(
+    isEditSession ? { enabled: true } : { enabled: false }
+  );
+  const { createUser, isCreating } = useCreateUser({
+    onSuccess: () => setFormData(defaultValues),
+  });
+  const { editUser, isEditing } = useEditUser();
+  const { deleteUser, isDeleting } = useDeleteUser({
+    onSuccess: () => navigate("/users"),
+  });
+
+  const isWorking = isFetching || isCreating || isEditing || isDeleting;
+
+  const defaultValues = {
+    userData: {
+      username: "",
+      password: "",
+      email: "",
+      firstName: "",
+      lastName: "",
+      role: ROLE.student,
+      isSuspended: false,
+    },
+    studentData: {
+      course: "",
+      outstandingFee: 0,
       enrollments: [],
     },
-  });
+    profileId: "",
+  };
 
-  const { fields, append, remove } = useFieldArray({
-    name: "enrollments",
-    control,
-  });
-
-  const [isStudent, setIsStudent] = useState(true);
-  const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(defaultValues);
   const [enrollment, setEnrollment] = useState("");
-
-  const { id } = useParams();
-
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation({
-    mutationFn: isEditSession ? handleUpdateUser : handleCreateUser,
-    onSuccess: (data) => {
-      toast.success(data.message);
-      reset();
-
-      // Invalidate the query to refetch the 'todos' query after successful mutation
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    },
-  });
+  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
-    if (isEditSession) {
-      handleFetchData();
+    if (isEditSession && usersStatus === "success") {
+      setUserToEdit();
     }
-  }, []);
+  }, [usersStatus, users]);
 
-  const handleFetchData = async () => {
-    try {
-      const res = await fetchUser(id);
-    } catch (err) {
-      toast.error(err.message);
+  const setUserToEdit = async () => {
+    const userData = users.data?.filter((el) => el._id === id)[0];
+
+    if (!userData) {
+      navigate("/users");
+      toast.error("User doesn't exist");
+      return;
+    }
+
+    setFormData((prevState) => ({
+      ...prevState,
+      userData: {
+        username: userData.username,
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        role: userData.role,
+        isSuspended: userData.isSuspended,
+        password: "",
+      },
+    }));
+
+    if (userData.role === ROLE.student) {
+      try {
+        const res = await fetchStudentProfileByUser(id);
+        const studentData = res.data[0];
+
+        setFormData((prevState) => ({
+          ...prevState,
+          studentData: {
+            course: studentData.course,
+            enrollments: studentData.enrollments,
+            outstandingFee: studentData.outstandingFee,
+          },
+          profileId: studentData._id,
+        }));
+      } catch (err) {
+        toast.error(err.message);
+      }
     }
   };
 
-  const onSubmit = (data) => {
-    const enrollments = data.enrollments.map((el) => el.value);
+  const handleChange = (event) => {
+    const path = event.target.name;
+    const value = event.target.value;
+    const keys = path.split(".");
 
-    const objToSubmit = {
-      userData: data.userData,
-      studentData: {
-        ...data.studentData,
-        enrollments,
+    setFormData((prevState) => ({
+      ...prevState,
+      [keys[0]]: {
+        ...prevState[keys[0]],
+        [keys[1]]: value,
       },
+    }));
+  };
+
+  const handleAddEnrollment = () => {
+    if (!enrollment) return;
+
+    setFormData((prevState) => ({
+      ...prevState,
+      studentData: {
+        ...prevState.studentData,
+        enrollments: [...prevState.studentData.enrollments, enrollment],
+      },
+    }));
+
+    setEnrollment("");
+  };
+
+  const handleRemoveEnrollment = (data) => {
+    const arr = formData.studentData.enrollments;
+    const index = arr.indexOf(data);
+    arr.splice(index, 1);
+
+    setFormData((prevState) => ({
+      ...prevState,
+      studentData: {
+        ...prevState.studentData,
+        enrollments: arr,
+      },
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const data = {
+      userData: formData.userData,
+      studentData: formData.studentData,
     };
 
     if (isEditSession) {
-      mutate({ id, objToSubmit });
+      if (!data.userData.password) {
+        delete data.userData.password;
+      }
+
+      editUser({ id, data, profileId: formData.profileId });
     } else {
-      mutate(objToSubmit);
+      createUser(data);
     }
   };
 
   return (
     <>
-      <Toast />
       <div className="form-page">
         <Paper className="paper" sx={{ minWidth: 700, minHeight: 300 }}>
           <form
             className="register-form"
             name="registerForm"
-            onSubmit={handleSubmit(onSubmit)}
+            onSubmit={handleSubmit}
           >
             <h1>{isEditSession ? "Edit User" : "Create User"}</h1>
 
@@ -169,7 +195,9 @@ const UserForm = ({ isEditSession }) => {
                   label="Username"
                   variant="outlined"
                   required
-                  {...register("userData.username")}
+                  name="userData.username"
+                  value={formData.userData.username}
+                  onChange={handleChange}
                 />
               </FormControl>
 
@@ -181,8 +209,10 @@ const UserForm = ({ isEditSession }) => {
                   id="password"
                   label="Password"
                   type={showPassword ? "text" : "password"}
-                  required
-                  {...register("userData.password")}
+                  required={!isEditSession}
+                  name="userData.password"
+                  value={formData.userData.password}
+                  onChange={handleChange}
                   endAdornment={
                     <InputAdornment position="end">
                       <IconButton
@@ -205,7 +235,9 @@ const UserForm = ({ isEditSession }) => {
                   type="email"
                   variant="outlined"
                   required
-                  {...register("userData.email")}
+                  name="userData.email"
+                  value={formData.userData.email}
+                  onChange={handleChange}
                 />
               </FormControl>
             </div>
@@ -217,7 +249,9 @@ const UserForm = ({ isEditSession }) => {
                   label="First Name"
                   variant="outlined"
                   required
-                  {...register("userData.firstName")}
+                  name="userData.firstName"
+                  value={formData.userData.firstName}
+                  onChange={handleChange}
                 />
               </FormControl>
 
@@ -227,7 +261,9 @@ const UserForm = ({ isEditSession }) => {
                   label="Last Name"
                   variant="outlined"
                   required
-                  {...register("userData.lastName")}
+                  name="userData.lastName"
+                  value={formData.userData.lastName}
+                  onChange={handleChange}
                 />
               </FormControl>
             </div>
@@ -240,11 +276,9 @@ const UserForm = ({ isEditSession }) => {
                 <Select
                   id="role"
                   label="Role"
-                  {...register("userData.role", {
-                    onChange: (e) =>
-                      setIsStudent(e.target.value === ROLE.student),
-                  })}
-                  defaultValue={ROLE.student}
+                  name="userData.role"
+                  value={formData.userData.role}
+                  onChange={handleChange}
                 >
                   {roles.map((role) => {
                     let text = role.charAt(0).toUpperCase() + role.slice(1);
@@ -265,8 +299,9 @@ const UserForm = ({ isEditSession }) => {
                 <Select
                   id="isSuspended"
                   label="Is Suspended"
-                  {...register("userData.isSuspended")}
-                  defaultValue={false}
+                  name="userData.isSuspended"
+                  value={formData.userData.isSuspended}
+                  onChange={handleChange}
                 >
                   <MenuItem key={"false"} value={false}>
                     No
@@ -278,7 +313,7 @@ const UserForm = ({ isEditSession }) => {
               </FormControl>
             </div>
 
-            {isStudent ? (
+            {formData.userData.role === ROLE.student ? (
               <>
                 <h1>Student Profile</h1>
                 <div>
@@ -288,7 +323,9 @@ const UserForm = ({ isEditSession }) => {
                       label="Course"
                       variant="outlined"
                       required
-                      {...register("studentData.course")}
+                      name="studentData.course"
+                      value={formData.studentData.course}
+                      onChange={handleChange}
                     />
                   </FormControl>
 
@@ -299,14 +336,9 @@ const UserForm = ({ isEditSession }) => {
                       variant="outlined"
                       type="number"
                       required
-                      {...register("studentData.outstandingFee", {
-                        valueAsNumber: true,
-                        min: {
-                          value: 0,
-                          message: "Cannot be negative.",
-                        },
-                      })}
-                      defaultValue={0}
+                      name="studentData.outstandingFee"
+                      value={formData.studentData.outstandingFee}
+                      onChange={handleChange}
                     />
                   </FormControl>
                 </div>
@@ -325,19 +357,14 @@ const UserForm = ({ isEditSession }) => {
                       id="enrollments"
                       label="Enrollments"
                       variant="outlined"
+                      name="studentData.enrollments"
                       value={enrollment}
                       onChange={(e) => setEnrollment(e.target.value)}
                     />
                   </FormControl>
 
                   <FormControl>
-                    <IconButton
-                      size="large"
-                      onClick={() => {
-                        setEnrollment("");
-                        append({ value: enrollment.toUpperCase() });
-                      }}
-                    >
+                    <IconButton size="large" onClick={handleAddEnrollment}>
                       <AddCircle fontSize="40" />
                     </IconButton>
                   </FormControl>
@@ -354,12 +381,12 @@ const UserForm = ({ isEditSession }) => {
                     flexWrap="wrap"
                     spacing={1}
                   >
-                    {fields.map((el, index) => {
+                    {formData.studentData.enrollments.map((el, index) => {
                       return (
                         <Chip
+                          onDelete={() => handleRemoveEnrollment(el)}
                           key={index}
-                          label={el.value}
-                          onDelete={() => remove(index)}
+                          label={el}
                         />
                       );
                     })}
@@ -373,11 +400,12 @@ const UserForm = ({ isEditSession }) => {
             <div style={{ marginTop: "36px" }}>
               {isEditSession ? (
                 <Button
-                  disabled={isLoading}
+                  disabled={isWorking}
                   variant="contained"
                   size="large"
                   color="secondary"
                   sx={{ marginRight: "8px" }}
+                  onClick={() => deleteUser(id)}
                 >
                   Delete User
                 </Button>
@@ -386,12 +414,12 @@ const UserForm = ({ isEditSession }) => {
               )}
 
               <Button
-                disabled={isLoading}
+                disabled={isWorking}
                 variant="contained"
                 size="large"
                 type="submit"
               >
-                {isEditSession ? "Edit User" : "Create New User"}
+                {isEditSession ? "Update User" : "Create New User"}
               </Button>
             </div>
           </form>

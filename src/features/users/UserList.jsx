@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 import {
   Button,
@@ -14,55 +12,34 @@ import {
   TableBody,
 } from "@mui/material";
 
-import { fetchUsers, suspendUser } from "../services/user";
-import Toast from "./Toast";
-import ListActions from "./ListActions";
+import { useFetchUsers } from "./useFetchUsers";
+import { useSuspendUser } from "./useSuspendUser";
+import ListActions from "../../components/ListActions";
 
 const header = ["Username", "Name", "Role", ""];
 
 const UsersList = () => {
-  const {
-    data,
-    isLoading: isFetching,
-    status,
-  } = useQuery({
-    queryKey: ["users"],
-    queryFn: fetchUsers,
-  });
+  const navigate = useNavigate();
+
+  const { users, isFetching, usersStatus } = useFetchUsers();
+  const { suspendUser, isSuspending } = useSuspendUser();
 
   const [options, setOptions] = useState([]);
 
-  const navigate = useNavigate();
-
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading: isSuspending } = useMutation({
-    mutationFn: ({ userData, id }) => suspendUser(userData, id),
-    onSuccess: (data) => {
-      // Invalidate the query to refetch the 'todos' query after successful mutation
-      queryClient.invalidateQueries({ queryKey: ["users"] });
-
-      toast.success(data.message);
-    },
-    onError: (err) => {
-      toast.error(err.message);
-    },
-  });
-
   useEffect(() => {
-    if (status === "success") {
-      setOptions(data.data);
+    if (usersStatus === "success") {
+      setOptions(users.data);
     }
-  }, [status, data]);
+  }, [usersStatus, users]);
 
   const handleSuspend = (event, shouldSuspend, id) => {
     event.stopPropagation();
 
-    mutate({ userData: { isSuspended: shouldSuspend }, id });
+    suspendUser({ userData: { isSuspended: shouldSuspend }, id });
   };
 
   const renderRows = () => {
-    if (isFetching) {
+    if (isFetching || usersStatus === "error") {
       return (
         <TableRow>
           <TableCell>Loading...</TableCell>
@@ -72,7 +49,7 @@ const UsersList = () => {
 
     return (
       <>
-        {data.data?.map((row) => (
+        {users.data?.map((row) => (
           <TableRow
             sx={{ cursor: "pointer" }}
             key={row._id}
@@ -114,7 +91,6 @@ const UsersList = () => {
 
   return (
     <>
-      <Toast />
       <div className="list-page">
         <Container className="container">
           <ListActions

@@ -2,11 +2,18 @@ import React from "react";
 
 import { Typography, Container } from "@mui/material";
 
+import { useToast } from "../hooks/useToast";
+
 const NotFoundPage = () => {
+  const { Toast } = useToast();
+
   return (
-    <Container>
-      <Typography>404 This page could not be found.</Typography>
-    </Container>
+    <>
+      <Toast />
+      <Container>
+        <Typography>404 This page could not be found.</Typography>
+      </Container>
+    </>
   );
 };
 

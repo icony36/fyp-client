@@ -23,7 +23,7 @@ const HomePage = () => {
       case ROLE.staff:
         return "/tickets";
       case ROLE.student:
-        return "/chat";
+        return "/chatbot";
       default:
         return "/";
     }
