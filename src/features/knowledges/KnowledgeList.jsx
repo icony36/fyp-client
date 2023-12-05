@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { format, formatDistance, subDays } from "date-fns";
+import { format, formatDistance } from "date-fns";
 
 import {
   Container,
@@ -43,6 +43,8 @@ const KnowledgeList = ({ data }) => {
       return (
         <TableRow>
           <TableCell>No knowledge available</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
         </TableRow>
       );
     }

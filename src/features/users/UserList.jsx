@@ -43,6 +43,9 @@ const UsersList = () => {
       return (
         <TableRow>
           <TableCell>Loading...</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
         </TableRow>
       );
     }
@@ -51,6 +54,9 @@ const UsersList = () => {
       return (
         <TableRow>
           <TableCell>No user available</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
         </TableRow>
       );
     }
