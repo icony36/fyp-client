@@ -11,7 +11,10 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = (method, path, data) => {
   return new Promise((resolve, reject) => {
-    return axios[method](`${process.env.REACT_APP_API_URL}${path}`, data)
+    return axios[method](
+      `${process.env.REACT_APP_API_URL || "http://localhost:3210"}${path}`,
+      data
+    )
       .then((res) => {
         return resolve(res.data);
       })
@@ -27,7 +30,10 @@ export const apiCall = (method, path, data) => {
 
 export const rasaApiCall = (method, path, data) => {
   return new Promise((resolve, reject) => {
-    return axios[method](`${process.env.REACT_APP_RASA_API}${path}`, data)
+    return axios[method](
+      `${process.env.REACT_APP_RASA_API || "http://localhost:5005"}${path}`,
+      data
+    )
       .then((res) => {
         return resolve(res.data);
       })
