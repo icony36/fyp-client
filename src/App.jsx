@@ -8,8 +8,8 @@ import { blue, pink } from "@mui/material/colors";
 import "./App.css";
 
 import { AuthProvider } from "./contexts";
+import { ChatProvider } from "./contexts/ChatContext";
 import { ROLE } from "./constants";
-import { useToast } from "./hooks/useToast";
 
 import Navbar from "./components/Navbar";
 import LoginPage from "./pages/LoginPage";
@@ -50,37 +50,47 @@ const App = () => {
       <ReactQueryDevtools initialIsOpen={false} />
       <BrowserRouter>
         <AuthProvider>
-          <ThemeProvider theme={theme}>
-            <Navbar />
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route element={<ProtectedRoute />}>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/profile/" element={<ProfilePage />} />
-                <Route path="/profile/edit" element={<ProfileEditPage />} />
-                <Route path="/chatbot" element={<ChatbotPage />} />
-              </Route>
-              <Route element={<ProtectedRoute allowedRoles={[ROLE.admin]} />}>
-                <Route path="/users" element={<UsersPage />} />
-                <Route path="/users/new" element={<UserNewPage />} />
-                <Route path="/users/:id" element={<UserEditPage />} />
-              </Route>
-              <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
-                <Route path="/tickets/" element={<NotFoundPage />} />
-                <Route path="/tickets/:id" element={<NotFoundPage />} />
-                <Route path="/knowledges" element={<KnowledgesPage />} />
-                <Route path="/knowledges/new" element={<KnowledgeNewPage />} />
-                <Route path="/knowledges/:id" element={<KnowledgeEditPage />} />
-              </Route>
-              <Route element={<ProtectedRoute allowedRoles={[ROLE.student]} />}>
+          <ChatProvider>
+            <ThemeProvider theme={theme}>
+              <Navbar />
+              <Routes>
+                <Route path="/login" element={<LoginPage />} />
+                <Route element={<ProtectedRoute />}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/profile/" element={<ProfilePage />} />
+                  <Route path="/profile/edit" element={<ProfileEditPage />} />
+                  <Route path="/chatbot" element={<ChatbotPage />} />
+                </Route>
+                <Route element={<ProtectedRoute allowedRoles={[ROLE.admin]} />}>
+                  <Route path="/users" element={<UsersPage />} />
+                  <Route path="/users/new" element={<UserNewPage />} />
+                  <Route path="/users/:id" element={<UserEditPage />} />
+                </Route>
+                <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
+                  <Route path="/tickets/" element={<NotFoundPage />} />
+                  <Route path="/tickets/:id" element={<NotFoundPage />} />
+                  <Route path="/knowledges" element={<KnowledgesPage />} />
+                  <Route
+                    path="/knowledges/new"
+                    element={<KnowledgeNewPage />}
+                  />
+                  <Route
+                    path="/knowledges/:id"
+                    element={<KnowledgeEditPage />}
+                  />
+                </Route>
                 <Route
-                  path="/profile/student/edit"
-                  element={<StudentProfileEditPage />}
-                />
-              </Route>
-              <Route path="*" element={<NotFoundPage />} />
-            </Routes>
-          </ThemeProvider>
+                  element={<ProtectedRoute allowedRoles={[ROLE.student]} />}
+                >
+                  <Route
+                    path="/profile/student/edit"
+                    element={<StudentProfileEditPage />}
+                  />
+                </Route>
+                <Route path="*" element={<NotFoundPage />} />
+              </Routes>
+            </ThemeProvider>
+          </ChatProvider>
         </AuthProvider>
       </BrowserRouter>
     </QueryClientProvider>

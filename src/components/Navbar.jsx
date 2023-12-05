@@ -21,7 +21,6 @@ const adminPages = [
 ];
 
 const staffPages = [
-  { name: "Tickets", link: "/tickets" },
   { name: "Knowledges", link: "/knowledges" },
   { name: "Profile", link: "/profile" },
 ];
@@ -61,7 +60,7 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar className="navbar" position="relative">
+    <AppBar className="navbar" position="sticky">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <NavLink to="/">

@@ -1,10 +1,168 @@
-import React from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
+import {
+  Container,
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Grid,
+  Paper,
+} from "@mui/material";
+import SendIcon from "@mui/icons-material/Send";
+
+import { ChatContext } from "../../contexts/ChatContext";
+import { useToast } from "../../hooks/useToast";
+import { sendMessage } from "../../services/rasa";
 
 const Chatbot = () => {
+  const { messages, setMessages, setUserMessage } = useContext(ChatContext);
+
+  const { toast } = useToast();
+
+  const messagesEndRef = useRef(null);
+
+  const [input, setInput] = useState("");
+
+  useEffect(() => {
+    messagesEndRef?.current.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const handleSend = (event) => {
+    event.preventDefault();
+
+    if (input.trim() !== "") {
+      setUserMessage(input);
+      handleSendMessage(input);
+      setInput("");
+    }
+  };
+
+  const handleSendMessage = async (input) => {
+    try {
+      const res = await sendMessage({ message: input });
+
+      setMessages((prevState) => [...prevState, ...res]);
+    } catch (err) {
+      toast.error(err.message);
+      console.log(err);
+    }
+  };
+
+  const handleInputChange = (event) => {
+    setInput(event.target.value);
+  };
+
+  const renderMessages = () => {
+    if (messages.length < 1) {
+      return (
+        <div
+          style={{
+            alignItems: "center",
+            justifyContent: "center",
+            display: "flex",
+          }}
+        >
+          <Typography>Ask chatbot something...</Typography>
+        </div>
+      );
+    }
+
+    return messages.map((message, index) => (
+      <Message key={index} message={message} />
+    ));
+  };
+
   return (
     <>
-      <h1>Chatbot</h1>
+      <div style={{ marginTop: "-20px" }}>
+        <Container className="container">
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+              minHeight: "92vh",
+            }}
+          >
+            <Box
+              sx={{ overflow: "hidden", position: "relative", p: 2, flex: 1 }}
+            >
+              <div
+                style={{
+                  height: "80%",
+                  width: "100%",
+                  overflowY: "auto",
+                }}
+              >
+                {renderMessages()}
+                <div ref={messagesEndRef}></div>
+              </div>
+            </Box>
+
+            <Box
+              sx={{
+                p: 2,
+                backgroundColor: "white",
+                position: "sticky",
+                bottom: 0,
+              }}
+            >
+              <form onSubmit={handleSend}>
+                <Grid container spacing={2}>
+                  <Grid item xs={10}>
+                    <TextField
+                      fullWidth
+                      size="small"
+                      placeholder="Type a message"
+                      variant="outlined"
+                      value={input}
+                      onChange={handleInputChange}
+                    />
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Button
+                      fullWidth
+                      size="large"
+                      color="primary"
+                      variant="contained"
+                      endIcon={<SendIcon />}
+                      type="submit"
+                    >
+                      Send
+                    </Button>
+                  </Grid>
+                </Grid>
+              </form>
+            </Box>
+          </Box>
+        </Container>
+      </div>
     </>
+  );
+};
+
+const Message = ({ message }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: message.isUser ? "flex-end" : "flex-start",
+        mb: 2,
+      }}
+    >
+      <Paper
+        variant="outlined"
+        sx={{
+          p: 2,
+          backgroundColor: message.isUser ? "secondary.50" : "primary.50",
+          borderColor: message.isUser ? "secondary.50" : "primary.50",
+          borderRadius: message.isUser
+            ? "20px 20px 5px 20px"
+            : "20px 20px 20px 5px",
+        }}
+      >
+        <Typography variant="body1">{message.text}</Typography>
+      </Paper>
+    </Box>
   );
 };
 

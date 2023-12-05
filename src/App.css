@@ -36,7 +36,7 @@ textarea:focus {
 
 .container {
   background-color: white;
-  min-height: 100vh;
+  min-height: 80vh;
 }
 
 .paper {

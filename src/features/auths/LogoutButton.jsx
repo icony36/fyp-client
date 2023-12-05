@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 
 import { useToast } from "../../hooks/useToast";
 import { AuthContext } from "../../contexts";
+import { ChatContext } from "../../contexts/ChatContext";
 
 const LogoutButton = () => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const LogoutButton = () => {
   const { toast } = useToast();
 
   const { logout } = useContext(AuthContext);
+  const { clearMessages } = useContext(ChatContext);
 
   const queryClient = useQueryClient();
 
@@ -22,6 +24,8 @@ const LogoutButton = () => {
     queryClient.removeQueries();
 
     navigate("/login");
+
+    clearMessages();
 
     // toast.success("You have successfully logged out.");
   };
