@@ -11,8 +11,6 @@ export const setTokenHeader = (token) => {
 
 export const apiCall = (method, path, data) => {
   return new Promise((resolve, reject) => {
-    console.log(process.env.REACT_APP_API_URL);
-
     return axios[method](
       `${process.env.REACT_APP_API_URL || "http://localhost:3210"}${path}`,
       data
