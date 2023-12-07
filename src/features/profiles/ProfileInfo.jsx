@@ -42,7 +42,9 @@ const ProfileInfo = () => {
                 variant="subtitle1"
                 gutterBottom
               >
-                {`${profile?.data?.firstName} ${profile?.data?.lastName}`}
+                {`${profile?.data?.firstName ? profile?.data?.firstName : ""} ${
+                  profile?.data?.lastName ? profile?.data?.lastName : ""
+                }`}
               </Typography>
             </div>
 
