@@ -24,7 +24,7 @@ const StudentProfileInfo = () => {
   return (
     <>
       <div className="form-page">
-        <Card className="paper" sx={{ minWidth: 720 }}>
+        <Card className="paper" sx={{ minWidth: 860 }}>
           <CardContent>
             <h1>Student Profile</h1>
             <div className="profile-group">

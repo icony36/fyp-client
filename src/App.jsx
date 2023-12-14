@@ -22,6 +22,9 @@ import KnowledgeEditPage from "./pages/KnowledgeEditPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import StudentProfileEditPage from "./pages/StudentProfileEditPage";
+import TicketsPage from "./pages/TicketsPage";
+import TicketPage from "./pages/TicketPage";
+import TicketNewPage from "./pages/TicketNewPage";
 import ChatbotPage from "./pages/ChatbotPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -66,9 +69,15 @@ const App = () => {
                   <Route path="/users/new" element={<UserNewPage />} />
                   <Route path="/users/:id" element={<UserEditPage />} />
                 </Route>
+                <Route
+                  element={
+                    <ProtectedRoute allowedRoles={[ROLE.staff, ROLE.student]} />
+                  }
+                >
+                  <Route path="/tickets/:id" element={<TicketPage />} />
+                </Route>
                 <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
-                  <Route path="/tickets/" element={<NotFoundPage />} />
-                  <Route path="/tickets/:id" element={<NotFoundPage />} />
+                  <Route path="/tickets/" element={<TicketsPage />} />
                   <Route path="/knowledges" element={<KnowledgesPage />} />
                   <Route
                     path="/knowledges/new"
@@ -82,6 +91,7 @@ const App = () => {
                 <Route
                   element={<ProtectedRoute allowedRoles={[ROLE.student]} />}
                 >
+                  <Route path="/tickets/new" element={<TicketNewPage />} />
                   <Route
                     path="/profile/student/edit"
                     element={<StudentProfileEditPage />}

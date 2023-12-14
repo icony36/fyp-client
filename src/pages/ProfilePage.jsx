@@ -4,6 +4,7 @@ import { AuthContext } from "../contexts";
 import { ROLE } from "../constants";
 import ProfileInfo from "../features/profiles/ProfileInfo";
 import StudentProfileInfo from "../features/profiles/StudentProfileInfo";
+import StudentTicketInfo from "../features/tickets/StudentTicketInfo";
 
 const ProfilePage = () => {
   const { auth } = useContext(AuthContext);
@@ -11,7 +12,14 @@ const ProfilePage = () => {
   return (
     <>
       <ProfileInfo />
-      {auth.role === ROLE.student ? <StudentProfileInfo /> : <></>}
+      {auth.role === ROLE.student ? (
+        <>
+          <StudentProfileInfo />
+          <StudentTicketInfo />
+        </>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

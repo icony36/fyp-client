@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { format, formatDistance } from "date-fns";
 
@@ -12,23 +12,31 @@ import {
   TableBody,
 } from "@mui/material";
 
+import { AuthContext } from "../../contexts";
 import ListActions from "../../components/ListActions";
-import { useFetchKnowledges } from "./useFetchKnowledges";
+import { ticketStatusToStr } from "../../utils/helpers";
 
-const header = ["Title", "Created At", "Last Modified"];
+import { useFetchTickets } from "./useFetchTickets";
 
-const KnowledgeList = ({ data }) => {
+const header = ["Subject", "Type", "Status", "Created At", "Last Update"];
+
+const TicketList = ({ isStudentSession }) => {
+  const { auth } = useContext(AuthContext);
+
   const navigate = useNavigate();
 
-  const { knowledges, isFetching, knowledgesStatus } = useFetchKnowledges();
+  const { tickets, isFetching, ticketsStatus } = useFetchTickets({
+    isStudentSession,
+    studentId: isStudentSession ? auth.id : null,
+  });
 
   const [searchOptions, setSearchOptions] = useState([]);
 
   useEffect(() => {
-    if (knowledgesStatus === "success") {
-      setSearchOptions(knowledges.data);
+    if (ticketsStatus === "success") {
+      setSearchOptions(tickets.data);
     }
-  }, [knowledgesStatus, knowledges]);
+  }, [ticketsStatus, tickets]);
 
   const renderRows = () => {
     if (isFetching) {
@@ -40,14 +48,16 @@ const KnowledgeList = ({ data }) => {
     }
 
     if (
-      knowledgesStatus === "error" ||
-      !knowledges ||
-      !knowledges.data ||
-      knowledges.data.length < 1
+      ticketsStatus === "error" ||
+      !tickets ||
+      !tickets.data ||
+      tickets.data.length < 1
     ) {
       return (
         <TableRow>
-          <TableCell>No knowledge available</TableCell>
+          <TableCell>No Ticket</TableCell>
+          <TableCell></TableCell>
+          <TableCell></TableCell>
           <TableCell></TableCell>
           <TableCell></TableCell>
         </TableRow>
@@ -56,14 +66,25 @@ const KnowledgeList = ({ data }) => {
 
     return (
       <>
-        {knowledges?.data?.map((row, i) => (
+        {tickets?.data?.map((row, i) => (
           <TableRow
             sx={{ cursor: "pointer" }}
             key={row._id}
             hover
-            onClick={() => navigate(`/knowledges/${row._id}`)}
+            onClick={() => navigate(`/tickets/${row._id}`)}
           >
-            <TableCell>{row.title}</TableCell>
+            <TableCell
+              sx={{
+                maxWidth: 200,
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
+              {row.subject}
+            </TableCell>
+            <TableCell>{row.type}</TableCell>
+            <TableCell>{ticketStatusToStr(row.status)}</TableCell>
             <TableCell>
               {format(new Date(row.createdAt), "yyyy/MM/dd")}
             </TableCell>
@@ -83,15 +104,16 @@ const KnowledgeList = ({ data }) => {
           <ListActions
             options={searchOptions}
             isLoading={isFetching}
-            handleSearchClicked={(id) => navigate(`/knowledges/${id}`)}
-            handleButtonClicked={() => navigate("/knowledges/new")}
-            searchLabel="Search by title."
-            buttonLabel="Create Knowledge"
+            handleSearchClicked={(id) => navigate(`/tickets/${id}`)}
+            handleButtonClicked={() => navigate("/tickets/new")}
+            searchLabel="Search by subject."
+            buttonLabel="Create Ticket"
             isOptionEqualToValue={(option, value) =>
-              option.title === value.title
+              option.subject === value.subject
             }
-            getOptionLabel={(option) => option.title}
-            searchBarWidth="60ch"
+            getOptionLabel={(option) => option.subject}
+            searchBarWidth={isStudentSession ? "60ch" : "80ch"}
+            shouldHideButton={!isStudentSession}
           />
 
           <TableContainer>
@@ -115,4 +137,4 @@ const KnowledgeList = ({ data }) => {
   );
 };
 
-export default KnowledgeList;
+export default TicketList;

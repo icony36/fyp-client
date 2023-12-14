@@ -3,3 +3,14 @@ export const ROLE = Object.freeze({
   staff: "staff",
   student: "student",
 });
+
+export const TICKET_STATUS = Object.freeze({
+  pendingStaff: "pending-staff",
+  pendingStudent: "pending-student",
+  solved: "solved",
+});
+
+export const TICKET_TYPE = Object.freeze({
+  open: "open",
+  close: "close",
+});

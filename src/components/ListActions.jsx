@@ -14,6 +14,7 @@ const ListActions = ({
   isOptionEqualToValue,
   getOptionLabel,
   searchBarWidth = "40ch",
+  shouldHideButton,
 }) => {
   const onChange = (event, value) => {
     if (!value) {
@@ -43,9 +44,13 @@ const ListActions = ({
         onChange={onChange}
       />
 
-      <Button sx={{ m: 4 }} variant="contained" onClick={handleButtonClicked}>
-        {buttonLabel}
-      </Button>
+      {shouldHideButton ? (
+        <></>
+      ) : (
+        <Button sx={{ m: 4 }} variant="contained" onClick={handleButtonClicked}>
+          {buttonLabel}
+        </Button>
+      )}
     </Toolbar>
   );
 };

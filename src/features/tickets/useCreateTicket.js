@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-import { createKnowledge as apiCreateKnowledge } from "../../services/knowledge";
+import { createTicket as apiCreateTicket } from "../../services/ticket";
 import { useToast } from "../../hooks/useToast";
 
-export const useCreateKnowledge = (options = {}) => {
+export const useCreateTicket = (options = {}) => {
   const { onSuccess } = options;
 
   const queryClient = useQueryClient();
@@ -11,16 +11,16 @@ export const useCreateKnowledge = (options = {}) => {
   const { toast } = useToast();
 
   const {
-    mutate: createKnowledge,
+    mutate: createTicket,
     isLoading: isCreating,
-    status: createKnowledgeStatus,
+    status: createTicketStatus,
   } = useMutation({
-    mutationFn: apiCreateKnowledge,
+    mutationFn: apiCreateTicket,
     onSuccess: (data) => {
       toast.success(data.message);
 
-      // Invalidate the query to refetch the 'knowledges' query after successful mutation
-      queryClient.invalidateQueries({ queryKey: ["knowledges"] });
+      // Invalidate the query to refetch the 'tickets' query after successful mutation
+      queryClient.invalidateQueries({ queryKey: ["tickets"] });
 
       if (onSuccess && typeof onSuccess === "function") onSuccess();
     },
@@ -29,5 +29,5 @@ export const useCreateKnowledge = (options = {}) => {
     },
   });
 
-  return { createKnowledge, isCreating, createKnowledgeStatus };
+  return { createTicket, isCreating, createTicketStatus };
 };
