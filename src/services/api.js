@@ -46,3 +46,23 @@ export const rasaApiCall = (method, path, data) => {
       });
   });
 };
+
+export const rasaYMLCall = (method, path, data) => {
+  return new Promise((resolve, reject) => {
+    return axios[method](
+      `${process.env.REACT_APP_RASA_API || "http://localhost:5005"}${path}`,
+      data,
+      { headers: { "Content-Type": "application/x-yaml" } }
+    )
+      .then((res) => {
+        return resolve(res.data);
+      })
+      .catch((err) => {
+        if (err.response) {
+          return reject(err.response.data);
+        }
+
+        return reject(err);
+      });
+  });
+};

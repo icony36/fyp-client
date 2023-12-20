@@ -51,7 +51,6 @@ const TicketInfo = () => {
 
       if (!ticketData) {
         navigate("/tickets");
-        toast.error("Ticket doesn't exist");
         return;
       }
 

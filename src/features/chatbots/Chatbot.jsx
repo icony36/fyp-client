@@ -10,12 +10,15 @@ import {
 } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
 
+import { AuthContext } from "../../contexts";
 import { ChatContext } from "../../contexts/ChatContext";
 import { useToast } from "../../hooks/useToast";
 import { sendMessage } from "../../services/rasa";
 
 const Chatbot = () => {
   const { messages, setMessages, setUserMessage } = useContext(ChatContext);
+
+  const { auth } = useContext(AuthContext);
 
   const { toast } = useToast();
 
@@ -39,7 +42,7 @@ const Chatbot = () => {
 
   const handleSendMessage = async (input) => {
     try {
-      const res = await sendMessage({ message: input });
+      const res = await sendMessage({ sender: auth.id, message: input });
 
       setMessages((prevState) => [...prevState, ...res]);
     } catch (err) {
