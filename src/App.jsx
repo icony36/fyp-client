@@ -25,6 +25,7 @@ import StudentProfileEditPage from "./pages/StudentProfileEditPage";
 import TicketsPage from "./pages/TicketsPage";
 import TicketPage from "./pages/TicketPage";
 import TicketNewPage from "./pages/TicketNewPage";
+import TrainingPage from "./pages/TrainingPage";
 import ChatbotPage from "./pages/ChatbotPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
@@ -46,8 +47,6 @@ const theme = createTheme({
 });
 
 const App = () => {
-  // const { Toast } = useToast();
-
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryDevtools initialIsOpen={false} />
@@ -78,6 +77,7 @@ const App = () => {
                 </Route>
                 <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
                   <Route path="/tickets/" element={<TicketsPage />} />
+                  <Route path="/training/" element={<TrainingPage />} />
                   <Route path="/knowledges" element={<KnowledgesPage />} />
                   <Route
                     path="/knowledges/new"

@@ -12,8 +12,7 @@ export const setTokenHeader = (token) => {
 export const apiCall = (method, path, data) => {
   return new Promise((resolve, reject) => {
     return axios[method](
-      // `${process.env.REACT_APP_API_URL || "http://localhost:3210"}${path}`,
-      `https://fyp-server-b4yk.onrender.com${path}`,
+      `${process.env.REACT_APP_API_URL || "http://localhost:3210"}${path}`,
       data
     )
       .then((res) => {

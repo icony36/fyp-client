@@ -44,6 +44,8 @@ const Chatbot = () => {
     try {
       const res = await sendMessage({ sender: auth.id, message: input });
 
+      console.log(res);
+
       setMessages((prevState) => [...prevState, ...res]);
     } catch (err) {
       toast.error(err.message);
@@ -70,9 +72,31 @@ const Chatbot = () => {
       );
     }
 
-    return messages.map((message, index) => (
-      <Message key={index} message={message} />
-    ));
+    let replies = [];
+
+    let botRes = [];
+
+    // messages.map((message, index) => {
+    //   if (message.isUser) {
+    //     if (botRes.length > 0) {
+    //       const messages = botRes;
+
+    //       replies.push(<BotMessage key={index} messages={messages} />);
+
+    //       botRes.length = [];
+    //     }
+
+    //     replies.push(<Message key={index} message={message} />);
+    //   } else {
+    //     botRes.push(message.text);
+    //   }
+    // });
+
+    // return replies;
+
+    return messages.map((message, index) => {
+      return <Message key={index} message={message} />;
+    });
   };
 
   return (
@@ -163,7 +187,33 @@ const Message = ({ message }) => {
             : "20px 20px 20px 5px",
         }}
       >
-        <Typography variant="body1">{message.text}</Typography>
+        <Typography>{message.text}</Typography>
+      </Paper>
+    </Box>
+  );
+};
+
+const BotMessage = ({ messages }) => {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "flex-start",
+        mb: 2,
+      }}
+    >
+      <Paper
+        variant="outlined"
+        sx={{
+          p: 2,
+          backgroundColor: "primary.50",
+          borderColor: "primary.50",
+          borderRadius: "20px 20px 20px 5px",
+        }}
+      >
+        {messages.map((el, i) => (
+          <Typography key={i}>{el}</Typography>
+        ))}
       </Paper>
     </Box>
   );

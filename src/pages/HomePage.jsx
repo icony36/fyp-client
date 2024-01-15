@@ -21,7 +21,7 @@ const HomePage = () => {
       case ROLE.admin:
         return "/users";
       case ROLE.staff:
-        return "/knowledges";
+        return "/tickets";
       case ROLE.student:
         return "/chatbot";
       default:

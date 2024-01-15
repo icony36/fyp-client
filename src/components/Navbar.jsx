@@ -21,8 +21,9 @@ const adminPages = [
 ];
 
 const staffPages = [
-  { name: "Knowledges", link: "/knowledges" },
   { name: "Tickets", link: "/tickets" },
+  { name: "Knowledges", link: "/knowledges" },
+  { name: "Training Data", link: "/training" },
   { name: "Profile", link: "/profile" },
 ];
 
