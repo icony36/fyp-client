@@ -44,8 +44,6 @@ const Chatbot = () => {
     try {
       const res = await sendMessage({ sender: auth.id, message: input });
 
-      console.log(res);
-
       setMessages((prevState) => [...prevState, ...res]);
     } catch (err) {
       toast.error(err.message);

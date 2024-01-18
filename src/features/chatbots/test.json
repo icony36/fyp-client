@@ -1,0 +1,52 @@
+{
+  "services": [
+    {
+      "type": "rasa-server",
+      "data": {
+        "projectName": "fyp-rasa",
+        "serviceName": "rasa",
+        "source": {
+          "type": "image",
+          "image": ""
+        },
+        "ports": [
+          {
+            "published": 5005,
+            "target": 5005
+          }
+        ],
+        "mounts": [
+          {
+            "type": "bind",
+            "hostPath": "./",
+            "mountPath": "/app"
+          }
+        ]
+      }
+    },
+    {
+      "type": "rasa-actions",
+      "data": {
+        "projectName": "fyp-rasa",
+        "serviceName": "actions",
+        "source": {
+          "type": "image",
+          "image": ""
+        },
+        "ports": [
+          {
+            "published": 5055,
+            "target": 5055
+          }
+        ],
+        "mounts": [
+          {
+            "type": "bind",
+            "hostPath": "./app/actions",
+            "mountPath": "/app/actions"
+          }
+        ]
+      }
+    }
+  ]
+}
