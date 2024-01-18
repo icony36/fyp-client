@@ -70,28 +70,6 @@ const Chatbot = () => {
       );
     }
 
-    let replies = [];
-
-    let botRes = [];
-
-    // messages.map((message, index) => {
-    //   if (message.isUser) {
-    //     if (botRes.length > 0) {
-    //       const messages = botRes;
-
-    //       replies.push(<BotMessage key={index} messages={messages} />);
-
-    //       botRes.length = [];
-    //     }
-
-    //     replies.push(<Message key={index} message={message} />);
-    //   } else {
-    //     botRes.push(message.text);
-    //   }
-    // });
-
-    // return replies;
-
     return messages.map((message, index) => {
       return <Message key={index} message={message} />;
     });
