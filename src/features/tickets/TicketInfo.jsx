@@ -15,10 +15,12 @@ import Paper, {
   ContentContainer,
   PaperContainer,
   TitleContainer,
+  Title,
 } from "../../ui/Paper";
 import { Heading } from "../../ui/Typography";
 import { TextAreaInput } from "../../ui/Input";
 import { FormGroup } from "../../ui/FormGroup";
+import { Modal } from "../../ui/Modal";
 
 const TicketInfo = () => {
   const { auth } = useContext(AuthContext);
@@ -200,7 +202,7 @@ const TicketInfo = () => {
         <PaperContainer style={{ width: "49%" }}>
           <form className="register-form" onSubmit={handleSubmit}>
             <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
-              Write a Response
+              <Title>Write a Response</Title>
             </TitleContainer>
             <ContentContainer>
               <TextAreaInput
@@ -248,12 +250,13 @@ const TicketInfo = () => {
       >
         <PaperContainer style={{ width: "49%" }}>
           <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
-            Past Responses
+            <Title>Past Responses</Title>
           </TitleContainer>
           <ContentContainer>{renderResponses()}</ContentContainer>
         </PaperContainer>
         {renderResponseForm()}
       </FormGroup>
+      {openModal && <Modal />}
     </>
   );
 };
