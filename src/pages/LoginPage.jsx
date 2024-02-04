@@ -64,6 +64,17 @@ const LoginPage = () => {
               Explore a world of personalized assistance, 24/7 availability, and
               streamlined interactions.
             </Heading>
+            <Heading
+              as="p"
+              style={{
+                fontSize: "12px",
+                fontStyle: "italic",
+              }}
+            >
+              *By continuing to use our services, you consent to the collection
+              and utilization of your information in accordance with the
+              Personal Data Protection Act (PDPA)
+            </Heading>
           </div>
         </HeroContainer>
 
