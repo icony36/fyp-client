@@ -2,20 +2,12 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
-import { FormControl, Typography, Divider } from "@mui/material";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-
 import { AuthContext } from "../../contexts";
-
 import { useToast } from "../../hooks/useToast";
 import { useFetchTickets } from "./useFetchTickets";
 import { useEditTicket } from "./useEditTicket";
 import { useDeleteTicket } from "./useDeleteTicket";
-import {
-  getFullName,
-  sortByNewest,
-  ticketStatusToStr,
-} from "../../utils/helpers";
+import { getFullName, sortByNewest } from "../../utils/helpers";
 import { ROLE, TICKET_TYPE, TICKET_STATUS } from "../../constants";
 import HeadingBar from "../../components/HeadingBar";
 import { Button } from "../../ui/Button";
@@ -58,6 +50,8 @@ const TicketInfo = () => {
     responses: [],
   });
   const [message, setMessage] = useState("");
+
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     if (ticketsStatus === "success") {
@@ -185,8 +179,8 @@ const TicketInfo = () => {
   const renderResponseForm = () => {
     return (
       <>
-        <form className="register-form" onSubmit={handleSubmit}>
-          <PaperContainer>
+        <PaperContainer style={{ width: "49%" }}>
+          <form className="register-form" onSubmit={handleSubmit}>
             <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
               Write a Response
             </TitleContainer>
@@ -206,8 +200,8 @@ const TicketInfo = () => {
                 Send Response
               </Button>
             </ContentContainer>
-          </PaperContainer>
-        </form>
+          </form>
+        </PaperContainer>
       </>
     );
   };
@@ -215,7 +209,11 @@ const TicketInfo = () => {
   return (
     <>
       <HeadingBar title="View Ticket" backLink={"/tickets"}>
-        {!isStudentSession && <Button primary>Modify Priority & Status</Button>}
+        {!isStudentSession && (
+          <Button primary onClick={() => setOpenModal(true)}>
+            Modify Priority & Status
+          </Button>
+        )}
       </HeadingBar>
 
       <Paper title="Ticket Details">
@@ -227,8 +225,10 @@ const TicketInfo = () => {
         <Heading as="h3">{ticketInfo.detail}</Heading>
       </Paper>
 
-      <FormGroup style={{ alignItems: "flex-start" }}>
-        <PaperContainer>
+      <FormGroup
+        style={{ alignItems: "flex-start", justifyContent: "space-between" }}
+      >
+        <PaperContainer style={{ width: "49%" }}>
           <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
             Past Responses
           </TitleContainer>

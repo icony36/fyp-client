@@ -147,7 +147,7 @@ const ProfileEditForm = () => {
         <Paper title="Account Information">
           <FormGroup>
             <Input
-              containerProps={{ style: { width: "620px" } }}
+              containerProps={{ style: { width: "49%" } }}
               id="username"
               name="username"
               label="Username"
@@ -157,7 +157,7 @@ const ProfileEditForm = () => {
             />
 
             <PasswordInput
-              containerProps={{ style: { width: "620px" } }}
+              containerProps={{ style: { width: "49%" } }}
               id="password"
               name="password"
               label="Password"
@@ -170,7 +170,7 @@ const ProfileEditForm = () => {
         <Paper title="User Information">
           <FormGroup style={{ marginBottom: "20px" }}>
             <Input
-              containerProps={{ style: { width: "620px" } }}
+              containerProps={{ style: { width: "49%" } }}
               id="firstName"
               name="firstName"
               label="First Name"
@@ -180,7 +180,7 @@ const ProfileEditForm = () => {
             />
 
             <Input
-              containerProps={{ style: { width: "620px" } }}
+              containerProps={{ style: { width: "49%" } }}
               id="lastName"
               name="lastName"
               label="Last Name"
@@ -192,7 +192,7 @@ const ProfileEditForm = () => {
 
           <FormGroup>
             <Input
-              containerProps={{ style: { width: "620px" } }}
+              containerProps={{ style: { width: "49%" } }}
               id="email"
               label="Email Address"
               type="email"
@@ -203,7 +203,7 @@ const ProfileEditForm = () => {
             />
 
             <Input
-              containerProps={{ style: { width: "620px" } }}
+              containerProps={{ style: { width: "49%" } }}
               id="role"
               label="Role"
               name="role"
@@ -217,7 +217,7 @@ const ProfileEditForm = () => {
           <Paper title="Student Profile">
             <FormGroup style={{ marginBottom: "20px" }}>
               <Input
-                containerProps={{ style: { width: "620px" } }}
+                containerProps={{ style: { width: "49%" } }}
                 id="course"
                 label="Course"
                 name="course"
@@ -226,7 +226,7 @@ const ProfileEditForm = () => {
               />
 
               <Input
-                containerProps={{ style: { width: "620px" } }}
+                containerProps={{ style: { width: "49%" } }}
                 id="outstandingFee"
                 label="Outstanding Fees"
                 name="outstandingFee"
