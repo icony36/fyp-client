@@ -7,7 +7,7 @@ import { useCreateKnowledge } from "./useCreateKnowledge";
 import { useEditKnowledge } from "./useEditKnowledge";
 import { useDeleteKnowledge } from "./useDeleteKnowledge";
 import HeadingBar from "../../components/HeadingBar";
-import { Button } from "../../ui/Button";
+import { Button, CancelButton } from "../../ui/Button";
 import { AddInput, Input, TextAreaInput } from "../../ui/Input";
 import Paper from "../../ui/Paper";
 import { ChipStack, ChipWithDelete } from "../../ui/Chip";
@@ -110,6 +110,8 @@ const KnowledgeForm = ({ isEditSession }) => {
           <Button disabled={isWorking} primary type="submit">
             {isEditSession ? "Save Changes" : "Create"}
           </Button>
+
+          <CancelButton />
         </HeadingBar>
 
         <Paper title="Knowledge Base Details">

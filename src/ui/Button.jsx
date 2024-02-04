@@ -1,5 +1,7 @@
 import styled, { css } from "styled-components";
 
+import React from "react";
+
 export const Button = styled.button`
   min-width: 180px;
   padding: 14px 16px;
@@ -65,3 +67,17 @@ export const Button = styled.button`
       }
     `}
 `;
+
+export const CancelButton = (props) => {
+  const reload = (event) => {
+    event.preventDefault();
+
+    window.location.reload();
+  };
+
+  return (
+    <Button outlined style={{ marginLeft: "16px" }} onClick={reload} {...props}>
+      Cancel
+    </Button>
+  );
+};

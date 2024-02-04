@@ -8,7 +8,7 @@ import { useFetchUsers } from "./useFetchUsers";
 import { useCreateUser } from "./useCreateUser";
 import { useEditUser } from "./useEditUser";
 import HeadingBar from "../../components/HeadingBar";
-import { Button } from "../../ui/Button";
+import { Button, CancelButton } from "../../ui/Button";
 import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { AddInput, Input, PasswordInput, SelectInput } from "../../ui/Input";
@@ -176,6 +176,8 @@ const UserForm = ({ isEditSession }) => {
           <Button primary disabled={isWorking} type="submit">
             {isEditSession ? "Save Changes" : "Create"}
           </Button>
+
+          <CancelButton />
         </HeadingBar>
 
         <Paper title="Account Information">
