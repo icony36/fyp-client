@@ -89,6 +89,15 @@ const Chatbot = () => {
 
   useEffect(() => {
     messagesEndRef?.current.scrollIntoView({ behavior: "smooth" });
+
+    if (messages.length <= 0) {
+      setMessages([
+        {
+          text: "Hello! Welcome to UniBot. How may I assist you today?",
+          isUser: false,
+        },
+      ]);
+    }
   }, [messages]);
 
   const handleSend = (event) => {
