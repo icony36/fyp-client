@@ -13,6 +13,7 @@ import { Input } from "../../ui/Input";
 import { Button } from "../../ui/Button";
 import HeadingBar from "../../components/HeadingBar";
 import { ProfileImage } from "../../ui/ProfileImage";
+import { getFullName } from "../../utils/helpers";
 
 const ChatbotContainer = styled.div`
   display: flex;
@@ -93,7 +94,10 @@ const Chatbot = () => {
     if (messages.length <= 0) {
       setMessages([
         {
-          text: "Hello! Welcome to UniBot. How may I assist you today?",
+          text: `Hello ${getFullName(
+            auth.firstName,
+            auth.lastName
+          )}! Welcome to UniBot. How may I assist you today?`,
           isUser: false,
         },
       ]);
