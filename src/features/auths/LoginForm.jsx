@@ -1,17 +1,9 @@
 import React, { useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  Paper,
-  FormControl,
-  OutlinedInput,
-  InputLabel,
-  InputAdornment,
-  IconButton,
-  TextField,
-  Button,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import { Input, PasswordInput } from "../../ui/Input";
+import { Heading } from "../../ui/Typography";
+import { Button } from "../../ui/Button";
 
 import { AuthContext } from "../../contexts";
 import { useToast } from "../../hooks/useToast";
@@ -27,8 +19,6 @@ const LoginForm = () => {
     username: "",
     password: "",
   });
-
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (event) => {
     setLoginData((prevState) => ({
@@ -53,57 +43,44 @@ const LoginForm = () => {
   return (
     <>
       <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 325, minHeight: 400 }}>
-          <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
-            <h1>Login</h1>
-            <div>
-              <FormControl sx={{ width: "25ch" }} margin="normal">
-                <TextField
-                  id="username"
-                  name="username"
-                  label="Username"
-                  variant="outlined"
-                  value={loginData.username}
-                  onChange={handleChange}
-                  required
-                />
-              </FormControl>
-            </div>
+        <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
+          <div style={{ marginBottom: "60px" }}>
+            <Heading light as="h1">
+              Welcome Back
+            </Heading>
+            <Heading light as="h4">
+              Sign in to your account
+            </Heading>
+          </div>
 
-            <div>
-              <FormControl sx={{ width: "25ch" }} margin="normal">
-                <InputLabel htmlFor="password" required>
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="password"
-                  name="password"
-                  label="Password"
-                  value={loginData.password}
-                  type={showPassword ? "text" : "password"}
-                  onChange={handleChange}
-                  required
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword((show) => !show)}
-                        onMouseDown={(event) => event.preventDefault()}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </div>
+          <div style={{ marginBottom: "24px" }}>
+            <Input
+              sx={{ width: "470px" }}
+              light
+              label="Username *"
+              id="username"
+              name="username"
+              value={loginData.username}
+              onChange={handleChange}
+              required
+            />
 
-            <div style={{ marginTop: "12px" }}>
-              <Button variant="contained" size="large" type="submit">
-                Login
-              </Button>
-            </div>
-          </form>
-        </Paper>
+            <PasswordInput
+              sx={{ width: "470px" }}
+              light
+              id="password"
+              name="password"
+              label="Password *"
+              value={loginData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <Button light type="submit">
+            Login
+          </Button>
+        </form>
       </div>
     </>
   );

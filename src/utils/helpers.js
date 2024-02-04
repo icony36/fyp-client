@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import { TICKET_STATUS } from "../constants";
+import { TICKET_STATUS, ROLE } from "../constants";
 
 export const getNodeId = () => {
   const timestamp = Date.now().toString(36);
@@ -75,4 +75,62 @@ export const sortByOldest = (dateA, dateB) => {
 
 export const sortByNewest = (dateA, dateB) => {
   return new Date(dateB) - new Date(dateA);
+};
+
+export const roleToName = (role) => {
+  switch (role) {
+    case ROLE.admin:
+      return "System Admin";
+    case ROLE.staff:
+      return "Staff";
+    case ROLE.student:
+      return "Student";
+    default:
+      return "";
+  }
+};
+
+export const ticketStatusToName = (status, role) => {
+  switch (status) {
+    case TICKET_STATUS.pendingStaff:
+      if (role === ROLE.student) {
+        return "Pending Reply";
+      }
+
+      return "New Reply";
+    case TICKET_STATUS.pendingStudent:
+      if (role === ROLE.student) {
+        return "New Reply";
+      }
+
+      return "Pending Reply";
+    case TICKET_STATUS.solved:
+      return "Completed";
+    default:
+      return "";
+  }
+};
+
+export const getFullName = (firstName, lastName) => {
+  if (!firstName || !lastName) {
+    return "Unknown";
+  }
+
+  return `${firstName} ${lastName}`;
+};
+
+export const getNameInitial = (str) => {
+  return str
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
+};
+
+export const getActiveFromSuspend = (isSuspended) => {
+  return isSuspended ? "Suspended" : "Active";
+};
+
+export const getCapitalize = (str) => {
+  return str.charAt(0).toUpperCase() + str.slice(1);
 };

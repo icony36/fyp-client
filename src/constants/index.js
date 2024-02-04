@@ -14,3 +14,9 @@ export const TICKET_TYPE = Object.freeze({
   open: "open",
   close: "close",
 });
+
+export const TICKET_PRIORITY = Object.freeze({
+  low: "low",
+  medium: "medium",
+  high: "high",
+});

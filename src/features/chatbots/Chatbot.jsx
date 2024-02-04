@@ -1,19 +1,65 @@
 import React, { useState, useContext, useRef, useEffect } from "react";
-import {
-  Container,
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Grid,
-  Paper,
-} from "@mui/material";
+
+import styled, { css } from "styled-components";
 import SendIcon from "@mui/icons-material/Send";
+import LogoIcon from "../../images/logo-icon.png";
 
 import { AuthContext } from "../../contexts";
 import { ChatContext } from "../../contexts/ChatContext";
 import { useToast } from "../../hooks/useToast";
 import { sendMessage } from "../../services/rasa";
+import { Heading } from "../../ui/Typography";
+import { Input } from "../../ui/Input";
+import { Button } from "../../ui/Button";
+import HeadingBar from "../../components/HeadingBar";
+import { ProfileImage } from "../../ui/ProfileImage";
+
+const ChatbotContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  border: 3px;
+  box-sizing: border-box;
+  padding: 0 40px 40px 40px;
+  justify-content: space-between;
+`;
+
+const ChatbotMessageContainer = styled.div`
+  height: 80vh;
+  overflow-y: scroll;
+`;
+
+const ChatbotActionArea = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: stretch;
+`;
+
+const MessageContainer = styled.div`
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  ${({ isuser }) =>
+    isuser &&
+    css`
+      justify-content: flex-end;
+    `};
+`;
+
+const MessageItem = styled.div`
+  background-color: white;
+  border-radius: 10px 10px 10px 0;
+  width: max-content;
+  margin: 16px 20px 16px 0;
+  padding: 10px 16px;
+
+  ${({ isuser }) =>
+    isuser &&
+    css`
+      border-radius: 10px 10px 0 10px;
+    `}
+`;
 
 const Chatbot = () => {
   const { messages, setMessages, setUserMessage } = useContext(ChatContext);
@@ -57,17 +103,7 @@ const Chatbot = () => {
 
   const renderMessages = () => {
     if (messages.length < 1) {
-      return (
-        <div
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            display: "flex",
-          }}
-        >
-          <Typography>Ask chatbot something...</Typography>
-        </div>
-      );
+      return;
     }
 
     return messages.map((message, index) => {
@@ -77,121 +113,60 @@ const Chatbot = () => {
 
   return (
     <>
-      <div style={{ marginTop: "-20px" }}>
-        <Container className="container">
-          <Box
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              minHeight: "92vh",
-            }}
-          >
-            <Box
-              sx={{ overflow: "hidden", position: "relative", p: 2, flex: 1 }}
-            >
-              <div
-                style={{
-                  height: "80%",
-                  width: "100%",
-                  overflowY: "auto",
-                }}
-              >
-                {renderMessages()}
-                <div ref={messagesEndRef}></div>
-              </div>
-            </Box>
+      <ChatbotContainer>
+        <HeadingBar
+          style={{ margin: "0 -40px" }}
+          title="Chat with UniBot"
+        ></HeadingBar>
+        <ChatbotMessageContainer>
+          {renderMessages()}
+          <div ref={messagesEndRef}></div>
+        </ChatbotMessageContainer>
 
-            <Box
-              sx={{
-                p: 2,
-                backgroundColor: "white",
-                position: "sticky",
-                bottom: 0,
+        <form onSubmit={handleSend}>
+          <ChatbotActionArea>
+            <Input
+              containerProps={{ style: { flex: 1, marginRight: "10px" } }}
+              placeholder="Type a message"
+              value={input}
+              onChange={handleInputChange}
+            />
+
+            <Button
+              style={{
+                height: "52px",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-evenly",
+                padding: "16px",
+                minWidth: "120px",
               }}
+              primary
+              endIcon={<SendIcon />}
+              type="submit"
             >
-              <form onSubmit={handleSend}>
-                <Grid container spacing={2}>
-                  <Grid item xs={10}>
-                    <TextField
-                      fullWidth
-                      size="small"
-                      placeholder="Type a message"
-                      variant="outlined"
-                      value={input}
-                      onChange={handleInputChange}
-                    />
-                  </Grid>
-                  <Grid item xs={2}>
-                    <Button
-                      fullWidth
-                      size="large"
-                      color="primary"
-                      variant="contained"
-                      endIcon={<SendIcon />}
-                      type="submit"
-                    >
-                      Send
-                    </Button>
-                  </Grid>
-                </Grid>
-              </form>
-            </Box>
-          </Box>
-        </Container>
-      </div>
+              Send
+              <SendIcon />
+            </Button>
+          </ChatbotActionArea>
+        </form>
+      </ChatbotContainer>
     </>
   );
 };
 
 const Message = ({ message }) => {
   return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: message.isUser ? "flex-end" : "flex-start",
-        mb: 2,
-      }}
-    >
-      <Paper
-        variant="outlined"
-        sx={{
-          p: 2,
-          backgroundColor: message.isUser ? "secondary.50" : "primary.50",
-          borderColor: message.isUser ? "secondary.50" : "primary.50",
-          borderRadius: message.isUser
-            ? "20px 20px 5px 20px"
-            : "20px 20px 20px 5px",
-        }}
-      >
-        <Typography>{message.text}</Typography>
-      </Paper>
-    </Box>
-  );
-};
-
-const BotMessage = ({ messages }) => {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        justifyContent: "flex-start",
-        mb: 2,
-      }}
-    >
-      <Paper
-        variant="outlined"
-        sx={{
-          p: 2,
-          backgroundColor: "primary.50",
-          borderColor: "primary.50",
-          borderRadius: "20px 20px 20px 5px",
-        }}
-      >
-        {messages.map((el, i) => (
-          <Typography key={i}>{el}</Typography>
-        ))}
-      </Paper>
-    </Box>
+    <MessageContainer isuser={message.isUser}>
+      {!message.isUser && (
+        <ProfileImage>
+          <img src={LogoIcon} alt="Chatbot icon" />
+        </ProfileImage>
+      )}
+      <MessageItem isuser={message.isUser}>
+        <Heading as="h3">{message.text}</Heading>
+      </MessageItem>
+    </MessageContainer>
   );
 };
 

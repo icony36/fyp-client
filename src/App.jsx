@@ -5,13 +5,13 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { blue, pink } from "@mui/material/colors";
+import GlobalStyles from "./GlobalStyles";
 import "./App.css";
 
 import { AuthProvider } from "./contexts";
 import { ChatProvider } from "./contexts/ChatContext";
 import { ROLE } from "./constants";
 
-import Navbar from "./components/Navbar";
 import LoginPage from "./pages/LoginPage";
 import UsersPage from "./pages/UsersPage";
 import UserNewPage from "./pages/UserNewPage";
@@ -44,6 +44,16 @@ const theme = createTheme({
     primary: blue,
     secondary: pink,
   },
+  MuiFormControl: {
+    root: {
+      height: "48px",
+    },
+  },
+  MuiInputBase: {
+    root: {
+      height: "48px",
+    },
+  },
 });
 
 const App = () => {
@@ -54,7 +64,7 @@ const App = () => {
         <AuthProvider>
           <ChatProvider>
             <ThemeProvider theme={theme}>
-              <Navbar />
+              <GlobalStyles />
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route element={<ProtectedRoute />}>
@@ -73,10 +83,10 @@ const App = () => {
                     <ProtectedRoute allowedRoles={[ROLE.staff, ROLE.student]} />
                   }
                 >
+                  <Route path="/tickets/" element={<TicketsPage />} />
                   <Route path="/tickets/:id" element={<TicketPage />} />
                 </Route>
                 <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
-                  <Route path="/tickets/" element={<TicketsPage />} />
                   <Route path="/training/" element={<TrainingPage />} />
                   <Route path="/knowledges" element={<KnowledgesPage />} />
                   <Route

@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef } from "react";
+import React, { useState, useCallback, useRef, useEffect } from "react";
 import ReactFlow, {
   Background,
   Controls,
@@ -37,10 +37,6 @@ const nodeColor = (node) => {
 };
 
 const FlowEditor = ({
-  formData,
-  setFormData,
-  initData,
-  valueName,
   nodeOptions,
   intentOptions,
   responseOptions,
@@ -54,12 +50,34 @@ const FlowEditor = ({
 }) => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [menu, setMenu] = useState(null);
+  const [updatedNode, setUpdatedNode] = useState({});
 
   const menuRef = useRef(null);
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
 
   const { screenToFlowPosition, getEdges } = useReactFlow();
+
+  useEffect(() => {
+    const { id, content } = updatedNode;
+
+    setElements((el) => {
+      const updatedNodes = el.nodes.map((node) => {
+        const newNode = { ...node };
+
+        if (node.id === id) {
+          newNode.data = {
+            ...newNode.data,
+            content,
+          };
+        }
+
+        return newNode;
+      });
+
+      return { ...el, nodes: updatedNodes };
+    });
+  }, [updatedNode]);
 
   const setElementsWithChanges = useCallback(
     (type, updatedElements, ignore = false) => {
@@ -75,13 +93,28 @@ const FlowEditor = ({
     [setElements]
   );
 
+  const getNodeData = useCallback(
+    (additionalData = {}) => {
+      return {
+        ...additionalData,
+        nodeOptions,
+        intentOptions,
+        responseOptions,
+        setUpdatedNode,
+      };
+    },
+    [nodeOptions, intentOptions, responseOptions, setUpdatedNode]
+  );
+
   const addNewNode = useCallback(
-    (nodeType, position, data) => {
+    (nodeType, position, additionalData = {}) => {
+      const data = getNodeData(additionalData);
+
       const newNode = getNewNode(nodeType, position, data);
 
       setElements((el) => ({ ...el, nodes: [...el.nodes, newNode] }));
     },
-    [setElements]
+    [setElements, getNodeData]
   );
 
   const addNewEdge = useCallback(
@@ -165,11 +198,7 @@ const FlowEditor = ({
           y: event.clientY,
         });
 
-        const data = {
-          nodeOptions,
-          intentOptions,
-          responseOptions,
-        };
+        const data = getNodeData();
 
         const newNode = getNewNode("stepNode", position, data);
         const newEdge = getNewEdge(connectingNodeId.current, newNode.id);
@@ -180,13 +209,7 @@ const FlowEditor = ({
         }));
       }
     },
-    [
-      screenToFlowPosition,
-      nodeOptions,
-      intentOptions,
-      responseOptions,
-      setElements,
-    ]
+    [screenToFlowPosition, setElements, getNodeData]
   );
 
   const onDragOver = useCallback((event) => {
@@ -210,15 +233,9 @@ const FlowEditor = ({
         y: event.clientY,
       });
 
-      const data = {
-        nodeOptions,
-        intentOptions,
-        responseOptions,
-      };
-
-      addNewNode(type, position, data);
+      addNewNode(type, position);
     },
-    [reactFlowInstance, nodeOptions, intentOptions, responseOptions, addNewNode]
+    [reactFlowInstance, addNewNode]
   );
 
   const isValidConnection = useCallback(
@@ -378,8 +395,6 @@ const FlowEditor = ({
               onClick={onPaneClick}
               edges={edges}
               setElements={setElements}
-              addNewNode={addNewNode}
-              addNewEdge={addNewEdge}
               getNode={getNode}
               deleteNodes={deleteNodes}
               {...menu}

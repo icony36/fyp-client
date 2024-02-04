@@ -1,23 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { format, formatDistance } from "date-fns";
-
-import {
-  Container,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from "@mui/material";
+import { format } from "date-fns";
 
 import ListActions from "../../components/ListActions";
 import { useFetchKnowledges } from "./useFetchKnowledges";
+import { List, ListCell, ListRow } from "../../ui/List";
+import { OutlinedChip, ChipStack } from "../../ui/Chip";
 
-const header = ["Title", "Created At", "Last Modified"];
+const header = ["Title", "Date Created", "Last Modified", "Tags"];
 
-const KnowledgeList = ({ data }) => {
+const KnowledgeList = () => {
   const navigate = useNavigate();
 
   const { knowledges, isFetching, knowledgesStatus } = useFetchKnowledges();
@@ -30,87 +22,61 @@ const KnowledgeList = ({ data }) => {
     }
   }, [knowledgesStatus, knowledges]);
 
-  const renderRows = () => {
-    if (isFetching) {
-      return (
-        <TableRow>
-          <TableCell>Loading...</TableCell>
-        </TableRow>
-      );
-    }
-
-    if (
-      knowledgesStatus === "error" ||
-      !knowledges ||
-      !knowledges.data ||
-      knowledges.data.length < 1
-    ) {
-      return (
-        <TableRow>
-          <TableCell>No knowledge available</TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      );
-    }
-
+  const renderLabels = (labels) => {
     return (
       <>
-        {knowledges?.data?.map((row, i) => (
-          <TableRow
-            sx={{ cursor: "pointer" }}
-            key={row._id}
-            hover
-            onClick={() => navigate(`/knowledges/${row._id}`)}
-          >
-            <TableCell>{row.title}</TableCell>
-            <TableCell>
-              {format(new Date(row.createdAt), "yyyy/MM/dd")}
-            </TableCell>
-            <TableCell>
-              {formatDistance(new Date(row.updatedAt), new Date())}
-            </TableCell>
-          </TableRow>
-        ))}
+        <ChipStack sx={{ maxWidth: "500px" }}>
+          {labels.map((label, i) => {
+            let marginRight = "";
+
+            if (i !== labels.length - 1) {
+              marginRight = "8px";
+            }
+
+            return <OutlinedChip style={{ marginRight }}>{label}</OutlinedChip>;
+          })}
+        </ChipStack>
       </>
+    );
+  };
+
+  const renderRow = (el) => {
+    return (
+      <ListRow
+        sx={{ cursor: "pointer" }}
+        key={el._id}
+        hover
+        onClick={() => navigate(`/knowledges/${el._id}`)}
+      >
+        <ListCell>{el.title}</ListCell>
+        <ListCell>{format(new Date(el.createdAt), "dd/MM/yyyy")}</ListCell>
+        <ListCell>{format(new Date(el.updatedAt), "dd/MM/yyyy")}</ListCell>
+        <ListCell>{renderLabels(el.labels)}</ListCell>
+      </ListRow>
     );
   };
 
   return (
     <>
-      <div className="list-page">
-        <Container className="container">
-          <ListActions
-            options={searchOptions}
-            isLoading={isFetching}
-            handleSearchClicked={(id) => navigate(`/knowledges/${id}`)}
-            handleButtonClicked={() => navigate("/knowledges/new")}
-            searchLabel="Search by title."
-            buttonLabel="Create Knowledge"
-            isOptionEqualToValue={(option, value) =>
-              option.title === value.title
-            }
-            getOptionLabel={(option) => option.title}
-            searchBarWidth="60ch"
-          />
+      <ListActions
+        options={searchOptions}
+        isLoading={isFetching}
+        handleSearchClicked={(id) => navigate(`/knowledges/${id}`)}
+        handleButtonClicked={() => navigate("/knowledges/new")}
+        buttonLabel="Create Knowledge"
+        isOptionEqualToValue={(option, value) => option.title === value.title}
+        getOptionLabel={(option) => option.title}
+        title="Knowledge Bases"
+      />
 
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }}>
-              <TableHead>
-                <TableRow>
-                  {header.map((header) => (
-                    <TableCell sx={{ fontWeight: "bold" }} key={header}>
-                      {header}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-
-              <TableBody>{renderRows()}</TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
-      </div>
+      <List
+        header={header}
+        data={knowledges?.data}
+        dataStatus={knowledgesStatus}
+        isFetching={isFetching}
+        notFoundMessage="No knowledge available"
+        renderRow={renderRow}
+      />
     </>
   );
 };

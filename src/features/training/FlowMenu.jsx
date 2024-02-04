@@ -12,8 +12,6 @@ const FlowMenu = ({
   bottom,
   edges,
   setElements,
-  addNewNode,
-  addNewEdge,
   getNode,
   deleteNodes,
   ...props

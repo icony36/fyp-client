@@ -1,23 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import {
-  Paper,
-  FormControl,
-  TextField,
-  Button,
-  Stack,
-  Chip,
-  IconButton,
-} from "@mui/material";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-import { AddCircle } from "@mui/icons-material";
-
 import { useToast } from "../../hooks/useToast";
 import { useFetchKnowledges } from "./useFetchKnowledges";
 import { useCreateKnowledge } from "./useCreateKnowledge";
 import { useEditKnowledge } from "./useEditKnowledge";
 import { useDeleteKnowledge } from "./useDeleteKnowledge";
+import HeadingBar from "../../components/HeadingBar";
+import { Button } from "../../ui/Button";
+import { AddInput, Input, TextAreaInput } from "../../ui/Input";
+import Paper from "../../ui/Paper";
+import { ChipStack, ChipWithDelete } from "../../ui/Chip";
 
 const KnowledgeForm = ({ isEditSession }) => {
   const { id } = useParams();
@@ -109,113 +102,70 @@ const KnowledgeForm = ({ isEditSession }) => {
 
   return (
     <>
-      <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 325, minHeight: 500 }}>
-          <form className="register-form" onSubmit={handleSubmit}>
-            <h1>{isEditSession ? "Edit Knowledge" : "Create New Knowledge"}</h1>
-            <div>
-              <FormControl sx={{ width: "100ch" }} margin="normal">
-                <TextField
-                  id="title"
-                  name="title"
-                  label="Title"
-                  variant="outlined"
-                  value={formData.title}
-                  onChange={handleChange}
-                  required
-                />
-              </FormControl>
-            </div>
-
-            <div
-              style={{
-                justifyContent: "space-between",
-                alignItems: "center",
-                display: "flex",
-                width: "100ch",
-                margin: "auto",
-              }}
+      <form className="register-form" onSubmit={handleSubmit}>
+        <HeadingBar
+          title={isEditSession ? "Edit Knowledge" : "Create New Knowledge"}
+          backLink={"/knowledges"}
+        >
+          <Button disabled={isWorking} primary type="submit">
+            {isEditSession ? "Save Changes" : "Create"}
+          </Button>
+          {isEditSession && (
+            <Button
+              disabled={isWorking}
+              outlined
+              style={{ marginLeft: "16px" }}
+              onClick={() => deleteKnowledge(id)}
             >
-              <FormControl sx={{ flex: 1 }} margin="normal">
-                <TextField
-                  id="labels"
-                  label="Labels*"
-                  variant="outlined"
-                  name="labels"
-                  value={label}
-                  onChange={(e) => setLabel(e.target.value)}
-                />
-              </FormControl>
+              Delete
+            </Button>
+          )}
+        </HeadingBar>
 
-              <FormControl>
-                <IconButton size="large" onClick={handleAddLabel}>
-                  <AddCircle fontSize="40" />
-                </IconButton>
-              </FormControl>
-            </div>
-
-            <div>
-              <Stack
-                margin="normal"
-                direction="row"
-                useFlexGap
-                flexWrap="wrap"
-                spacing={1}
-              >
-                {formData.labels.map((el, index) => {
-                  return (
-                    <Chip
-                      onDelete={() => handleRemoveLabel(el)}
-                      key={index}
-                      label={el}
-                    />
-                  );
-                })}
-              </Stack>
-            </div>
-
-            <div>
-              <FormControl sx={{ width: "100ch" }} margin="normal">
-                <TextareaAutosize
-                  id="description"
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  required
-                  minRows={20}
-                  placeholder="Description *"
-                />
-              </FormControl>
-            </div>
-
-            <div style={{ marginTop: "12px" }}>
-              {isEditSession ? (
-                <Button
-                  disabled={isWorking}
-                  variant="contained"
-                  size="large"
-                  color="secondary"
-                  sx={{ marginRight: "8px" }}
-                  onClick={() => deleteKnowledge(id)}
-                >
-                  Delete Knowledge
-                </Button>
-              ) : (
-                <></>
-              )}
-
-              <Button
-                disabled={isWorking}
-                variant="contained"
-                size="large"
-                type="submit"
-              >
-                {isEditSession ? "Update Knowledge" : "Create Knowledge"}
-              </Button>
-            </div>
-          </form>
+        <Paper title="Knowledge Base Details">
+          <Input
+            id="title"
+            name="title"
+            label="Title *"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
         </Paper>
-      </div>
+
+        <Paper title="Knowledge Base Information">
+          <TextAreaInput
+            id="description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            required
+            label="Description *"
+            placeholder="Description"
+            style={{ marginBottom: "20px" }}
+          />
+
+          <AddInput
+            id="labels"
+            label="Tags *"
+            name="labels"
+            value={label}
+            onChange={(e) => setLabel(e.target.value)}
+            handleAdd={handleAddLabel}
+          />
+
+          <ChipStack>
+            {formData.labels?.map((el, index) => (
+              <ChipWithDelete
+                label={el}
+                onDelete={() => handleRemoveLabel(el)}
+                style={{ marginRight: "8px", fontSize: "14px" }}
+                key={index}
+              />
+            ))}
+          </ChipStack>
+        </Paper>
+      </form>
     </>
   );
 };

@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { format, formatDistance } from "date-fns";
+import { format } from "date-fns";
 
-import { Paper, FormControl, Typography, Button, Divider } from "@mui/material";
+import { FormControl, Typography, Divider } from "@mui/material";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 import { AuthContext } from "../../contexts";
@@ -11,8 +11,22 @@ import { useToast } from "../../hooks/useToast";
 import { useFetchTickets } from "./useFetchTickets";
 import { useEditTicket } from "./useEditTicket";
 import { useDeleteTicket } from "./useDeleteTicket";
-import { sortByNewest, ticketStatusToStr } from "../../utils/helpers";
+import {
+  getFullName,
+  sortByNewest,
+  ticketStatusToStr,
+} from "../../utils/helpers";
 import { ROLE, TICKET_TYPE, TICKET_STATUS } from "../../constants";
+import HeadingBar from "../../components/HeadingBar";
+import { Button } from "../../ui/Button";
+import Paper, {
+  ContentContainer,
+  PaperContainer,
+  TitleContainer,
+} from "../../ui/Paper";
+import { Heading } from "../../ui/Typography";
+import { TextAreaInput } from "../../ui/Input";
+import { FormGroup } from "../../ui/FormGroup";
 
 const TicketInfo = () => {
   const { auth } = useContext(AuthContext);
@@ -116,9 +130,9 @@ const TicketInfo = () => {
   const renderResponses = () => {
     if (isFetching) {
       return (
-        <Typography variant="subtitle1" gutterBottom>
+        <Heading as="h3" style={{ textAlign: "center" }}>
           Loading...
-        </Typography>
+        </Heading>
       );
     }
 
@@ -128,9 +142,9 @@ const TicketInfo = () => {
       ticketInfo.responses.length < 1
     ) {
       return (
-        <Typography variant="subtitle1" gutterBottom>
+        <Heading as="h3" style={{ textAlign: "center" }}>
           No response yet
-        </Typography>
+        </Heading>
       );
     }
 
@@ -141,215 +155,114 @@ const TicketInfo = () => {
     return arr.map((el, index) => {
       return (
         <>
-          <div key={index} style={{ marginBottom: "16px" }}>
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Time :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {format(new Date(el.msgAt), "yyyy/MM/dd HH:mm")}
-              </Typography>
-            </div>
+          <PaperContainer
+            key={index}
+            style={{
+              minWidth: "100%",
+              border:
+                el.senderType === ROLE.staff
+                  ? "2px solid var(--color-primary)"
+                  : "2px solid var(--color-light-grey)",
+            }}
+          >
+            <FormGroup style={{ padding: "20px 20px 0 20px" }}>
+              <TitleContainer style={{ padding: 0, borderBottom: "none" }}>
+                {getFullName(el.senderId?.firstName, el.senderId?.lastName)}
+              </TitleContainer>
 
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Sender :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {el.senderType}
-              </Typography>
-            </div>
+              <Heading as="h4" style={{ fontWeight: "bold" }}>
+                {format(new Date(el.msgAt), "dd/MM/yyyy")}
+              </Heading>
+            </FormGroup>
 
-            <div>
-              <Typography textAlign={"left"} variant="subtitle1" gutterBottom>
-                Reponses :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold", textAlign: "left" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {el.message}
-              </Typography>
-            </div>
-
-            <Divider sx={{ marginTop: "16px" }} />
-          </div>
+            <ContentContainer>{el.message}</ContentContainer>
+          </PaperContainer>
         </>
       );
     });
   };
 
-  const renderResponseArea = () => {
-    if (
-      (auth.role === ROLE.staff &&
-        ticketInfo.status === TICKET_STATUS.pendingStaff) ||
-      (auth.role === ROLE.student &&
-        ticketInfo.status === TICKET_STATUS.pendingStudent)
-    ) {
-      return (
-        <>
-          <div className="form-page">
-            <Paper className="paper" sx={{ minWidth: 325, minHeight: 500 }}>
-              <form className="register-form" onSubmit={handleSubmit}>
-                <div>
-                  <Typography
-                    textAlign={"left"}
-                    variant="subtitle1"
-                    gutterBottom
-                  >
-                    Your response :
-                  </Typography>
-                  <FormControl sx={{ width: "100ch" }} margin="normal">
-                    <TextareaAutosize
-                      id="message"
-                      name="message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      required
-                      minRows={20}
-                      placeholder="Type something..."
-                    />
-                  </FormControl>
-                </div>
+  const renderResponseForm = () => {
+    return (
+      <>
+        <form className="register-form" onSubmit={handleSubmit}>
+          <PaperContainer>
+            <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
+              Write a Response
+            </TitleContainer>
+            <ContentContainer>
+              <TextAreaInput
+                containerProps={{ style: { marginBottom: "20px" } }}
+                id="message"
+                name="message"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                required
+                minRows={20}
+                placeholder="Response"
+              />
 
-                <div style={{ marginTop: "12px" }}>
-                  <Button
-                    disabled={isWorking}
-                    variant="contained"
-                    size="large"
-                    type="submit"
-                  >
-                    Response
-                  </Button>
-                </div>
-              </form>
-            </Paper>
-          </div>
-        </>
-      );
-    }
-
-    return <></>;
+              <Button disabled={isWorking} outlined size="large" type="submit">
+                Send Response
+              </Button>
+            </ContentContainer>
+          </PaperContainer>
+        </form>
+      </>
+    );
   };
 
   return (
     <>
-      <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 860, minHeight: 320 }}>
-          <h1>Ticket Info</h1>
+      <HeadingBar title="View Ticket" backLink={"/tickets"}>
+        {!isStudentSession && <Button primary>Modify Priority & Status</Button>}
+      </HeadingBar>
 
-          <div className="profile-group">
-            <Typography variant="subtitle1" gutterBottom>
-              Subject :
-            </Typography>
-            <Typography
-              sx={{ fontWeight: "bold" }}
-              variant="subtitle1"
-              gutterBottom
-            >
-              {ticketInfo.subject}
-            </Typography>
-          </div>
+      <Paper title="Ticket Details">
+        <Heading
+          as="h2"
+          style={{ marginBottom: "20px" }}
+        >{`Subject: ${ticketInfo.subject}`}</Heading>
 
-          <div className="profile-group">
-            <Typography variant="subtitle1" gutterBottom>
-              Created by :
-            </Typography>
-            <Typography
-              sx={{ fontWeight: "bold" }}
-              variant="subtitle1"
-              gutterBottom
-            >
-              {ticketInfo.studentId?.username}
-            </Typography>
-          </div>
+        <Heading as="h3">{ticketInfo.detail}</Heading>
+      </Paper>
 
-          <div className="profile-group">
-            <Typography variant="subtitle1" gutterBottom>
-              Type :
-            </Typography>
-            <Typography
-              sx={{ fontWeight: "bold" }}
-              variant="subtitle1"
-              gutterBottom
-            >
-              {ticketInfo.type?.toUpperCase()}
-            </Typography>
-          </div>
+      <FormGroup style={{ alignItems: "flex-start" }}>
+        <PaperContainer>
+          <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
+            Past Responses
+          </TitleContainer>
+          <ContentContainer>{renderResponses()}</ContentContainer>
+        </PaperContainer>
+        {renderResponseForm()}
+      </FormGroup>
 
-          <div className="profile-group">
-            <Typography variant="subtitle1" gutterBottom>
-              Status :
-            </Typography>
-            <Typography
-              sx={{ fontWeight: "bold" }}
-              variant="subtitle1"
-              gutterBottom
-            >
-              {ticketStatusToStr(ticketInfo.status)}
-            </Typography>
-          </div>
+      {!isStudentSession && (
+        <div style={{ marginTop: "12px" }}>
+          <Button
+            disabled={isWorking}
+            variant="contained"
+            size="large"
+            color="secondary"
+            sx={{ marginRight: "8px" }}
+            onClick={() => deleteTicket(id)}
+          >
+            Delete Ticket
+          </Button>
 
-          <div>
-            <Typography textAlign={"left"} variant="subtitle1" gutterBottom>
-              Description :
-            </Typography>
-            <Typography
-              sx={{ fontWeight: "bold", textAlign: "left" }}
-              variant="subtitle1"
-              gutterBottom
-            >
-              {ticketInfo.detail}
-            </Typography>
-          </div>
-
-          {isStudentSession ? (
-            <></>
-          ) : (
-            <div style={{ marginTop: "12px" }}>
-              <Button
-                disabled={isWorking}
-                variant="contained"
-                size="large"
-                color="secondary"
-                sx={{ marginRight: "8px" }}
-                onClick={() => deleteTicket(id)}
-              >
-                Delete Ticket
-              </Button>
-
-              <Button
-                disabled={isWorking}
-                variant="contained"
-                size="large"
-                sx={{ marginRight: "8px" }}
-                onClick={() => handleChangeType()}
-              >
-                {ticketInfo.type === TICKET_TYPE.close
-                  ? "Open Ticket"
-                  : "Close Ticket"}
-              </Button>
-            </div>
-          )}
-        </Paper>
-      </div>
-
-      {renderResponseArea()}
-
-      <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 860, minHeight: 100 }}>
-          {renderResponses()}
-        </Paper>
-      </div>
+          <Button
+            disabled={isWorking}
+            variant="contained"
+            size="large"
+            sx={{ marginRight: "8px" }}
+            onClick={() => handleChangeType()}
+          >
+            {ticketInfo.type === TICKET_TYPE.close
+              ? "Open Ticket"
+              : "Close Ticket"}
+          </Button>
+        </div>
+      )}
     </>
   );
 };

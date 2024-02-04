@@ -1,88 +1,154 @@
 import React, { useContext } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Typography,
-  Toolbar,
-} from "@mui/material";
-import SmartToyIcon from "@mui/icons-material/SmartToy";
+import styled, { css } from "styled-components";
+import LogoLight from "../images/logo-light.png";
 
 import { AuthContext } from "../contexts";
 import { ROLE } from "../constants";
+import { getNameInitial, roleToName, getFullName } from "../utils/helpers";
 import LogoutButton from "../features/auths/LogoutButton";
+import { Heading } from "../ui/Typography";
+import { ProfileImage } from "../ui/ProfileImage";
 
-const adminPages = [
-  { name: "Users", link: "/users" },
-  { name: "Profile", link: "/profile" },
-];
+const adminPages = [{ name: "Users", url: "/users" }];
 
 const staffPages = [
-  { name: "Tickets", link: "/tickets" },
-  { name: "Knowledges", link: "/knowledges" },
-  { name: "Training Data", link: "/training" },
-  { name: "Profile", link: "/profile" },
+  { name: "Tickets", url: "/tickets" },
+  { name: "Knowledges", url: "/knowledges" },
+  { name: "Training Data", url: "/training" },
 ];
 
 const studentPages = [
-  { name: "Chatbot", link: "/chatbot" },
-  { name: "Profile", link: "/profile" },
+  { name: "Chatbot", url: "/chatbot" },
+  { name: "Tickets", url: "/tickets" },
 ];
+
+const SidebarContainer = styled.div`
+  height: 100%;
+  width: 310px;
+  position: fixed;
+  z-index: 20;
+  top: 0;
+  left: 0;
+  background-color: var(--color-primary-darker);
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const SidebarLink = styled.div`
+  font-family: "Playfair Display";
+  padding: 15px 40px;
+  margin: 0;
+  font-size: 25px;
+  width: 100%;
+  color: var(--color-white);
+  transition: 0.3s;
+
+  &:hover {
+    background-color: var(--color-primary);
+  }
+
+  ${({ isactive }) =>
+    isactive &&
+    css`
+      background-color: var(--color-primary);
+    `}
+`;
+
+const SidebarHome = styled.div`
+  padding: 20px;
+`;
+
+const SidebarEnd = styled.div`
+  display: flex;
+  flex-direction: row;
+  padding: 15px 20px;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 40px;
+`;
+
+const SidebarProfile = styled.div`
+  cursor: pointer;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
 
 const Navbar = () => {
   const { auth } = useContext(AuthContext);
 
-  const renderRoleBasedNav = () => {
+  const navigate = useNavigate();
+
+  const getRoleBasedNav = () => {
     switch (auth.role) {
       case ROLE.admin:
-        return getNavLinks(adminPages);
+        return adminPages;
       case ROLE.staff:
-        return getNavLinks(staffPages);
+        return staffPages;
       case ROLE.student:
-        return getNavLinks(studentPages);
+        return studentPages;
       default:
-        return <></>;
+        return [];
     }
   };
 
-  const getNavLinks = (arr) => {
-    if (arr.length <= 0) return <></>;
-
-    return arr.map((el) => (
-      <Button
-        key={el.name}
-        sx={{ my: 2, color: "#bbdefb", display: "block", fontWeight: "900" }}
+  const renderNavLink = (links) => {
+    return links?.map((link) => (
+      <NavLink
+        key={link.name}
+        style={{
+          display: "flex",
+          alignItems: "stretch",
+          width: "100%",
+          height: "63px",
+        }}
+        to={link.url}
       >
-        <NavLink to={el.link}>{el.name}</NavLink>
-      </Button>
+        {({ isActive }) => (
+          <SidebarLink isactive={isActive ? true : false}>
+            {link.name}
+          </SidebarLink>
+        )}
+      </NavLink>
     ));
   };
 
   return (
-    <AppBar className="navbar" position="sticky">
-      <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <NavLink to="/">
-            <SmartToyIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          </NavLink>
-          {auth.isAuth ? (
-            <>
-              <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-                {renderRoleBasedNav()}
-              </Box>
-              <LogoutButton />
-            </>
-          ) : (
-            <Typography sx={{ fontWeight: "900" }}>
-              Student Service Chatbot
-            </Typography>
-          )}
-        </Toolbar>
-      </Container>
-    </AppBar>
+    <>
+      <SidebarContainer>
+        <div>
+          <SidebarHome>
+            <NavLink to="/">
+              <img src={LogoLight} alt="sidebar logo" />
+            </NavLink>
+          </SidebarHome>
+
+          {renderNavLink(getRoleBasedNav())}
+        </div>
+
+        <SidebarEnd>
+          <SidebarProfile onClick={() => navigate(`/profile`)}>
+            <ProfileImage>
+              {getNameInitial(getFullName(auth?.firstName, auth?.lastName))}
+            </ProfileImage>
+            <div>
+              <Heading as="h3" style={{ color: "white", fontWeight: "bold" }}>
+                {getFullName(auth?.firstName, auth?.lastName)}
+              </Heading>
+              <Heading as="h5" style={{ color: "white" }}>
+                {roleToName(auth.role)}
+              </Heading>
+            </div>
+          </SidebarProfile>
+
+          <LogoutButton />
+        </SidebarEnd>
+      </SidebarContainer>
+    </>
   );
 };
 

@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
-import { Button } from "@mui/material";
+import { IconButton } from "@mui/material";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 import { useToast } from "../../hooks/useToast";
 import { AuthContext } from "../../contexts";
@@ -31,13 +32,14 @@ const LogoutButton = () => {
   };
 
   return (
-    <Button
-      sx={{ color: "white", display: "block", fontWeight: "900" }}
-      variant="text"
+    <IconButton
+      sx={{ color: "#F5871F", backgroundColor: "white" }}
       onClick={handleLogout}
+      size="large"
+      disableRipple
     >
-      Log Out
-    </Button>
+      <LogoutIcon />
+    </IconButton>
   );
 };
 

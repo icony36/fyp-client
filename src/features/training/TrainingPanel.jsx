@@ -18,25 +18,24 @@ const initEdges = [];
 const TrainingPanel = () => {
   const [tab, setTab] = useState(0);
 
-  const [elements, setElements, { past, undo, canUndo, redo, canRedo }] =
-    useUndoable(
-      { nodes: initNodes, edges: initEdges },
-      {
-        behavior: "destroyFuture",
-      }
-    );
+  const [elements, setElements, { undo, canUndo, redo, canRedo }] = useUndoable(
+    { nodes: initNodes, edges: initEdges },
+    {
+      behavior: "destroyFuture",
+    }
+  );
 
-  const initIntent = {
+  const initIntents = {
     name: "",
     examples: [""],
   };
-
-  const [intents, setIntents] = useState([initIntent]);
 
   const initResponses = {
     name: "",
     text: [""],
   };
+
+  const [intents, setIntents] = useState([initIntents]);
 
   const [responses, setResponses] = useState([initResponses]);
 
@@ -48,8 +47,6 @@ const TrainingPanel = () => {
     console.log("Save:");
     console.log(intents);
     console.log(responses);
-    console.log(elements.nodes);
-    console.log(elements.edges);
     console.log(elements);
   };
 
@@ -60,7 +57,7 @@ const TrainingPanel = () => {
           <TextForm
             formData={intents}
             setFormData={setIntents}
-            initData={initIntent}
+            initData={initIntents}
             valueName="examples"
             keyLabel="Intent Name"
             valueLabel="Example"
@@ -71,10 +68,10 @@ const TrainingPanel = () => {
       case 1:
         return (
           <TextForm
-            formData={intents}
-            setFormData={setIntents}
-            initData={initIntent}
-            valueName="examples"
+            formData={responses}
+            setFormData={setResponses}
+            initData={initResponses}
+            valueName="text"
             keyLabel="Response Name"
             valueLabel="Text"
             addNewGroupLabel="Add New Response"
@@ -85,11 +82,6 @@ const TrainingPanel = () => {
         return (
           <ReactFlowProvider>
             <FlowEditor
-              formData={intents}
-              setFormData={setIntents}
-              initData={initIntent}
-              valueName="examples"
-              valueLabel="Step"
               nodeOptions={nodeOptions}
               intentOptions={intents}
               responseOptions={responses}

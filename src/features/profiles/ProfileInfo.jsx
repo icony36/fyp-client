@@ -1,108 +1,84 @@
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { Typography, Card, CardContent, Button } from "@mui/material";
-
 import { AuthContext } from "../../contexts";
 import { useFetchProfile } from "./useFetchProfile";
+import { useFetchStudentProfile } from "./useFetchStudentProfile";
+import HeadingBar from "../../components/HeadingBar";
+import { Button } from "../../ui/Button";
+import Paper from "../../ui/Paper";
+import { FormGroup } from "../../ui/FormGroup";
+import { Info } from "../../ui/Info";
+import { ROLE } from "../../constants";
 
 const ProfileInfo = () => {
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  const { profile, isFetching } = useFetchProfile({
+  const { profile, isFetching: isFetchingProfile } = useFetchProfile({
     id: auth.id,
   });
 
+  const { studentProfile, isFetching: isFetchingStudent } =
+    useFetchStudentProfile({
+      id: auth.id,
+      enabled: auth.role === ROLE.student,
+    });
+
+  const isWorking = isFetchingProfile || isFetchingStudent;
+
   return (
     <>
-      <div className="form-page">
-        <Card className="paper" sx={{ minWidth: 860 }}>
-          <CardContent>
-            <h1>Profile</h1>
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Username :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {profile?.data?.username}
-              </Typography>
-            </div>
+      <HeadingBar title="My Profile">
+        <Button
+          primary
+          disabled={isWorking}
+          onClick={() => navigate(`/profile/edit`)}
+        >
+          Edit
+        </Button>
+      </HeadingBar>
 
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Name :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {`${profile?.data?.firstName ? profile?.data?.firstName : ""} ${
-                  profile?.data?.lastName ? profile?.data?.lastName : ""
-                }`}
-              </Typography>
-            </div>
+      <Paper title="Account Information">
+        <FormGroup>
+          <Info label="Username">{profile?.data?.username}</Info>
+        </FormGroup>
+      </Paper>
 
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Email :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {profile?.data?.email}
-              </Typography>
-            </div>
+      <Paper title="User Information">
+        <FormGroup style={{ marginBottom: "20px" }}>
+          <Info label="First Name">{profile?.data?.firstName}</Info>
+          <Info label="Last Name">{profile?.data?.lastName}</Info>
+        </FormGroup>
 
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Role :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {profile?.data?.role?.toUpperCase()}
-              </Typography>
-            </div>
+        <FormGroup>
+          <Info label="Email Address">{profile?.data?.email}</Info>
+          <Info label="Role">{profile?.data?.role?.toUpperCase()}</Info>
+        </FormGroup>
+      </Paper>
 
-            <div className="profile-group">
-              <Typography variant="subtitle1" gutterBottom>
-                Status :
-              </Typography>
-              <Typography
-                sx={{ fontWeight: "bold" }}
-                variant="subtitle1"
-                gutterBottom
-              >
-                {profile?.data?.isSuspended ? "Suspended" : "Active"}
-              </Typography>
-            </div>
+      {auth.role === ROLE.student && (
+        <Paper title="Student Profile">
+          <FormGroup style={{ marginBottom: "20px" }}>
+            <Info label="Course">{studentProfile?.data?.course}</Info>
+          </FormGroup>
 
-            <div
-              className="profile-group"
-              style={{ marginTop: "40px", justifyContent: "center" }}
-            >
-              <Button
-                disabled={isFetching}
-                variant="contained"
-                size="small"
-                onClick={() => navigate(`/profile/edit`)}
-              >
-                Update
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+          <FormGroup>
+            <Info label="Outstanding Fee">
+              {studentProfile?.data?.outstandingFee}
+            </Info>
+            <Info label="Enrolled Modules">
+              {studentProfile?.data?.enrollments?.map((el, index) => {
+                if (index !== studentProfile.data.enrollments.length - 1) {
+                  return `${el}, `;
+                }
+
+                return el;
+              })}
+            </Info>
+          </FormGroup>
+        </Paper>
+      )}
     </>
   );
 };

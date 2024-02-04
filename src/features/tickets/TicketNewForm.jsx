@@ -1,11 +1,15 @@
 import React, { useState, useContext } from "react";
 
-import { Paper, FormControl, TextField, Button } from "@mui/material";
+import { FormControl, TextField } from "@mui/material";
 import { TextareaAutosize } from "@mui/base/TextareaAutosize";
 
 import { AuthContext } from "../../contexts";
 
 import { useCreateTicket } from "./useCreateTicket";
+import HeadingBar from "../../components/HeadingBar";
+import { Button } from "../../ui/Button";
+import Paper from "../../ui/Paper";
+import { Input, TextAreaInput } from "../../ui/Input";
 
 const TicketNewForm = () => {
   const { auth } = useContext(AuthContext);
@@ -42,51 +46,35 @@ const TicketNewForm = () => {
 
   return (
     <>
-      <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 325, minHeight: 500 }}>
-          <form className="register-form" onSubmit={handleSubmit}>
-            <h1>Create New Ticket</h1>
-            <div>
-              <FormControl sx={{ width: "100ch" }} margin="normal">
-                <TextField
-                  id="subject"
-                  name="subject"
-                  label="Subject"
-                  variant="outlined"
-                  value={formData.subject}
-                  onChange={handleChange}
-                  required
-                />
-              </FormControl>
-            </div>
+      <form className="register-form" onSubmit={handleSubmit}>
+        <HeadingBar title="Create Ticket" backLink={"/tickets"}>
+          <Button disabled={isCreating} primary type="submit">
+            Create
+          </Button>
+        </HeadingBar>
 
-            <div>
-              <FormControl sx={{ width: "100ch" }} margin="normal">
-                <TextareaAutosize
-                  id="detail"
-                  name="detail"
-                  value={formData.detail}
-                  onChange={handleChange}
-                  required
-                  minRows={20}
-                  placeholder="Details *"
-                />
-              </FormControl>
-            </div>
+        <Paper title={"Ticket Details"}>
+          <Input
+            id="subject"
+            name="subject"
+            label="Subject *"
+            value={formData.subject}
+            onChange={handleChange}
+            required
+            style={{ marginBottom: "20px" }}
+          />
 
-            <div style={{ marginTop: "12px" }}>
-              <Button
-                disabled={isCreating}
-                variant="contained"
-                size="large"
-                type="submit"
-              >
-                Create Ticket
-              </Button>
-            </div>
-          </form>
+          <TextAreaInput
+            id="detail"
+            name="detail"
+            value={formData.detail}
+            onChange={handleChange}
+            required
+            label="Description *"
+            placeholder="Description"
+          />
         </Paper>
-      </div>
+      </form>
     </>
   );
 };

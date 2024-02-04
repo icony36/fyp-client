@@ -1,22 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import {
-  Paper,
-  FormControl,
-  OutlinedInput,
-  InputLabel,
-  InputAdornment,
-  IconButton,
-  TextField,
-  Button,
-  Select,
-  MenuItem,
-  Stack,
-  Chip,
-} from "@mui/material";
-import { Visibility, VisibilityOff, AddCircle } from "@mui/icons-material";
-
 import { fetchStudentProfileByUser } from "../../services/studentProfile";
 import { ROLE } from "../../constants";
 import { useToast } from "../../hooks/useToast";
@@ -24,6 +8,12 @@ import { useFetchUsers } from "./useFetchUsers";
 import { useCreateUser } from "./useCreateUser";
 import { useEditUser } from "./useEditUser";
 import { useDeleteUser } from "./useDeleteUser";
+import HeadingBar from "../../components/HeadingBar";
+import { Button } from "../../ui/Button";
+import Paper from "../../ui/Paper";
+import { FormGroup } from "../../ui/FormGroup";
+import { AddInput, Input, PasswordInput, SelectInput } from "../../ui/Input";
+import { ChipStack, ChipWithDelete } from "../../ui/Chip";
 
 const roles = Object.values(ROLE);
 
@@ -66,13 +56,12 @@ const UserForm = ({ isEditSession }) => {
 
   const [formData, setFormData] = useState(defaultValues);
   const [enrollment, setEnrollment] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
 
   useEffect(() => {
     if (isEditSession && usersStatus === "success") {
       setUserToEdit();
     }
-  }, [usersStatus, users]);
+  }, [usersStatus, users, isEditSession]);
 
   const setUserToEdit = async () => {
     const userData = users.data?.filter((el) => el._id === id)[0];
@@ -183,248 +172,146 @@ const UserForm = ({ isEditSession }) => {
 
   return (
     <>
-      <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 700, minHeight: 300 }}>
-          <form className="login-form" onSubmit={handleSubmit}>
-            <h1>{isEditSession ? "Edit User" : "Create User"}</h1>
+      <form onSubmit={handleSubmit}>
+        <HeadingBar
+          title={isEditSession ? "Edit User" : "Create User"}
+          backLink={"/users"}
+        >
+          <Button primary disabled={isWorking} type="submit">
+            {isEditSession ? "Save Changes" : "Create"}
+          </Button>
 
-            <div>
-              <FormControl sx={{ m: "8px", width: "25ch" }}>
-                <TextField
-                  id="username"
-                  label="Username"
-                  variant="outlined"
-                  required
-                  name="userData.username"
-                  value={formData.userData.username}
-                  onChange={handleChange}
-                />
-              </FormControl>
+          {isEditSession && (
+            <Button
+              outlined
+              style={{ marginLeft: "16px" }}
+              disabled={isWorking}
+              onClick={() => deleteUser(id)}
+            >
+              Delete
+            </Button>
+          )}
+        </HeadingBar>
 
-              <FormControl sx={{ m: "8px", width: "25ch" }}>
-                <InputLabel htmlFor="password" required>
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="password"
-                  label="Password"
-                  type={showPassword ? "text" : "password"}
-                  required={!isEditSession}
-                  name="userData.password"
-                  value={formData.userData.password}
-                  onChange={handleChange}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword((show) => !show)}
-                        onMouseDown={(event) => event.preventDefault()}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </div>
+        <Paper title="Account Information">
+          <FormGroup>
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              label="Username *"
+              id="username"
+              name="userData.username"
+              value={formData.userData.username}
+              onChange={handleChange}
+              required
+            />
 
-            <div>
-              <FormControl sx={{ m: "8px", width: "52ch" }}>
-                <TextField
-                  id="email"
-                  label="Email"
-                  type="email"
-                  variant="outlined"
-                  required
-                  name="userData.email"
-                  value={formData.userData.email}
-                  onChange={handleChange}
-                />
-              </FormControl>
-            </div>
-
-            <div>
-              <FormControl sx={{ m: "8px", width: "25ch" }}>
-                <TextField
-                  id="firstName"
-                  label="First Name"
-                  variant="outlined"
-                  required
-                  name="userData.firstName"
-                  value={formData.userData.firstName}
-                  onChange={handleChange}
-                />
-              </FormControl>
-
-              <FormControl sx={{ m: "8px", width: "25ch" }}>
-                <TextField
-                  id="lastName"
-                  label="Last Name"
-                  variant="outlined"
-                  required
-                  name="userData.lastName"
-                  value={formData.userData.lastName}
-                  onChange={handleChange}
-                />
-              </FormControl>
-            </div>
-
-            <div>
-              <FormControl sx={{ m: "8px", width: "25ch" }}>
-                <InputLabel htmlFor="role" required>
-                  Role
-                </InputLabel>
-                <Select
-                  id="role"
-                  label="Role"
-                  name="userData.role"
-                  value={formData.userData.role}
-                  onChange={handleChange}
-                >
-                  {roles.map((role) => {
-                    let text = role.charAt(0).toUpperCase() + role.slice(1);
-
-                    return (
-                      <MenuItem key={role} value={role}>
-                        {text}
-                      </MenuItem>
-                    );
-                  })}
-                </Select>
-              </FormControl>
-
-              <FormControl sx={{ m: "8px", width: "25ch" }}>
-                <InputLabel htmlFor="role" required>
-                  Is Suspended
-                </InputLabel>
-                <Select
-                  id="isSuspended"
-                  label="Is Suspended"
-                  name="userData.isSuspended"
-                  value={formData.userData.isSuspended}
-                  onChange={handleChange}
-                >
-                  <MenuItem key={"false"} value={false}>
-                    No
-                  </MenuItem>
-                  <MenuItem key={"true"} value={true}>
-                    Yes
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </div>
-
-            {formData.userData.role === ROLE.student ? (
-              <>
-                <h1>Student Profile</h1>
-                <div>
-                  <FormControl sx={{ m: "8px", width: "25ch" }}>
-                    <TextField
-                      id="course"
-                      label="Course"
-                      variant="outlined"
-                      required
-                      name="studentData.course"
-                      value={formData.studentData?.course}
-                      onChange={handleChange}
-                    />
-                  </FormControl>
-
-                  <FormControl sx={{ m: "8px", width: "25ch" }}>
-                    <TextField
-                      id="outstandingFee"
-                      label="Outstanding Fee"
-                      variant="outlined"
-                      type="number"
-                      required
-                      name="studentData.outstandingFee"
-                      value={formData.studentData?.outstandingFee}
-                      onChange={handleChange}
-                    />
-                  </FormControl>
-                </div>
-
-                <div
-                  style={{
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                    display: "flex",
-                    width: "54ch",
-                    margin: "auto",
-                  }}
-                >
-                  <FormControl sx={{ m: "8px", flex: 1 }}>
-                    <TextField
-                      id="enrollments"
-                      label="Enrollments"
-                      variant="outlined"
-                      name="studentData.enrollments"
-                      value={enrollment}
-                      onChange={(e) => setEnrollment(e.target.value)}
-                    />
-                  </FormControl>
-
-                  <FormControl>
-                    <IconButton size="large" onClick={handleAddEnrollment}>
-                      <AddCircle fontSize="40" />
-                    </IconButton>
-                  </FormControl>
-                </div>
-
-                <div>
-                  <Stack
-                    sx={{
-                      width: "52ch",
-                      margin: "8px auto",
-                    }}
-                    direction="row"
-                    useFlexGap
-                    flexWrap="wrap"
-                    spacing={1}
-                  >
-                    {formData.studentData?.enrollments.map((el, index) => {
-                      return (
-                        <Chip
-                          onDelete={() => handleRemoveEnrollment(el)}
-                          key={index}
-                          label={el}
-                        />
-                      );
-                    })}
-                  </Stack>
-                </div>
-              </>
-            ) : (
-              <></>
-            )}
-
-            <div style={{ marginTop: "36px" }}>
-              {isEditSession ? (
-                <Button
-                  disabled={isWorking}
-                  variant="contained"
-                  size="large"
-                  color="secondary"
-                  sx={{ marginRight: "8px" }}
-                  onClick={() => deleteUser(id)}
-                >
-                  Delete User
-                </Button>
-              ) : (
-                <></>
-              )}
-
-              <Button
-                disabled={isWorking}
-                variant="contained"
-                size="large"
-                type="submit"
-              >
-                {isEditSession ? "Update User" : "Create New User"}
-              </Button>
-            </div>
-          </form>
+            <PasswordInput
+              containerProps={{ style: { width: "620px" } }}
+              label="Password *"
+              id="password"
+              name="userData.password"
+              value={formData.userData.password}
+              onChange={handleChange}
+              required={!isEditSession}
+            />
+          </FormGroup>
         </Paper>
-      </div>
+
+        <Paper title="User Information">
+          <FormGroup style={{ marginBottom: "20px" }}>
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="firstName"
+              label="First Name * "
+              required
+              name="userData.firstName"
+              value={formData.userData.firstName}
+              onChange={handleChange}
+            />
+
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="lastName"
+              label="Last Name *"
+              required
+              name="userData.lastName"
+              value={formData.userData.lastName}
+              onChange={handleChange}
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="email"
+              label="Email *"
+              type="email"
+              required
+              name="userData.email"
+              value={formData.userData.email}
+              onChange={handleChange}
+            />
+
+            <SelectInput
+              containerProps={{ style: { width: "620px" } }}
+              id="role"
+              label="Role *"
+              name="userData.role"
+              value={formData.userData.role}
+              onChange={handleChange}
+              options={roles}
+              capitalizeOption
+            />
+          </FormGroup>
+        </Paper>
+
+        {formData.userData.role === ROLE.student && (
+          <Paper title="Student Information">
+            <FormGroup style={{ marginBottom: "20px" }}>
+              <Input
+                containerProps={{ style: { width: "620px" } }}
+                id="course"
+                label="Course *"
+                required
+                name="studentData.course"
+                value={formData.studentData?.course}
+                onChange={handleChange}
+              />
+
+              <Input
+                containerProps={{ style: { width: "620px" } }}
+                id="outstandingFee"
+                label="Outstanding Fee"
+                type="number"
+                required
+                name="studentData.outstandingFee"
+                value={formData.studentData?.outstandingFee}
+                onChange={handleChange}
+              />
+            </FormGroup>
+
+            <AddInput
+              id="enrollments"
+              label="Enrollments"
+              name="studentData.enrollments"
+              value={enrollment}
+              onChange={(e) => setEnrollment(e.target.value)}
+              handleAdd={handleAddEnrollment}
+            />
+
+            <ChipStack>
+              {formData.studentData?.enrollments.map((el, index) => (
+                <ChipWithDelete
+                  key={index}
+                  label={el}
+                  onDelete={() => handleRemoveEnrollment(el)}
+                  style={{ marginRight: "8px" }}
+                />
+              ))}
+            </ChipStack>
+          </Paper>
+        )}
+      </form>
     </>
   );
 };

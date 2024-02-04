@@ -1,20 +1,29 @@
 import React from "react";
 import { toast } from "react-hot-toast";
 
-import { Toolbar, Autocomplete, TextField, Button } from "@mui/material";
+import styled from "styled-components";
+import { Heading } from "../ui/Typography";
+import SearchBar from "../ui/SearchBar";
+import { Button } from "../ui/Button";
+import { HeadingContainer } from "../ui/HeadingContainer";
+
+const ActionArea = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const ListActions = ({
+  title,
   options,
   isLoading,
   searchKey,
   handleSearchClicked,
   handleButtonClicked,
-  searchLabel,
   buttonLabel,
   isOptionEqualToValue,
   getOptionLabel,
-  searchBarWidth = "40ch",
   shouldHideButton,
+  children,
 }) => {
   const onChange = (event, value) => {
     if (!value) {
@@ -30,28 +39,29 @@ const ListActions = ({
   };
 
   return (
-    <Toolbar
-      sx={{ justifyContent: "space-between", margin: "32px 0" }}
-      disableGutters
-    >
-      <Autocomplete
-        sx={{ width: searchBarWidth }}
-        isOptionEqualToValue={isOptionEqualToValue}
-        getOptionLabel={getOptionLabel}
-        options={options}
-        loading={isLoading}
-        renderInput={(params) => <TextField {...params} label={searchLabel} />}
-        onChange={onChange}
-      />
+    <HeadingContainer>
+      <Heading as="h1">{title}</Heading>
+      <ActionArea>
+        <SearchBar
+          isOptionEqualToValue={isOptionEqualToValue}
+          getOptionLabel={getOptionLabel}
+          options={options}
+          loading={isLoading}
+          onChange={onChange}
+          sx={{ marginRight: "16px" }}
+        />
 
-      {shouldHideButton ? (
-        <></>
-      ) : (
-        <Button sx={{ m: 4 }} variant="contained" onClick={handleButtonClicked}>
-          {buttonLabel}
-        </Button>
-      )}
-    </Toolbar>
+        {shouldHideButton ? (
+          <></>
+        ) : (
+          <Button condensed primary onClick={handleButtonClicked}>
+            {buttonLabel}
+          </Button>
+        )}
+
+        {children}
+      </ActionArea>
+    </HeadingContainer>
   );
 };
 

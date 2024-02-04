@@ -3,13 +3,18 @@ import { Outlet } from "react-router-dom";
 
 import { useToast } from "../hooks/useToast";
 
+import Navbar from "../components/Navbar";
+
 const AppLayout = () => {
   const { Toast } = useToast();
 
   return (
     <>
       <Toast />
-      <Outlet />
+      <Navbar />
+      <div className="sidebar-content">
+        <Outlet />
+      </div>
     </>
   );
 };

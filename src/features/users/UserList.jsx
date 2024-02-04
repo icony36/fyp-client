@@ -1,22 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
-import {
-  Button,
-  Container,
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-} from "@mui/material";
+import styled, { css } from "styled-components";
 
 import { useFetchUsers } from "./useFetchUsers";
 import { useSuspendUser } from "./useSuspendUser";
 import ListActions from "../../components/ListActions";
+import { List, ListRow, ListCell } from "../../ui/List";
+import { Button } from "../../ui/Button";
+import { ProfileImage } from "../../ui/ProfileImage";
+import {
+  getActiveFromSuspend,
+  getNameInitial,
+  getFullName,
+  roleToName,
+} from "../../utils/helpers";
 
-const header = ["Username", "Name", "Role", ""];
+const header = ["User", "Role", "Status", "Action"];
+
+const ProfileArea = styled.div`
+  display: flex;
+`;
+
+const SuspendIcon = styled.div`
+  border-radius: 50%;
+  height: 16px;
+  width: 16px;
+  margin-right: 12px;
+  background-color: var(--color-green);
+
+  ${({ isSuspended }) =>
+    isSuspended &&
+    css`
+      background-color: var(--color-red);
+    `}
+`;
 
 const UsersList = () => {
   const navigate = useNavigate();
@@ -38,104 +55,96 @@ const UsersList = () => {
     suspendUser({ userData: { isSuspended: shouldSuspend }, id });
   };
 
-  const renderRows = () => {
-    if (isFetching || usersStatus === "error") {
-      return (
-        <TableRow>
-          <TableCell>Loading...</TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      );
-    }
-
-    if (!users || !users.data || users.data.length < 1) {
-      return (
-        <TableRow>
-          <TableCell>No user available</TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
-        </TableRow>
-      );
-    }
+  const getSuspendCell = (isSuspended) => {
+    const str = getActiveFromSuspend(isSuspended)?.toUpperCase();
 
     return (
-      <>
-        {users.data?.map((row) => (
-          <TableRow
-            sx={{ cursor: "pointer" }}
-            key={row._id}
-            hover
-            onClick={() => navigate(`/users/${row._id}`)}
-          >
-            <TableCell>{row.username}</TableCell>
-            <TableCell>{`${row.firstName} ${row.lastName}`}</TableCell>
-            <TableCell>{row.role?.toUpperCase()}</TableCell>
-            <TableCell style={{ textAlign: "center" }}>
-              {row.isSuspended ? (
-                <Button
-                  sx={{ width: "15ch" }}
-                  size="small"
-                  variant="contained"
-                  disabled={isSuspending}
-                  onClick={(e) => handleSuspend(e, false, row._id)}
-                >
-                  Unsuspend
-                </Button>
-              ) : (
-                <Button
-                  sx={{ width: "15ch" }}
-                  size="small"
-                  color="secondary"
-                  variant="contained"
-                  disabled={isSuspending}
-                  onClick={(e) => handleSuspend(e, true, row._id)}
-                >
-                  Suspend
-                </Button>
-              )}
-            </TableCell>
-          </TableRow>
-        ))}
-      </>
+      <div style={{ display: "flex" }}>
+        <SuspendIcon isSuspended={isSuspended} />
+        {str}
+      </div>
+    );
+  };
+
+  const renderRow = (el) => {
+    return (
+      <ListRow key={el._id}>
+        <ListCell>
+          <ProfileArea>
+            <ProfileImage primary>
+              {getNameInitial(getFullName(el.firstName, el.lastName))}
+            </ProfileImage>
+            <div>
+              <div style={{ fontSize: "17px" }}>
+                {getFullName(el.firstName, el.lastName)}
+              </div>
+              <div style={{ fontWeight: "500" }}>{el.username}</div>
+            </div>
+          </ProfileArea>
+        </ListCell>
+        <ListCell>{roleToName(el.role)?.toUpperCase()}</ListCell>
+        <ListCell>{getSuspendCell(el.isSuspended)}</ListCell>
+        <ListCell>
+          <div>
+            <Button
+              small
+              condensed
+              outlined
+              onClick={() => navigate(`/users/${el._id}`)}
+              style={{ marginRight: "8px" }}
+            >
+              View
+            </Button>
+            {el.isSuspended ? (
+              <Button
+                small
+                condensed
+                outlined
+                disabled={isSuspending}
+                onClick={(e) => handleSuspend(e, false, el._id)}
+              >
+                Unsuspend
+              </Button>
+            ) : (
+              <Button
+                small
+                condensed
+                outlined
+                disabled={isSuspending}
+                onClick={(e) => handleSuspend(e, true, el._id)}
+              >
+                Suspend
+              </Button>
+            )}
+          </div>
+        </ListCell>
+      </ListRow>
     );
   };
 
   return (
     <>
-      <div className="list-page">
-        <Container className="container">
-          <ListActions
-            options={searchOptions}
-            isLoading={isFetching}
-            handleSearchClicked={(id) => navigate(`/users/${id}`)}
-            handleButtonClicked={() => navigate("/users/new")}
-            searchLabel="Search by username"
-            buttonLabel="Create User"
-            isOptionEqualToValue={(option, value) =>
-              option.username === value.username
-            }
-            getOptionLabel={(option) => option.username}
-          />
+      <ListActions
+        title="Users"
+        options={searchOptions}
+        isLoading={isFetching}
+        handleSearchClicked={(id) => navigate(`/users/${id}`)}
+        handleButtonClicked={() => navigate("/users/new")}
+        buttonLabel="Create User"
+        isOptionEqualToValue={(option, value) =>
+          option.username === value.username
+        }
+        getOptionLabel={(option) => option.username}
+      />
 
-          <TableContainer>
-            <Table sx={{ minWidth: 650 }}>
-              <TableHead>
-                <TableRow>
-                  {header.map((header) => (
-                    <TableCell sx={{ fontWeight: "bold" }} key={header}>
-                      {header}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>{renderRows()}</TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
-      </div>
+      <List
+        header={header}
+        data={users?.data}
+        dataStatus={usersStatus}
+        isFetching={isFetching}
+        notFoundMessage="No user available"
+        renderRow={renderRow}
+      />
     </>
   );
 };

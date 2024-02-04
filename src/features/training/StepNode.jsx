@@ -1,16 +1,26 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 
 import "reactflow/dist/style.css";
 import { Card, CardContent, TextField, MenuItem } from "@mui/material";
 
-const StepNode = ({ data, isConnectable, selected }) => {
-  const { nodeOptions, intentOptions, responseOptions } = data;
+const StepNode = ({ id, data, isConnectable, selected }) => {
+  const { setUpdatedNode, nodeOptions, intentOptions, responseOptions } = data;
 
-  const [nodeType, setNodeType] = useState("Intent");
+  const [contentType, setContentType] = useState("Intent");
+  const [contentValue, setContentValue] = useState("");
+
+  useEffect(() => {
+    setUpdatedNode({ id, content: { contentType, contentValue } });
+  }, [contentType, contentValue, id, setUpdatedNode]);
+
+  const handleContentTypeChanged = (value) => {
+    setContentType(value);
+    setContentValue("");
+  };
 
   const renderOptions = () => {
-    switch (nodeType) {
+    switch (contentType) {
       case "Intent":
         if (intentOptions.length <= 0) {
           return (
@@ -64,11 +74,11 @@ const StepNode = ({ data, isConnectable, selected }) => {
               sx={{ width: "15ch" }}
               size="small"
               className="nodrag"
-              id="nodeType"
+              id="contentType"
               label="Type"
-              name="nodeType"
-              value={nodeType}
-              onChange={(e) => setNodeType(e.target.value)}
+              name="contentType"
+              value={contentType}
+              onChange={(e) => handleContentTypeChanged(e.target.value)}
             >
               {nodeOptions.map((el, index) => {
                 return (
@@ -81,16 +91,17 @@ const StepNode = ({ data, isConnectable, selected }) => {
           </div>
 
           <div style={{ marginTop: "8px" }}>
-            {nodeType ? (
+            {contentType ? (
               <TextField
                 select
                 sx={{ width: "15ch" }}
                 size="small"
                 className="nodrag"
                 id="step"
-                label={nodeType}
+                label={contentType}
                 name="step"
-                value={""}
+                value={contentValue}
+                onChange={(e) => setContentValue(e.target.value)}
               >
                 {renderOptions()}
               </TextField>

@@ -1,31 +1,48 @@
 import React, { useState, useContext, useEffect } from "react";
 
-import {
-  Paper,
-  FormControl,
-  OutlinedInput,
-  InputLabel,
-  InputAdornment,
-  IconButton,
-  TextField,
-  Button,
-} from "@mui/material";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
-
 import { AuthContext } from "../../contexts";
 import { useFetchProfile } from "./useFetchProfile";
 import { useEditProfile } from "./useEditProfile";
+import { useFetchStudentProfile } from "./useFetchStudentProfile";
+import { useEditStudentProfile } from "./useEditStudentProfile";
+import { ROLE } from "../../constants";
+import HeadingBar from "../../components/HeadingBar";
+import { Button } from "../../ui/Button";
+import Paper from "../../ui/Paper";
+import { FormGroup } from "../../ui/FormGroup";
+import { AddInput, Input, PasswordInput } from "../../ui/Input";
+import { ChipStack, ChipWithDelete } from "../../ui/Chip";
 
 const ProfileEditForm = () => {
   const { auth } = useContext(AuthContext);
 
-  const { profile, isFetching, profileStatus } = useFetchProfile({
+  const {
+    profile,
+    isFetching: isFechingProfile,
+    profileStatus,
+  } = useFetchProfile({
     id: auth.id,
   });
 
-  const { editProfile, isEditing } = useEditProfile();
+  const { editProfile, isEditing: isEditingProfile } = useEditProfile();
 
-  const isWorking = isFetching || isEditing;
+  const {
+    studentProfile,
+    isFetching: isFetchingStudent,
+    studentProfileStatus,
+  } = useFetchStudentProfile({
+    id: auth.id,
+    enabled: auth.role === ROLE.student,
+  });
+
+  const { editStudentProfile, isEditing: isEditingStudent } =
+    useEditStudentProfile();
+
+  const isWorking =
+    isFechingProfile ||
+    isEditingProfile ||
+    isFetchingStudent ||
+    isEditingStudent;
 
   const [profileData, setProfileData] = useState({
     username: "",
@@ -33,9 +50,15 @@ const ProfileEditForm = () => {
     firstName: "",
     lastName: "",
     email: "",
+    role: "",
   });
 
-  const [showPassword, setShowPassword] = useState(false);
+  const [studentData, setStudentData] = useState({
+    course: "",
+    outstandingFee: 0,
+    enrollments: [],
+  });
+  const [enrollment, setEnrollment] = useState("");
 
   useEffect(() => {
     if (profileStatus === "success") {
@@ -45,14 +68,48 @@ const ProfileEditForm = () => {
         firstName: profile?.data?.firstName,
         lastName: profile?.data?.lastName,
         email: profile?.data?.email,
+        role: profile?.data?.role,
       }));
     }
   }, [profile, profileStatus]);
+
+  useEffect(() => {
+    if (studentProfileStatus === "success") {
+      setStudentData((prevState) => ({
+        ...prevState,
+        course: studentProfile?.data?.course,
+        outstandingFee: studentProfile?.data?.outstandingFee,
+        enrollments: studentProfile?.data?.enrollments,
+      }));
+    }
+  }, [studentProfile, studentProfileStatus]);
 
   const handleChange = (event) => {
     setProfileData((prevState) => ({
       ...prevState,
       [event.target.name]: event.target.value,
+    }));
+  };
+
+  const handleAddEnrollment = () => {
+    if (!enrollment) return;
+
+    setStudentData((prevState) => ({
+      ...prevState,
+      enrollments: [...prevState.enrollments, enrollment],
+    }));
+
+    setEnrollment("");
+  };
+
+  const handleRemoveEnrollment = (data) => {
+    const arr = studentData.enrollments;
+    const index = arr.indexOf(data);
+    arr.splice(index, 1);
+
+    setStudentData((prevState) => ({
+      ...prevState,
+      enrollments: arr,
     }));
   };
 
@@ -67,107 +124,139 @@ const ProfileEditForm = () => {
       delete toSubmit.password;
     }
 
-    editProfile({ profileData: toSubmit, id: auth.id });
+    await editProfile({ profileData: toSubmit, id: auth.id });
+
+    if (auth.role === ROLE.student) {
+      const toSubmitStudent = {
+        ...studentData,
+      };
+
+      editStudentProfile({ profileData: toSubmitStudent, id: auth.id });
+    }
   };
 
   return (
     <>
-      <div className="form-page">
-        <Paper className="paper" sx={{ minWidth: 325, minHeight: 400 }}>
-          <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
-            <h1>Edit Profile</h1>
-            <div>
-              <FormControl sx={{ width: "25ch" }} margin="normal">
-                <TextField
-                  id="username"
-                  name="username"
-                  label="Username"
-                  variant="outlined"
-                  value={profileData.username}
-                  onChange={handleChange}
-                  required
-                />
-              </FormControl>
+      <form onSubmit={handleSubmit}>
+        <HeadingBar title="Edit My Profile" backLink={"/profile"}>
+          <Button primary disabled={isWorking} type="submit">
+            Save Changes
+          </Button>
+        </HeadingBar>
 
-              <FormControl sx={{ width: "25ch" }} margin="normal">
-                <InputLabel htmlFor="password" required>
-                  Password
-                </InputLabel>
-                <OutlinedInput
-                  id="password"
-                  name="password"
-                  label="Password"
-                  value={profileData.password}
-                  type={showPassword ? "text" : "password"}
-                  onChange={handleChange}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => setShowPassword((show) => !show)}
-                        onMouseDown={(event) => event.preventDefault()}
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                />
-              </FormControl>
-            </div>
+        <Paper title="Account Information">
+          <FormGroup>
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="username"
+              name="username"
+              label="Username"
+              value={profileData.username}
+              onChange={handleChange}
+              required
+            />
 
-            <div>
-              <FormControl sx={{ width: "25ch" }} margin="normal">
-                <TextField
-                  id="firstName"
-                  name="firstName"
-                  label="First Name"
-                  variant="outlined"
-                  value={profileData.firstName}
-                  onChange={handleChange}
-                  required
-                />
-              </FormControl>
-
-              <FormControl sx={{ width: "25ch" }} margin="normal">
-                <TextField
-                  id="lastName"
-                  name="lastName"
-                  label="Last Name"
-                  variant="outlined"
-                  value={profileData.lastName}
-                  onChange={handleChange}
-                  required
-                />
-              </FormControl>
-            </div>
-
-            <div>
-              <FormControl sx={{ m: "8px", width: "52ch" }}>
-                <TextField
-                  id="email"
-                  label="Email"
-                  type="email"
-                  variant="outlined"
-                  required
-                  name="email"
-                  value={profileData.email}
-                  onChange={handleChange}
-                />
-              </FormControl>
-            </div>
-
-            <div style={{ marginTop: "12px" }}>
-              <Button
-                disabled={isWorking}
-                variant="contained"
-                size="large"
-                type="submit"
-              >
-                Update
-              </Button>
-            </div>
-          </form>
+            <PasswordInput
+              containerProps={{ style: { width: "620px" } }}
+              id="password"
+              name="password"
+              label="Password"
+              value={profileData.password}
+              onChange={handleChange}
+            />
+          </FormGroup>
         </Paper>
-      </div>
+
+        <Paper title="User Information">
+          <FormGroup style={{ marginBottom: "20px" }}>
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="firstName"
+              name="firstName"
+              label="First Name"
+              value={profileData.firstName}
+              onChange={handleChange}
+              required
+            />
+
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="lastName"
+              name="lastName"
+              label="Last Name"
+              value={profileData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </FormGroup>
+
+          <FormGroup>
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="email"
+              label="Email Address"
+              type="email"
+              required
+              name="email"
+              value={profileData.email}
+              onChange={handleChange}
+            />
+
+            <Input
+              containerProps={{ style: { width: "620px" } }}
+              id="role"
+              label="Role"
+              name="role"
+              value={profileData.role.toUpperCase()}
+              disabled
+            />
+          </FormGroup>
+        </Paper>
+
+        {auth.role === ROLE.student && (
+          <Paper title="Student Profile">
+            <FormGroup style={{ marginBottom: "20px" }}>
+              <Input
+                containerProps={{ style: { width: "620px" } }}
+                id="course"
+                label="Course"
+                name="course"
+                value={studentData.course}
+                disabled
+              />
+
+              <Input
+                containerProps={{ style: { width: "620px" } }}
+                id="outstandingFee"
+                label="Outstanding Fees"
+                name="outstandingFee"
+                value={studentData.outstandingFee}
+                disabled
+              />
+            </FormGroup>
+
+            <AddInput
+              id="enrollments"
+              label="Enrolled Modules"
+              name="studentData.enrollments"
+              value={enrollment}
+              onChange={(e) => setEnrollment(e.target.value)}
+              handleAdd={handleAddEnrollment}
+            />
+
+            <ChipStack>
+              {studentData?.enrollments?.map((el, index) => (
+                <ChipWithDelete
+                  key={index}
+                  label={el}
+                  onDelete={() => handleRemoveEnrollment(el)}
+                  style={{ marginRight: "8px" }}
+                />
+              ))}
+            </ChipStack>
+          </Paper>
+        )}
+      </form>
     </>
   );
 };
