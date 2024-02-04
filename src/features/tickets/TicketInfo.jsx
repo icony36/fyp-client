@@ -121,6 +121,10 @@ const TicketInfo = () => {
     setMessage("");
   };
 
+  const compareName = (firstName1, firstName2, lastName1, lastName2) => {
+    return firstName1 === firstName2 && lastName1 === lastName2;
+  };
+
   const renderResponses = () => {
     if (isFetching) {
       return (
@@ -164,7 +168,17 @@ const TicketInfo = () => {
             >
               <TitleContainer style={{ padding: 0, borderBottom: "none" }}>
                 <Heading as="h2" style={{ fontWeight: "600" }}>
-                  {getFullName(el.senderId?.firstName, el.senderId?.lastName)}
+                  {compareName(
+                    el.senderId?.firstName,
+                    auth.firstName,
+                    el.senderId?.lastName,
+                    auth.lastName
+                  )
+                    ? "You"
+                    : getFullName(
+                        el.senderId?.firstName,
+                        el.senderId?.lastName
+                      )}
                 </Heading>
               </TitleContainer>
 
