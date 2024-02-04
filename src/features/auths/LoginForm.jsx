@@ -44,7 +44,7 @@ const LoginForm = () => {
     <>
       <div className="form-page">
         <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "60px" }}>
+          <div style={{ marginBottom: "60px", textAlign: "center" }}>
             <Heading light as="h1">
               Welcome Back
             </Heading>
