@@ -26,14 +26,18 @@ const KnowledgeList = () => {
     return (
       <>
         <ChipStack sx={{ maxWidth: "500px" }}>
-          {labels.map((label, i) => {
+          {labels.map((label, index) => {
             let marginRight = "";
 
-            if (i !== labels.length - 1) {
+            if (index !== labels.length - 1) {
               marginRight = "8px";
             }
 
-            return <OutlinedChip style={{ marginRight }}>{label}</OutlinedChip>;
+            return (
+              <OutlinedChip key={index} style={{ marginRight }}>
+                {label}
+              </OutlinedChip>
+            );
           })}
         </ChipStack>
       </>

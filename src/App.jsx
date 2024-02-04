@@ -29,6 +29,7 @@ import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./pages/ProtectedRoute";
 import UserPage from "./pages/UserPage";
+import KnowledgePage from "./pages/KnowledgePage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -72,6 +73,7 @@ const App = () => {
                 <Route path="/training/" element={<TrainingPage />} />
                 <Route path="/knowledges" element={<KnowledgesPage />} />
                 <Route path="/knowledges/new" element={<KnowledgeNewPage />} />
+                <Route path="/knowledges/:id" element={<KnowledgePage />} />
                 <Route
                   path="/knowledges/:id/edit"
                   element={<KnowledgeEditPage />}

@@ -10,11 +10,14 @@ export const PaperContainer = styled.div`
 `;
 
 export const TitleContainer = styled.div`
+  border-bottom: 2px solid var(--color-light-grey);
+  padding: 20px;
+`;
+
+export const Title = styled.div`
   font-family: "Playfair Display";
   font-weight: 600;
   font-size: 25px;
-  border-bottom: 2px solid var(--color-light-grey);
-  padding: 20px;
 `;
 
 export const ContentContainer = styled.div`
@@ -24,7 +27,11 @@ export const ContentContainer = styled.div`
 const Paper = ({ children, title }) => {
   return (
     <PaperContainer>
-      {title && <TitleContainer>{title}</TitleContainer>}
+      {title && (
+        <TitleContainer>
+          <Title>{title}</Title>
+        </TitleContainer>
+      )}
       <ContentContainer>{children}</ContentContainer>
     </PaperContainer>
   );

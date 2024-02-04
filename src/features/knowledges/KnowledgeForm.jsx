@@ -110,16 +110,6 @@ const KnowledgeForm = ({ isEditSession }) => {
           <Button disabled={isWorking} primary type="submit">
             {isEditSession ? "Save Changes" : "Create"}
           </Button>
-          {isEditSession && (
-            <Button
-              disabled={isWorking}
-              outlined
-              style={{ marginLeft: "16px" }}
-              onClick={() => deleteKnowledge(id)}
-            >
-              Delete
-            </Button>
-          )}
         </HeadingBar>
 
         <Paper title="Knowledge Base Details">

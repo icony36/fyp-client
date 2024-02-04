@@ -98,7 +98,7 @@ const Chatbot = () => {
         },
       ]);
     }
-  }, [messages]);
+  }, [messages, setMessages]);
 
   const handleSend = (event) => {
     event.preventDefault();

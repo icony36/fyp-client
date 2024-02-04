@@ -104,7 +104,7 @@ const TicketGrid = () => {
 
                 {getStatusChip(el.status)}
               </CardTitleContainer>
-              <CardSubtitleContainer>Data Created</CardSubtitleContainer>
+              <CardSubtitleContainer>Date Created</CardSubtitleContainer>
               <CardContentContainer>
                 <Heading as="h3" style={{ fontWeight: "600" }}>
                   {format(new Date(el.createdAt), "dd MMM yyyy").toUpperCase()}
