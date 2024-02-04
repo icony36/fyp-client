@@ -159,9 +159,13 @@ const TicketInfo = () => {
                   : "2px solid var(--color-light-grey)",
             }}
           >
-            <FormGroup style={{ padding: "20px 20px 0 20px" }}>
+            <FormGroup
+              style={{ padding: "20px 20px 0 20px", alignItems: "flex-start" }}
+            >
               <TitleContainer style={{ padding: 0, borderBottom: "none" }}>
-                {getFullName(el.senderId?.firstName, el.senderId?.lastName)}
+                <Heading as="h2" style={{ fontWeight: "600" }}>
+                  {getFullName(el.senderId?.firstName, el.senderId?.lastName)}
+                </Heading>
               </TitleContainer>
 
               <Heading as="h4" style={{ fontWeight: "bold" }}>
