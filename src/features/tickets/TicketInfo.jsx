@@ -78,7 +78,7 @@ const TicketInfo = () => {
         responses: ticketData.responses,
       }));
     }
-  }, [ticketsStatus, tickets]);
+  }, [ticketsStatus, tickets, id, navigate]);
 
   const handleChangeType = () => {
     let toSubmit = {};
@@ -236,33 +236,6 @@ const TicketInfo = () => {
         </PaperContainer>
         {renderResponseForm()}
       </FormGroup>
-
-      {!isStudentSession && (
-        <div style={{ marginTop: "12px" }}>
-          <Button
-            disabled={isWorking}
-            variant="contained"
-            size="large"
-            color="secondary"
-            sx={{ marginRight: "8px" }}
-            onClick={() => deleteTicket(id)}
-          >
-            Delete Ticket
-          </Button>
-
-          <Button
-            disabled={isWorking}
-            variant="contained"
-            size="large"
-            sx={{ marginRight: "8px" }}
-            onClick={() => handleChangeType()}
-          >
-            {ticketInfo.type === TICKET_TYPE.close
-              ? "Open Ticket"
-              : "Close Ticket"}
-          </Button>
-        </div>
-      )}
     </>
   );
 };
