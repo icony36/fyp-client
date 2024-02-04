@@ -76,10 +76,11 @@ const LoginForm = () => {
               required
             />
           </div>
-
-          <Button light type="submit">
-            Login
-          </Button>
+          <div style={{ textAlign: "center" }}>
+            <Button light type="submit">
+              Login
+            </Button>
+          </div>
         </form>
       </div>
     </>
