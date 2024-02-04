@@ -7,7 +7,6 @@ import { useToast } from "../../hooks/useToast";
 import { useFetchUsers } from "./useFetchUsers";
 import { useCreateUser } from "./useCreateUser";
 import { useEditUser } from "./useEditUser";
-import { useDeleteUser } from "./useDeleteUser";
 import HeadingBar from "../../components/HeadingBar";
 import { Button } from "../../ui/Button";
 import Paper from "../../ui/Paper";
@@ -30,11 +29,8 @@ const UserForm = ({ isEditSession }) => {
     onSuccess: () => setFormData(defaultValues),
   });
   const { editUser, isEditing } = useEditUser();
-  const { deleteUser, isDeleting } = useDeleteUser({
-    onSuccess: () => navigate("/users"),
-  });
 
-  const isWorking = isFetching || isCreating || isEditing || isDeleting;
+  const isWorking = isFetching || isCreating || isEditing;
 
   const defaultValues = {
     userData: {
@@ -175,22 +171,11 @@ const UserForm = ({ isEditSession }) => {
       <form onSubmit={handleSubmit}>
         <HeadingBar
           title={isEditSession ? "Edit User" : "Create User"}
-          backLink={"/users"}
+          backLink={isEditSession ? `/users/${id}` : "/users"}
         >
           <Button primary disabled={isWorking} type="submit">
             {isEditSession ? "Save Changes" : "Create"}
           </Button>
-
-          {isEditSession && (
-            <Button
-              outlined
-              style={{ marginLeft: "16px" }}
-              disabled={isWorking}
-              onClick={() => deleteUser(id)}
-            >
-              Delete
-            </Button>
-          )}
         </HeadingBar>
 
         <Paper title="Account Information">

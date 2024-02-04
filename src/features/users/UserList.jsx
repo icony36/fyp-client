@@ -59,7 +59,7 @@ const UsersList = () => {
     const str = getActiveFromSuspend(isSuspended)?.toUpperCase();
 
     return (
-      <div style={{ display: "flex" }}>
+      <div style={{ display: "flex", alignItems: "center" }}>
         <SuspendIcon isSuspended={isSuspended} />
         {str}
       </div>

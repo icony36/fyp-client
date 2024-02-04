@@ -3,8 +3,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { blue, pink } from "@mui/material/colors";
 import GlobalStyles from "./GlobalStyles";
 import "./App.css";
 
@@ -30,28 +28,12 @@ import ChatbotPage from "./pages/ChatbotPage";
 import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProtectedRoute from "./pages/ProtectedRoute";
+import UserPage from "./pages/UserPage";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 180 * 1000, // set a default stale time to fetch data (in milliseconds)
-    },
-  },
-});
-
-const theme = createTheme({
-  palette: {
-    primary: blue,
-    secondary: pink,
-  },
-  MuiFormControl: {
-    root: {
-      height: "48px",
-    },
-  },
-  MuiInputBase: {
-    root: {
-      height: "48px",
     },
   },
 });
@@ -63,53 +45,47 @@ const App = () => {
       <BrowserRouter>
         <AuthProvider>
           <ChatProvider>
-            <ThemeProvider theme={theme}>
-              <GlobalStyles />
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route element={<ProtectedRoute />}>
-                  <Route path="/" element={<HomePage />} />
-                  <Route path="/profile/" element={<ProfilePage />} />
-                  <Route path="/profile/edit" element={<ProfileEditPage />} />
-                  <Route path="/chatbot" element={<ChatbotPage />} />
-                </Route>
-                <Route element={<ProtectedRoute allowedRoles={[ROLE.admin]} />}>
-                  <Route path="/users" element={<UsersPage />} />
-                  <Route path="/users/new" element={<UserNewPage />} />
-                  <Route path="/users/:id" element={<UserEditPage />} />
-                </Route>
+            <GlobalStyles />
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route element={<ProtectedRoute />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/profile/" element={<ProfilePage />} />
+                <Route path="/profile/edit" element={<ProfileEditPage />} />
+                <Route path="/chatbot" element={<ChatbotPage />} />
+              </Route>
+              <Route element={<ProtectedRoute allowedRoles={[ROLE.admin]} />}>
+                <Route path="/users" element={<UsersPage />} />
+                <Route path="/users/new" element={<UserNewPage />} />
+                <Route path="/users/:id" element={<UserPage />} />
+                <Route path="/users/:id/edit" element={<UserEditPage />} />
+              </Route>
+              <Route
+                element={
+                  <ProtectedRoute allowedRoles={[ROLE.staff, ROLE.student]} />
+                }
+              >
+                <Route path="/tickets/" element={<TicketsPage />} />
+                <Route path="/tickets/:id" element={<TicketPage />} />
+              </Route>
+              <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
+                <Route path="/training/" element={<TrainingPage />} />
+                <Route path="/knowledges" element={<KnowledgesPage />} />
+                <Route path="/knowledges/new" element={<KnowledgeNewPage />} />
                 <Route
-                  element={
-                    <ProtectedRoute allowedRoles={[ROLE.staff, ROLE.student]} />
-                  }
-                >
-                  <Route path="/tickets/" element={<TicketsPage />} />
-                  <Route path="/tickets/:id" element={<TicketPage />} />
-                </Route>
-                <Route element={<ProtectedRoute allowedRoles={[ROLE.staff]} />}>
-                  <Route path="/training/" element={<TrainingPage />} />
-                  <Route path="/knowledges" element={<KnowledgesPage />} />
-                  <Route
-                    path="/knowledges/new"
-                    element={<KnowledgeNewPage />}
-                  />
-                  <Route
-                    path="/knowledges/:id"
-                    element={<KnowledgeEditPage />}
-                  />
-                </Route>
+                  path="/knowledges/:id/edit"
+                  element={<KnowledgeEditPage />}
+                />
+              </Route>
+              <Route element={<ProtectedRoute allowedRoles={[ROLE.student]} />}>
+                <Route path="/tickets/new" element={<TicketNewPage />} />
                 <Route
-                  element={<ProtectedRoute allowedRoles={[ROLE.student]} />}
-                >
-                  <Route path="/tickets/new" element={<TicketNewPage />} />
-                  <Route
-                    path="/profile/student/edit"
-                    element={<StudentProfileEditPage />}
-                  />
-                </Route>
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </ThemeProvider>
+                  path="/profile/student/edit"
+                  element={<StudentProfileEditPage />}
+                />
+              </Route>
+              <Route path="*" element={<NotFoundPage />} />
+            </Routes>
           </ChatProvider>
         </AuthProvider>
       </BrowserRouter>

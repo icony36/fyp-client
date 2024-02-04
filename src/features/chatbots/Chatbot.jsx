@@ -61,6 +61,21 @@ const MessageItem = styled.div`
     `}
 `;
 
+const Message = ({ message }) => {
+  return (
+    <MessageContainer isuser={message.isUser}>
+      {!message.isUser && (
+        <ProfileImage>
+          <img src={LogoIcon} alt="Chatbot icon" />
+        </ProfileImage>
+      )}
+      <MessageItem isuser={message.isUser}>
+        <Heading as="h3">{message.text}</Heading>
+      </MessageItem>
+    </MessageContainer>
+  );
+};
+
 const Chatbot = () => {
   const { messages, setMessages, setUserMessage } = useContext(ChatContext);
 
@@ -152,21 +167,6 @@ const Chatbot = () => {
         </form>
       </ChatbotContainer>
     </>
-  );
-};
-
-const Message = ({ message }) => {
-  return (
-    <MessageContainer isuser={message.isUser}>
-      {!message.isUser && (
-        <ProfileImage>
-          <img src={LogoIcon} alt="Chatbot icon" />
-        </ProfileImage>
-      )}
-      <MessageItem isuser={message.isUser}>
-        <Heading as="h3">{message.text}</Heading>
-      </MessageItem>
-    </MessageContainer>
   );
 };
 
