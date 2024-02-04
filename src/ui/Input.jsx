@@ -194,7 +194,7 @@ export const TextAreaInput = ({
       <InputLabel light={light} {...labelProps}>
         {label}
       </InputLabel>
-      <TextArea rows="20" minRows={20} {...remainingProps} />
+      <TextArea rows="10" minRows={10} {...remainingProps} />
     </InputContainer>
   );
 };
