@@ -71,7 +71,7 @@ const LoginPage = () => {
                 fontStyle: "italic",
               }}
             >
-              *By continuing to use our services, you consent to the collection
+              * By continuing to use our services, you consent to the collection
               and utilization of your information in accordance with the
               Personal Data Protection Act (PDPA)
             </Heading>
