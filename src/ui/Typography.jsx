@@ -4,11 +4,6 @@ export const Heading = styled.h1`
   text-overflow: ellipsis;
   overflow: hidden;
 
-  ${({ light }) =>
-    light &&
-    css`
-      color: var(--color-white);
-    `}
   ${(props) =>
     props.as === "h1" &&
     css`
@@ -18,7 +13,7 @@ export const Heading = styled.h1`
       margin: 8px 0;
       color: var(--color-primary);
     `}
-    ${(props) =>
+  ${(props) =>
     props.as === "h2" &&
     css`
       font-family: "Playfair Display";
@@ -54,4 +49,10 @@ export const Heading = styled.h1`
       font-weight: 400;
       margin: 8px 0;
     `};
+
+  ${({ light }) =>
+    light &&
+    css`
+      color: white;
+    `}
 `;
