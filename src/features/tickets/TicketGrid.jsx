@@ -138,7 +138,7 @@ const TicketGrid = () => {
         title="My Tickets"
       ></ListActions>
 
-      <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2 }}>
+      <Grid container rowSpacing={0.5} columnSpacing={2}>
         {renderItems()}
       </Grid>
     </>
