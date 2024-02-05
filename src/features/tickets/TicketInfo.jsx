@@ -32,6 +32,8 @@ import {
   CardSubtitleContainer,
 } from "../../ui/Card";
 import { Radio } from "../../ui/Radio";
+import { IconButton } from "@mui/material";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
 const priorityOptions = [
   { value: TICKET_PRIORITY.low, label: "Low" },
@@ -80,6 +82,7 @@ const TicketInfo = () => {
     priority: TICKET_PRIORITY.low,
   });
 
+  const [showDetails, setShowDetails] = useState(false);
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
@@ -276,14 +279,54 @@ const TicketInfo = () => {
         )}
       </HeadingBar>
 
-      <Paper title="Ticket Details">
-        <Heading
-          as="h2"
-          style={{ marginBottom: "20px" }}
-        >{`Subject: ${ticketInfo.subject}`}</Heading>
+      <PaperContainer>
+        <TitleContainer
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Title>Ticket Details</Title>
+          <IconButton
+            sx={{ color: "black" }}
+            onClick={() => setShowDetails(!showDetails)}
+          >
+            {showDetails ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TitleContainer>
+        <ContentContainer>
+          <div
+            style={{
+              marginBottom: "20px",
+            }}
+          >
+            <Heading
+              as="h2"
+              style={
+                showDetails
+                  ? { textOverflow: "inherit", overflow: "auto" }
+                  : {
+                      textOverflow: "ellipsis",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                    }
+              }
+            >{`Subject: ${ticketInfo.subject}`}</Heading>
+          </div>
 
-        <Heading as="h3">{ticketInfo.detail}</Heading>
-      </Paper>
+          <Heading
+            as="h3"
+            style={
+              showDetails
+                ? { textOverflow: "inherit", overflow: "auto" }
+                : {
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                  }
+            }
+          >
+            {ticketInfo.detail}
+          </Heading>
+        </ContentContainer>
+      </PaperContainer>
 
       <FormGroup
         style={{ alignItems: "flex-start", justifyContent: "space-between" }}
