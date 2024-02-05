@@ -46,6 +46,12 @@ const typeOptions = [
   { value: TICKET_TYPE.close, label: "Closed" },
 ];
 
+const statusOptions = [
+  { value: TICKET_STATUS.pendingStaff, label: "Pending Staff Reply" },
+  { value: TICKET_STATUS.pendingStudent, label: "Pending Student Reply" },
+  { value: TICKET_STATUS.solved, label: "Completed" },
+];
+
 const TicketInfo = () => {
   const { auth } = useContext(AuthContext);
 
@@ -76,8 +82,8 @@ const TicketInfo = () => {
   });
   const [message, setMessage] = useState("");
   const [initModalState, setInitModalState] = useState({
-    type: TICKET_TYPE.open,
-    priority: TICKET_PRIORITY.low,
+    type: "",
+    priority: "",
   });
 
   const [showDetails, setShowDetails] = useState(false);
@@ -121,6 +127,13 @@ const TicketInfo = () => {
     setTicketInfo((prevState) => ({
       ...prevState,
       type: event.target.value,
+    }));
+  };
+
+  const handleChangeStatus = (event) => {
+    setTicketInfo((prevState) => ({
+      ...prevState,
+      status: event.target.value,
     }));
   };
 
@@ -348,7 +361,7 @@ const TicketInfo = () => {
               value={ticketInfo.priority}
             />
           </CardContentContainer>
-          <CardSubtitleContainer>Status</CardSubtitleContainer>
+          <CardSubtitleContainer>Type</CardSubtitleContainer>
           <CardContentContainer>
             <Radio
               options={typeOptions}
@@ -356,6 +369,15 @@ const TicketInfo = () => {
               value={ticketInfo.type}
             />
           </CardContentContainer>
+          {/* <CardSubtitleContainer>Status</CardSubtitleContainer>
+          <CardContentContainer>
+            <Radio
+              options={statusOptions}
+              onChange={handleChangeStatus}
+              value={ticketInfo.status}
+            />
+          </CardContentContainer> */}
+
           <CardContentContainer
             style={{
               display: "flex",
