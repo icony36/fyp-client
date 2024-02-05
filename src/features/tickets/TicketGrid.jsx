@@ -102,7 +102,6 @@ const TicketGrid = () => {
 
   const handleClearFilter = () => {
     setFilter("");
-    setSort(SORT_TYPE.latest);
   };
 
   const getStatusChip = (status) => {

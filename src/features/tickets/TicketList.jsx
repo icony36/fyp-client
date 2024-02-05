@@ -130,8 +130,6 @@ const TicketList = () => {
       priority: "",
       type: "",
     });
-
-    setSort(SORT_TYPE.latest);
   };
 
   const handleSetSort = (event) => {
