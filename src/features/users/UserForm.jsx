@@ -7,7 +7,7 @@ import { useToast } from "../../hooks/useToast";
 import { useFetchUsers } from "./useFetchUsers";
 import { useCreateUser } from "./useCreateUser";
 import { useEditUser } from "./useEditUser";
-import HeadingBar from "../../components/HeadingBar";
+import HeadingBar, { BackModal } from "../../components/HeadingBar";
 import { Button, CancelButton } from "../../ui/Button";
 import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
@@ -172,6 +172,7 @@ const UserForm = ({ isEditSession }) => {
         <HeadingBar
           title={isEditSession ? "Edit User" : "Create User"}
           backLink={isEditSession ? `/users/${id}` : "/users"}
+          checkBack
         >
           <Button primary="true" disabled={isWorking} type="submit">
             {isEditSession ? "Save Changes" : "Create"}

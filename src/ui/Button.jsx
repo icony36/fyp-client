@@ -97,6 +97,7 @@ export const CancelButton = (props) => {
 
   return (
     <Button
+      type="button"
       outlined="true"
       style={{ marginLeft: "16px" }}
       onClick={reload}

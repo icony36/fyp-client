@@ -1,11 +1,11 @@
 import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import { CardContainer, CardSubtitleContainer } from "./Card";
 
 const Dialog = styled.dialog`
   border: none;
   padding: 0;
   background-color: transparent;
+  transition: 0.3s;
 `;
 
 const DialogBackdrop = styled.div`
@@ -20,20 +20,6 @@ const DialogBackdrop = styled.div`
 
 export const Modal = ({ openModal, closeModal, children }) => {
   const ref = useRef();
-
-  // useEffect(() => {
-  //   const checkIfClickedOutside = (e) => {
-  //     if (ref.current && !ref.current.contains(e.target)) {
-  //       // closeModal();
-  //     }
-  //   };
-
-  //   document.addEventListener("click", checkIfClickedOutside);
-
-  //   return () => {
-  //     document.removeEventListener("click", checkIfClickedOutside);
-  //   };
-  // }, []);
 
   useEffect(() => {
     if (openModal) {

@@ -106,6 +106,7 @@ const KnowledgeForm = ({ isEditSession }) => {
         <HeadingBar
           title={isEditSession ? "Edit Knowledge" : "Create New Knowledge"}
           backLink={"/knowledges"}
+          checkBack
         >
           <Button disabled={isWorking} primary="true" type="submit">
             {isEditSession ? "Save Changes" : "Create"}

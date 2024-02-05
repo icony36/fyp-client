@@ -42,47 +42,45 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="form-page">
-        <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
-          <div style={{ marginBottom: "60px", textAlign: "center" }}>
-            <Heading light="true" as="h1">
-              Welcome Back
-            </Heading>
-            <Heading light="true" as="h4">
-              Sign in to your account
-            </Heading>
-          </div>
+      <form name="loginForm" onSubmit={handleSubmit}>
+        <div style={{ marginBottom: "60px", textAlign: "center" }}>
+          <Heading light="true" as="h1">
+            Welcome Back
+          </Heading>
+          <Heading light="true" as="h4">
+            Sign in to your account
+          </Heading>
+        </div>
 
-          <div style={{ marginBottom: "24px" }}>
-            <Input
-              sx={{ width: "470px" }}
-              light="true"
-              label="Username *"
-              id="username"
-              name="username"
-              value={loginData.username}
-              onChange={handleChange}
-              required
-            />
+        <div style={{ marginBottom: "24px" }}>
+          <Input
+            sx={{ width: "470px" }}
+            light="true"
+            label="Username *"
+            id="username"
+            name="username"
+            value={loginData.username}
+            onChange={handleChange}
+            required
+          />
 
-            <PasswordInput
-              sx={{ width: "470px" }}
-              light="true"
-              id="password"
-              name="password"
-              label="Password *"
-              value={loginData.password}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div style={{ textAlign: "center" }}>
-            <Button light="true" type="submit">
-              Login
-            </Button>
-          </div>
-        </form>
-      </div>
+          <PasswordInput
+            sx={{ width: "470px" }}
+            light="true"
+            id="password"
+            name="password"
+            label="Password *"
+            value={loginData.password}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div style={{ textAlign: "center" }}>
+          <Button light="true" type="submit">
+            Login
+          </Button>
+        </div>
+      </form>
     </>
   );
 };
