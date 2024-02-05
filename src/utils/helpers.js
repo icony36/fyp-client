@@ -1,6 +1,13 @@
 import { v4 as uuid } from "uuid";
 
-import { TICKET_STATUS, ROLE, SORT_TYPE } from "../constants";
+import { ColorChip } from "../ui/Chip";
+import {
+  TICKET_STATUS,
+  ROLE,
+  SORT_TYPE,
+  TICKET_PRIORITY,
+  TICKET_TYPE,
+} from "../constants";
 
 export const getNodeId = () => {
   const timestamp = Date.now().toString(36);
@@ -160,3 +167,78 @@ export const sortOptions = [
   { value: SORT_TYPE.earliest, label: "Date (Earliest to Latest)" },
   { value: SORT_TYPE.latest, label: "Date (Latest to Earliest)" },
 ];
+
+export const getProrityChip = (prority) => {
+  const str = prority.toUpperCase();
+
+  switch (prority) {
+    case TICKET_PRIORITY.high:
+      return (
+        <ColorChip
+          style={{
+            backgroundColor: "#F8D2D0",
+            color: "#E14942",
+          }}
+        >
+          {str}
+        </ColorChip>
+      );
+    case TICKET_PRIORITY.medium:
+      return (
+        <ColorChip
+          style={{
+            backgroundColor: "#F8E8C9",
+            color: "#E1A325",
+          }}
+        >
+          {str}
+        </ColorChip>
+      );
+    case TICKET_PRIORITY.low:
+      return (
+        <ColorChip
+          style={{
+            backgroundColor: "#CFEBCF",
+            color: "#3EAF3F",
+          }}
+        >
+          {str}
+        </ColorChip>
+      );
+
+    default:
+      return <ColorChip>{str}</ColorChip>;
+  }
+};
+
+export const getTypeChip = (type) => {
+  const str = type.toUpperCase();
+
+  switch (type) {
+    case TICKET_TYPE.open:
+      return (
+        <ColorChip
+          style={{
+            backgroundColor: "#D4E4F1",
+            color: "#5193C6",
+          }}
+        >
+          {str}
+        </ColorChip>
+      );
+    case TICKET_TYPE.close:
+      return (
+        <ColorChip
+          style={{
+            backgroundColor: "#D8D8D8",
+            color: "#636363",
+          }}
+        >
+          {str}
+        </ColorChip>
+      );
+
+    default:
+      return <ColorChip>{str}</ColorChip>;
+  }
+};

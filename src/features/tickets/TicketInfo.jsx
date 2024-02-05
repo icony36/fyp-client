@@ -2,12 +2,18 @@ import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
-import { AuthContext } from "../../contexts";
 import { useToast } from "../../hooks/useToast";
+import { AuthContext } from "../../contexts";
+import { fetchStudentProfileByUser } from "../../services/studentProfile";
 import { useFetchTickets } from "./useFetchTickets";
 import { useEditTicket } from "./useEditTicket";
 import { useDeleteTicket } from "./useDeleteTicket";
-import { getFullName, sortByNewest, compareName } from "../../utils/helpers";
+import {
+  getFullName,
+  sortByNewest,
+  compareName,
+  getProrityChip,
+} from "../../utils/helpers";
 import {
   ROLE,
   TICKET_TYPE,
@@ -46,11 +52,11 @@ const typeOptions = [
   { value: TICKET_TYPE.close, label: "Closed" },
 ];
 
-const statusOptions = [
-  { value: TICKET_STATUS.pendingStaff, label: "Pending Staff Reply" },
-  { value: TICKET_STATUS.pendingStudent, label: "Pending Student Reply" },
-  { value: TICKET_STATUS.solved, label: "Completed" },
-];
+// const statusOptions = [
+//   { value: TICKET_STATUS.pendingStaff, label: "Pending Staff Reply" },
+//   { value: TICKET_STATUS.pendingStudent, label: "Pending Student Reply" },
+//   { value: TICKET_STATUS.solved, label: "Completed" },
+// ];
 
 const TicketInfo = () => {
   const { auth } = useContext(AuthContext);
@@ -60,6 +66,8 @@ const TicketInfo = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
+
+  const { toast } = useToast();
 
   const { tickets, isFetching, ticketsStatus } = useFetchTickets({
     isStudentSession,
@@ -80,6 +88,8 @@ const TicketInfo = () => {
     status: "",
     responses: [],
   });
+  const [studentProfile, setStudentProfile] = useState({});
+
   const [message, setMessage] = useState("");
   const [initModalState, setInitModalState] = useState({
     type: "",
@@ -100,6 +110,8 @@ const TicketInfo = () => {
 
       setTicketInfo((prevState) => ({
         ...prevState,
+        _id: ticketData._id,
+        createdAt: ticketData.createdAt,
         subject: ticketData.subject,
         detail: ticketData.detail,
         studentId: ticketData.studentId,
@@ -113,8 +125,20 @@ const TicketInfo = () => {
         type: ticketData.type,
         priority: ticketData.priority,
       });
+
+      fetchStudentData(ticketData.studentId._id);
     }
   }, [ticketsStatus, tickets, id, navigate]);
+
+  const fetchStudentData = async (studentId) => {
+    try {
+      const res = await fetchStudentProfileByUser(studentId);
+
+      setStudentProfile(res.data);
+    } catch (err) {
+      toast.error(err.message);
+    }
+  };
 
   const handleChangePriority = (event) => {
     setTicketInfo((prevState) => ({
@@ -130,12 +154,12 @@ const TicketInfo = () => {
     }));
   };
 
-  const handleChangeStatus = (event) => {
-    setTicketInfo((prevState) => ({
-      ...prevState,
-      status: event.target.value,
-    }));
-  };
+  // const handleChangeStatus = (event) => {
+  //   setTicketInfo((prevState) => ({
+  //     ...prevState,
+  //     status: event.target.value,
+  //   }));
+  // };
 
   const handleSaveChanges = () => {
     const toSubmit = {
@@ -312,8 +336,13 @@ const TicketInfo = () => {
               as="h2"
               style={
                 showDetails
-                  ? { textOverflow: "inherit", overflow: "auto" }
+                  ? {
+                      fontSize: "17px",
+                      textOverflow: "inherit",
+                      overflow: "auto",
+                    }
                   : {
+                      fontSize: "17px",
                       textOverflow: "ellipsis",
                       overflow: "hidden",
                       whiteSpace: "nowrap",
@@ -337,6 +366,10 @@ const TicketInfo = () => {
             {ticketInfo.detail}
           </Heading>
         </ContentContainer>
+
+        {!isStudentSession && showDetails && (
+          <SenderInfo ticketData={ticketInfo} studentData={studentProfile} />
+        )}
       </PaperContainer>
 
       <FormGroup
@@ -369,14 +402,6 @@ const TicketInfo = () => {
               value={ticketInfo.type}
             />
           </CardContentContainer>
-          {/* <CardSubtitleContainer>Status</CardSubtitleContainer>
-          <CardContentContainer>
-            <Radio
-              options={statusOptions}
-              onChange={handleChangeStatus}
-              value={ticketInfo.status}
-            />
-          </CardContentContainer> */}
 
           <CardContentContainer
             style={{
@@ -422,3 +447,91 @@ const TicketInfo = () => {
 };
 
 export default TicketInfo;
+
+const SenderInfo = ({ studentData, ticketData }) => {
+  return (
+    <>
+      <CardContentContainer style={{ display: "flex", marginBottom: "20px" }}>
+        <div style={{ flex: 1, fontWeight: "bold" }}>
+          <Heading style={{ fontWeight: "bold" }} as="h2">
+            ID
+          </Heading>
+          <Heading as="h3">{ticketData?._id}</Heading>
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <Heading style={{ fontWeight: "bold" }} as="h2">
+            Date Created
+          </Heading>
+          <Heading as="h3">
+            {format(new Date(ticketData?.createdAt), "dd/MM/yyyy")}
+          </Heading>
+        </div>
+
+        <div style={{ flex: 1 }}>
+          <Heading style={{ fontWeight: "bold" }} as="h2">
+            Priority
+          </Heading>
+          <Heading as="h3">{getProrityChip(ticketData?.priority)}</Heading>
+        </div>
+      </CardContentContainer>
+
+      <CardSubtitleContainer style={{ fontSize: "24px" }}>
+        Sender Information
+      </CardSubtitleContainer>
+
+      <CardContentContainer style={{ display: "flex" }}>
+        <div style={{ flex: 1, fontWeight: "bold" }}>
+          <div style={{ marginBottom: "40px" }}>
+            <Heading style={{ fontWeight: "bold" }} as="h2">
+              Name
+            </Heading>
+            <Heading as="h3">
+              {getFullName(
+                ticketData?.studentId?.firstName,
+                ticketData?.studentId?.lastName
+              )}
+            </Heading>
+          </div>
+
+          <div style={{ marginBottom: "40px" }}>
+            <Heading style={{ fontWeight: "bold" }} as="h2">
+              Course
+            </Heading>
+            <Heading as="h3">{studentData?.course}</Heading>
+          </div>
+
+          <div>
+            <Heading style={{ fontWeight: "bold" }} as="h2">
+              Enrolled Modules
+            </Heading>
+            <Heading as="h3">
+              {studentData?.enrollments?.map(
+                (el, index) =>
+                  `${el}${
+                    index !== studentData?.enrollments.length - 1 ? ", " : ""
+                  }`
+              )}
+            </Heading>
+          </div>
+        </div>
+
+        <div style={{ flex: 1, fontWeight: "bold" }}>
+          <div style={{ marginBottom: "40px" }}>
+            <Heading style={{ fontWeight: "bold" }} as="h2">
+              Email Address
+            </Heading>
+            <Heading as="h3">{ticketData?.studentId?.email}</Heading>
+          </div>
+
+          <div style={{ marginBottom: "40px" }}>
+            <Heading style={{ fontWeight: "bold" }} as="h2">
+              Outstanding Fees
+            </Heading>
+            <Heading as="h3">$ {studentData?.outstandingFee}</Heading>
+          </div>
+        </div>
+      </CardContentContainer>
+    </>
+  );
+};

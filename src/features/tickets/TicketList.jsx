@@ -19,6 +19,7 @@ import {
   CardSubtitleContainer,
 } from "../../ui/Card";
 import { Radio } from "../../ui/Radio";
+import { getProrityChip, getTypeChip } from "../../utils/helpers";
 
 import { useFetchTickets } from "./useFetchTickets";
 
@@ -134,81 +135,6 @@ const TicketList = () => {
 
   const handleSetSort = (event) => {
     setSort(event.target.value);
-  };
-
-  const getProrityChip = (prority) => {
-    const str = prority.toUpperCase();
-
-    switch (prority) {
-      case TICKET_PRIORITY.high:
-        return (
-          <ColorChip
-            style={{
-              backgroundColor: "#F8D2D0",
-              color: "#E14942",
-            }}
-          >
-            {str}
-          </ColorChip>
-        );
-      case TICKET_PRIORITY.medium:
-        return (
-          <ColorChip
-            style={{
-              backgroundColor: "#F8E8C9",
-              color: "#E1A325",
-            }}
-          >
-            {str}
-          </ColorChip>
-        );
-      case TICKET_PRIORITY.low:
-        return (
-          <ColorChip
-            style={{
-              backgroundColor: "#CFEBCF",
-              color: "#3EAF3F",
-            }}
-          >
-            {str}
-          </ColorChip>
-        );
-
-      default:
-        return <ColorChip>{str}</ColorChip>;
-    }
-  };
-
-  const getTypeChip = (type) => {
-    const str = type.toUpperCase();
-
-    switch (type) {
-      case TICKET_TYPE.open:
-        return (
-          <ColorChip
-            style={{
-              backgroundColor: "#D4E4F1",
-              color: "#5193C6",
-            }}
-          >
-            {str}
-          </ColorChip>
-        );
-      case TICKET_TYPE.close:
-        return (
-          <ColorChip
-            style={{
-              backgroundColor: "#D8D8D8",
-              color: "#636363",
-            }}
-          >
-            {str}
-          </ColorChip>
-        );
-
-      default:
-        return <ColorChip>{str}</ColorChip>;
-    }
   };
 
   const renderRow = (el) => {
