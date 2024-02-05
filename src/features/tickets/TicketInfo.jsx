@@ -337,12 +337,12 @@ const TicketInfo = () => {
               style={
                 showDetails
                   ? {
-                      fontSize: "17px",
+                      fontSize: "20px",
                       textOverflow: "inherit",
                       overflow: "auto",
                     }
                   : {
-                      fontSize: "17px",
+                      fontSize: "20px",
                       textOverflow: "ellipsis",
                       overflow: "hidden",
                       whiteSpace: "nowrap",
