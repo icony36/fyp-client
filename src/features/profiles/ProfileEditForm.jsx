@@ -139,7 +139,7 @@ const ProfileEditForm = () => {
     <>
       <form onSubmit={handleSubmit}>
         <HeadingBar title="Edit My Profile" backLink={"/profile"}>
-          <Button primary disabled={isWorking} type="submit">
+          <Button primary="true" disabled={isWorking} type="submit">
             Save Changes
           </Button>
         </HeadingBar>

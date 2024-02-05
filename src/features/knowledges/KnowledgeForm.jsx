@@ -58,7 +58,7 @@ const KnowledgeForm = ({ isEditSession }) => {
         labels: knowledgeData.labels,
       }));
     }
-  }, [knowledgesStatus, knowledges]);
+  }, [knowledgesStatus, knowledges, id, isEditSession]);
 
   const handleChange = (event) => {
     setFormData((prevState) => ({
@@ -107,7 +107,7 @@ const KnowledgeForm = ({ isEditSession }) => {
           title={isEditSession ? "Edit Knowledge" : "Create New Knowledge"}
           backLink={"/knowledges"}
         >
-          <Button disabled={isWorking} primary type="submit">
+          <Button disabled={isWorking} primary="true" type="submit">
             {isEditSession ? "Save Changes" : "Create"}
           </Button>
 

@@ -9,8 +9,6 @@ import HeadingBar from "../../components/HeadingBar";
 import { Button } from "../../ui/Button";
 import Paper, { Title } from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
-import { Info } from "../../ui/Info";
-import { TitleContainer } from "../../ui/Paper";
 import { Heading } from "../../ui/Typography";
 import { ChipStack, OutlinedChip } from "../../ui/Chip";
 
@@ -60,7 +58,7 @@ const KnowledgeInfo = () => {
     <>
       <HeadingBar title="View Knowledge" backLink={"/knowledges"}>
         <Button
-          primary
+          primary="true"
           disabled={isWorking}
           onClick={() => navigate(`/knowledges/${id}/edit`)}
         >
@@ -68,7 +66,7 @@ const KnowledgeInfo = () => {
         </Button>
 
         <Button
-          outlined
+          outlined="true"
           style={{ marginLeft: "16px" }}
           disabled={isWorking}
           onClick={() => deleteKnowledge(id)}

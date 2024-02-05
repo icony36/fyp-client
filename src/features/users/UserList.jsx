@@ -28,8 +28,8 @@ const SuspendIcon = styled.div`
   margin-right: 12px;
   background-color: var(--color-green);
 
-  ${({ isSuspended }) =>
-    isSuspended &&
+  ${({ issuspended }) =>
+    issuspended &&
     css`
       background-color: var(--color-red);
     `}
@@ -60,7 +60,7 @@ const UsersList = () => {
 
     return (
       <div style={{ display: "flex", alignItems: "center" }}>
-        <SuspendIcon isSuspended={isSuspended} />
+        <SuspendIcon issuspended={isSuspended ? 1 : 0} />
         {str}
       </div>
     );
@@ -71,7 +71,7 @@ const UsersList = () => {
       <ListRow key={el._id}>
         <ListCell>
           <ProfileArea>
-            <ProfileImage primary>
+            <ProfileImage primary="true">
               {getNameInitial(getFullName(el.firstName, el.lastName))}
             </ProfileImage>
             <div>
@@ -87,9 +87,9 @@ const UsersList = () => {
         <ListCell>
           <div>
             <Button
-              small
-              condensed
-              outlined
+              small="true"
+              condensed="true"
+              outlined="true"
               onClick={() => navigate(`/users/${el._id}`)}
               style={{ marginRight: "8px" }}
             >
@@ -97,9 +97,9 @@ const UsersList = () => {
             </Button>
             {el.isSuspended ? (
               <Button
-                small
-                condensed
-                outlined
+                small="true"
+                condensed="true"
+                outlined="true"
                 disabled={isSuspending}
                 onClick={(e) => handleSuspend(e, false, el._id)}
               >
@@ -107,9 +107,9 @@ const UsersList = () => {
               </Button>
             ) : (
               <Button
-                small
-                condensed
-                outlined
+                small="true"
+                condensed="true"
+                outlined="true"
                 disabled={isSuspending}
                 onClick={(e) => handleSuspend(e, true, el._id)}
               >

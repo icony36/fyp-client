@@ -10,7 +10,8 @@ const GlobalStyles = createGlobalStyle`
   --color-orange: #F5871F;
   --color-green: #3EAF3F;
   --color-red: #E14942;
-  --color-light-grey: #D9D9D9
+  --color-light-grey: #D9D9D9;
+  --color-grey-lightest: #eeeeee;
 }
 `;
 

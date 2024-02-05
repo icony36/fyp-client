@@ -28,12 +28,6 @@ const UserInfo = () => {
   const [profile, setProfile] = useState({});
   const [studentProfile, setStudentProfile] = useState({});
 
-  // const { profile, isFetching: isFetchingProfile } = useFetchProfile({
-  //   id,
-  // });
-
-  // const isWorking = isFetchingProfile || isFetchingStudent;
-
   useEffect(() => {
     if (usersStatus === "success") {
       setUserToProfile();
@@ -83,7 +77,7 @@ const UserInfo = () => {
     <>
       <HeadingBar title="View Profile" backLink={"/users"}>
         <Button
-          primary
+          primary="true"
           disabled={isWorking}
           onClick={() => navigate(`/users/${id}/edit`)}
         >
@@ -91,7 +85,7 @@ const UserInfo = () => {
         </Button>
 
         <Button
-          outlined
+          outlined="true"
           style={{ marginLeft: "16px" }}
           disabled={isWorking}
           onClick={() => deleteUser(id)}

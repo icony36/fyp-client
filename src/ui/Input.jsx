@@ -85,7 +85,7 @@ export const Input = ({
           }}
           margin="none"
           fullWidth
-          InputLabelProps={{ shrink: false }}
+          // inputLabelProps={{ shrink: false }}
           {...remainingProps}
         />
       </InputContainer>
@@ -194,7 +194,7 @@ export const TextAreaInput = ({
       <InputLabel light={light} {...labelProps}>
         {label}
       </InputLabel>
-      <TextArea rows="10" minRows={10} {...remainingProps} />
+      <TextArea rows="10" {...remainingProps} />
     </InputContainer>
   );
 };

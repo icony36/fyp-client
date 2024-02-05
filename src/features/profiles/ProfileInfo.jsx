@@ -31,7 +31,7 @@ const ProfileInfo = () => {
     <>
       <HeadingBar title="My Profile">
         <Button
-          primary
+          primary="true"
           disabled={isWorking}
           onClick={() => navigate(`/profile/edit`)}
         >

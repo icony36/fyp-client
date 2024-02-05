@@ -54,7 +54,7 @@ const ListActions = ({
         {shouldHideButton ? (
           <></>
         ) : (
-          <Button condensed primary onClick={handleButtonClicked}>
+          <Button condensed="true" primary="true" onClick={handleButtonClicked}>
             {buttonLabel}
           </Button>
         )}

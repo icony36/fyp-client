@@ -1,22 +1,60 @@
+import React, { useEffect, useRef } from "react";
 import styled from "styled-components";
-import React from "react";
 import { CardContainer, CardSubtitleContainer } from "./Card";
 
 const Dialog = styled.dialog`
-  position: relative;
-  max-width: 20rem;
-  padding: 2rem;
-  border: 0;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 0.5rem 0.25rem hsl(0 0% 0% / 10%);
+  border: none;
+  padding: 0;
+  background-color: transparent;
 `;
 
-export const Modal = ({ handleClose }) => {
+const DialogBackdrop = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  /* background: #252424cc; */
+  height: 100%;
+  width: 100vw;
+  z-index: 50;
+`;
+
+export const Modal = ({ openModal, closeModal, children }) => {
+  const ref = useRef();
+
+  // useEffect(() => {
+  //   const checkIfClickedOutside = (e) => {
+  //     if (ref.current && !ref.current.contains(e.target)) {
+  //       // closeModal();
+  //     }
+  //   };
+
+  //   document.addEventListener("click", checkIfClickedOutside);
+
+  //   return () => {
+  //     document.removeEventListener("click", checkIfClickedOutside);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    if (openModal) {
+      document.body.style.overflow = "hidden";
+      ref.current?.showModal(); // Shows the dialog and makes it the top-most modal dialog
+    } else {
+      document.body.style.overflow = null;
+      ref.current?.close();
+    }
+  }, [openModal]);
+
   return (
-    <Dialog>
-      <CardContainer>
-        <CardSubtitleContainer>Test</CardSubtitleContainer>
-      </CardContainer>
-    </Dialog>
+    <>
+      {openModal && <DialogBackdrop />}
+      <Dialog
+        ref={ref}
+        onCancel={closeModal}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {children}
+      </Dialog>
+    </>
   );
 };

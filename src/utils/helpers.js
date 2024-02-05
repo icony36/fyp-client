@@ -134,3 +134,7 @@ export const getActiveFromSuspend = (isSuspended) => {
 export const getCapitalize = (str) => {
   return str.charAt(0).toUpperCase() + str.slice(1);
 };
+
+export const compareName = (firstName1, firstName2, lastName1, lastName2) => {
+  return firstName1 === firstName2 && lastName1 === lastName2;
+};

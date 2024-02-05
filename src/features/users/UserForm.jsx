@@ -173,7 +173,7 @@ const UserForm = ({ isEditSession }) => {
           title={isEditSession ? "Edit User" : "Create User"}
           backLink={isEditSession ? `/users/${id}` : "/users"}
         >
-          <Button primary disabled={isWorking} type="submit">
+          <Button primary="true" disabled={isWorking} type="submit">
             {isEditSession ? "Save Changes" : "Create"}
           </Button>
 

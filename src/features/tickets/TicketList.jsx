@@ -33,30 +33,30 @@ const TicketList = () => {
 
   useEffect(() => {
     if (ticketsStatus === "success") {
-      const newTickets = setPriority(rawTickets.data);
+      // const newTickets = setPriority(rawTickets.data);
 
-      setTickets(newTickets);
-      setSearchOptions(newTickets);
+      setTickets(rawTickets.data);
+      setSearchOptions(rawTickets.data);
     }
   }, [ticketsStatus, rawTickets]);
 
-  const setPriority = (tickets) => {
-    return tickets.map((el) => {
-      const timeDiff = new Date().getTime() - new Date(el.updatedAt).getTime();
+  // const setPriority = (tickets) => {
+  //   return tickets.map((el) => {
+  //     const timeDiff = new Date().getTime() - new Date(el.updatedAt).getTime();
 
-      const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
+  //     const dayDiff = Math.round(timeDiff / (1000 * 3600 * 24));
 
-      if (dayDiff >= 14) {
-        el.priority = TICKET_PRIORITY.high;
-      } else if (dayDiff >= 7 && dayDiff < 14) {
-        el.priority = TICKET_PRIORITY.medium;
-      } else {
-        el.priority = TICKET_PRIORITY.low;
-      }
+  //     if (dayDiff >= 14) {
+  //       el.priority = TICKET_PRIORITY.high;
+  //     } else if (dayDiff >= 7 && dayDiff < 14) {
+  //       el.priority = TICKET_PRIORITY.medium;
+  //     } else {
+  //       el.priority = TICKET_PRIORITY.low;
+  //     }
 
-      return el;
-    });
-  };
+  //     return el;
+  //   });
+  // };
 
   const getProrityChip = (prority) => {
     const str = prority.toUpperCase();

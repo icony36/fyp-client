@@ -45,10 +45,10 @@ const LoginForm = () => {
       <div className="form-page">
         <form className="login-form" name="loginForm" onSubmit={handleSubmit}>
           <div style={{ marginBottom: "60px", textAlign: "center" }}>
-            <Heading light as="h1">
+            <Heading light="true" as="h1">
               Welcome Back
             </Heading>
-            <Heading light as="h4">
+            <Heading light="true" as="h4">
               Sign in to your account
             </Heading>
           </div>
@@ -56,7 +56,7 @@ const LoginForm = () => {
           <div style={{ marginBottom: "24px" }}>
             <Input
               sx={{ width: "470px" }}
-              light
+              light="true"
               label="Username *"
               id="username"
               name="username"
@@ -67,7 +67,7 @@ const LoginForm = () => {
 
             <PasswordInput
               sx={{ width: "470px" }}
-              light
+              light="true"
               id="password"
               name="password"
               label="Password *"
@@ -77,7 +77,7 @@ const LoginForm = () => {
             />
           </div>
           <div style={{ textAlign: "center" }}>
-            <Button light type="submit">
+            <Button light="true" type="submit">
               Login
             </Button>
           </div>

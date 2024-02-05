@@ -11,6 +11,8 @@ export const Button = styled.button`
   border: 2px solid rgba(0, 0, 0, 0);
   cursor: pointer;
   transition: 0.3s;
+  user-select: none;
+  -moz-user-select: none;
 
   ${({ small }) =>
     small &&
@@ -29,6 +31,21 @@ export const Button = styled.button`
     css`
       padding: 10px 12px;
       font-size: 15px;
+      min-width: 120px;
+    `}
+
+  ${({ simple }) =>
+    simple &&
+    css`
+      min-width: 80px;
+      padding: 8px 14px;
+      font-size: 15px;
+      background-color: transparent;
+      border-color: transparent;
+      font-weight: 600;
+      &:hover {
+        background-color: var(--color-grey-lightest);
+      }
     `}
 
   ${({ primary }) =>
@@ -76,7 +93,12 @@ export const CancelButton = (props) => {
   };
 
   return (
-    <Button outlined style={{ marginLeft: "16px" }} onClick={reload} {...props}>
+    <Button
+      outlined="true"
+      style={{ marginLeft: "16px" }}
+      onClick={reload}
+      {...props}
+    >
       Cancel
     </Button>
   );

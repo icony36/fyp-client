@@ -109,9 +109,7 @@ const Navbar = () => {
         to={link.url}
       >
         {({ isActive }) => (
-          <SidebarLink isactive={isActive ? true : false}>
-            {link.name}
-          </SidebarLink>
+          <SidebarLink isactive={isActive ? 1 : 0}>{link.name}</SidebarLink>
         )}
       </NavLink>
     ));

@@ -7,8 +7,13 @@ import { useToast } from "../../hooks/useToast";
 import { useFetchTickets } from "./useFetchTickets";
 import { useEditTicket } from "./useEditTicket";
 import { useDeleteTicket } from "./useDeleteTicket";
-import { getFullName, sortByNewest } from "../../utils/helpers";
-import { ROLE, TICKET_TYPE, TICKET_STATUS } from "../../constants";
+import { getFullName, sortByNewest, compareName } from "../../utils/helpers";
+import {
+  ROLE,
+  TICKET_TYPE,
+  TICKET_STATUS,
+  TICKET_PRIORITY,
+} from "../../constants";
 import HeadingBar from "../../components/HeadingBar";
 import { Button } from "../../ui/Button";
 import Paper, {
@@ -21,6 +26,23 @@ import { Heading } from "../../ui/Typography";
 import { TextAreaInput } from "../../ui/Input";
 import { FormGroup } from "../../ui/FormGroup";
 import { Modal } from "../../ui/Modal";
+import {
+  CardContainer,
+  CardContentContainer,
+  CardSubtitleContainer,
+} from "../../ui/Card";
+import { Radio } from "../../ui/Radio";
+
+const priorityOptions = [
+  { value: TICKET_PRIORITY.low, label: "Low" },
+  { value: TICKET_PRIORITY.medium, label: "Medium" },
+  { value: TICKET_PRIORITY.high, label: "High" },
+];
+
+const typeOptions = [
+  { value: TICKET_TYPE.open, label: "Open" },
+  { value: TICKET_TYPE.close, label: "Closed" },
+];
 
 const TicketInfo = () => {
   const { auth } = useContext(AuthContext);
@@ -48,10 +70,15 @@ const TicketInfo = () => {
     detail: "",
     studentId: {},
     type: "",
+    priority: "",
     status: "",
     responses: [],
   });
   const [message, setMessage] = useState("");
+  const [initModalState, setInitModalState] = useState({
+    type: TICKET_TYPE.open,
+    priority: TICKET_PRIORITY.low,
+  });
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -70,34 +97,41 @@ const TicketInfo = () => {
         detail: ticketData.detail,
         studentId: ticketData.studentId,
         type: ticketData.type,
+        priority: ticketData.priority,
         status: ticketData.status,
         responses: ticketData.responses,
       }));
+
+      setInitModalState({
+        type: ticketData.type,
+        priority: ticketData.priority,
+      });
     }
   }, [ticketsStatus, tickets, id, navigate]);
 
-  const handleChangeType = () => {
-    let toSubmit = {};
+  const handleChangePriority = (event) => {
+    setTicketInfo((prevState) => ({
+      ...prevState,
+      priority: event.target.value,
+    }));
+  };
 
-    switch (ticketInfo.type) {
-      case TICKET_TYPE.open:
-        toSubmit = {
-          type: TICKET_TYPE.close,
-          status: TICKET_STATUS.solved,
-        };
+  const handleChangeType = (event) => {
+    setTicketInfo((prevState) => ({
+      ...prevState,
+      type: event.target.value,
+    }));
+  };
 
-        break;
-      case TICKET_TYPE.close:
-        toSubmit = {
-          type: TICKET_TYPE.open,
-          status: TICKET_STATUS.pendingStaff,
-        };
-        break;
-      default:
-        break;
-    }
+  const handleSaveChanges = () => {
+    const toSubmit = {
+      type: ticketInfo.type,
+      priority: ticketInfo.priority,
+    };
 
     editTicket({ ticketData: toSubmit, id });
+
+    setOpenModal(false);
   };
 
   const handleSubmit = (event) => {
@@ -123,8 +157,15 @@ const TicketInfo = () => {
     setMessage("");
   };
 
-  const compareName = (firstName1, firstName2, lastName1, lastName2) => {
-    return firstName1 === firstName2 && lastName1 === lastName2;
+  const handleResetModal = () => {
+    setTicketInfo((prevState) => ({
+      ...prevState,
+      ...initModalState,
+    }));
+  };
+
+  const handleDelete = () => {
+    deleteTicket(id);
   };
 
   const renderResponses = () => {
@@ -212,11 +253,10 @@ const TicketInfo = () => {
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 required
-                minRows={20}
                 placeholder="Response"
               />
 
-              <Button disabled={isWorking} outlined size="large" type="submit">
+              <Button disabled={isWorking} outlined="true" type="submit">
                 Send Response
               </Button>
             </ContentContainer>
@@ -230,7 +270,7 @@ const TicketInfo = () => {
     <>
       <HeadingBar title="View Ticket" backLink={"/tickets"}>
         {!isStudentSession && (
-          <Button primary onClick={() => setOpenModal(true)}>
+          <Button primary="true" onClick={() => setOpenModal(true)}>
             Modify Priority & Status
           </Button>
         )}
@@ -250,13 +290,69 @@ const TicketInfo = () => {
       >
         <PaperContainer style={{ width: "49%" }}>
           <TitleContainer style={{ paddingBottom: 0, borderBottom: "none" }}>
-            <Title>Past Responses</Title>
+            <Title key={"title"}>Past Responses</Title>
           </TitleContainer>
           <ContentContainer>{renderResponses()}</ContentContainer>
         </PaperContainer>
         {renderResponseForm()}
       </FormGroup>
-      {openModal && <Modal />}
+      <Modal openModal={openModal}>
+        <CardContainer style={{ margin: 0, height: "100%", minWidth: "780px" }}>
+          <CardSubtitleContainer>Prority</CardSubtitleContainer>
+          <CardContentContainer>
+            <Radio
+              options={priorityOptions}
+              onChange={handleChangePriority}
+              value={ticketInfo.priority}
+            />
+          </CardContentContainer>
+          <CardSubtitleContainer>Status</CardSubtitleContainer>
+          <CardContentContainer>
+            <Radio
+              options={typeOptions}
+              onChange={handleChangeType}
+              value={ticketInfo.type}
+            />
+          </CardContentContainer>
+          <CardContentContainer
+            style={{
+              display: "flex",
+              borderTop: "2px solid var(--color-light-grey)",
+            }}
+          >
+            <div
+              style={{
+                flex: 1,
+              }}
+            >
+              <Button
+                simple="true"
+                onClick={handleResetModal}
+                style={{ color: "var(--color-red)" }}
+              >
+                Reset Changes
+              </Button>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              <Button simple="true" onClick={() => setOpenModal(false)}>
+                Cancel
+              </Button>
+              <Button
+                simple="true"
+                style={{ color: "var(--color-primary)" }}
+                onClick={handleSaveChanges}
+              >
+                Save Changes
+              </Button>
+            </div>
+          </CardContentContainer>
+        </CardContainer>
+      </Modal>
     </>
   );
 };
