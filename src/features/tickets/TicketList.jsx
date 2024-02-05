@@ -2,13 +2,16 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 
-import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
 import ListActions from "../../components/ListActions";
-import { getFullName } from "../../utils/helpers";
-import { SORT_DATE, TICKET_PRIORITY, TICKET_TYPE } from "../../constants";
+import {
+  getFullName,
+  getSortedDataByDate,
+  sortOptions,
+} from "../../utils/helpers";
+import { SORT_TYPE, TICKET_PRIORITY, TICKET_TYPE } from "../../constants";
 import { List, ListCell, ListRow } from "../../ui/List";
 import { ColorChip } from "../../ui/Chip";
-import { Button } from "../../ui/Button";
+import { Button, FilterButton } from "../../ui/Button";
 import { Modal } from "../../ui/Modal";
 import {
   CardContainer,
@@ -18,7 +21,6 @@ import {
 import { Radio } from "../../ui/Radio";
 
 import { useFetchTickets } from "./useFetchTickets";
-import { IconButton } from "@mui/material";
 
 const header = [
   "ID",
@@ -40,11 +42,6 @@ const typeOptions = [
   { value: TICKET_TYPE.close, label: "Closed" },
 ];
 
-const sortOptions = [
-  { value: SORT_DATE.earliest, label: "Date (Earliest to Latest)" },
-  { value: SORT_DATE.latest, label: "Date (Latest to Earliest)" },
-];
-
 const TicketList = () => {
   const navigate = useNavigate();
 
@@ -57,7 +54,7 @@ const TicketList = () => {
   const [tickets, setTickets] = useState([]);
   const [searchOptions, setSearchOptions] = useState([]);
   const [openModal, setOpenModal] = useState(false);
-  const [sort, setSort] = useState(SORT_DATE.latest);
+  const [sort, setSort] = useState(SORT_TYPE.latest);
   const [filter, setFilter] = useState({
     priority: "",
     type: "",
@@ -65,12 +62,54 @@ const TicketList = () => {
 
   useEffect(() => {
     if (ticketsStatus === "success") {
-      setTickets(rawTickets.data);
-      setSearchOptions(rawTickets.data);
+      const arr = getSortedDataByDate(rawTickets.data, SORT_TYPE.latest);
+
+      setTickets(arr);
+      setSearchOptions(arr);
     }
   }, [ticketsStatus, rawTickets]);
 
-  const getPriorityOnly = () => {};
+  const handleSaveFilter = () => {
+    let arr = [...rawTickets.data];
+
+    arr = applyFilter(arr);
+    arr = getSortedDataByDate(arr, sort);
+
+    setTickets(arr);
+
+    setOpenModal(false);
+  };
+
+  const applyFilter = (arr) => {
+    let newArr = [...arr];
+
+    switch (filter.priority) {
+      case TICKET_PRIORITY.low:
+        newArr = arr.filter((el) => el.priority === TICKET_PRIORITY.low);
+        break;
+      case TICKET_PRIORITY.medium:
+        newArr = arr.filter((el) => el.priority === TICKET_PRIORITY.medium);
+        break;
+      case TICKET_PRIORITY.high:
+        newArr = arr.filter((el) => el.priority === TICKET_PRIORITY.high);
+        break;
+      default:
+        break;
+    }
+
+    switch (filter.type) {
+      case TICKET_TYPE.open:
+        newArr = newArr.filter((el) => el.type === TICKET_TYPE.open);
+        break;
+      case TICKET_TYPE.close:
+        newArr = newArr.filter((el) => el.type === TICKET_TYPE.close);
+        break;
+      default:
+        break;
+    }
+
+    return newArr;
+  };
 
   const handleSetFilterPriority = (event) => {
     setFilter((prevState) => ({
@@ -91,6 +130,8 @@ const TicketList = () => {
       priority: "",
       type: "",
     });
+
+    setSort(SORT_TYPE.latest);
   };
 
   const handleSetSort = (event) => {
@@ -216,15 +257,7 @@ const TicketList = () => {
         shouldHideButton
         title="Tickets"
       >
-        <IconButton
-          sx={{
-            color: "var(--color-primary)",
-            border: "2px solid var(--color-primary)",
-          }}
-          onClick={() => setOpenModal(true)}
-        >
-          <FilterAltOutlinedIcon sx={{ height: "30px", width: "30px" }} />
-        </IconButton>
+        <FilterButton onClick={() => setOpenModal(true)} />
       </ListActions>
       <List
         header={header}
@@ -289,7 +322,11 @@ const TicketList = () => {
               <Button simple="true" onClick={() => setOpenModal(false)}>
                 Cancel
               </Button>
-              <Button simple="true" style={{ color: "var(--color-primary)" }}>
+              <Button
+                simple="true"
+                style={{ color: "var(--color-primary)" }}
+                onClick={handleSaveFilter}
+              >
                 Save Changes
               </Button>
             </div>

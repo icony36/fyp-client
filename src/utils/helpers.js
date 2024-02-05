@@ -1,6 +1,6 @@
 import { v4 as uuid } from "uuid";
 
-import { TICKET_STATUS, ROLE } from "../constants";
+import { TICKET_STATUS, ROLE, SORT_TYPE } from "../constants";
 
 export const getNodeId = () => {
   const timestamp = Date.now().toString(36);
@@ -138,3 +138,25 @@ export const getCapitalize = (str) => {
 export const compareName = (firstName1, firstName2, lastName1, lastName2) => {
   return firstName1 === firstName2 && lastName1 === lastName2;
 };
+
+export const getSortedDataByDate = (arr, sortType) => {
+  const newArr = [...arr];
+
+  switch (sortType) {
+    case SORT_TYPE.earliest:
+      newArr.sort((a, b) => sortByOldest(a.createdAt, b.createdAt));
+      break;
+    case SORT_TYPE.latest:
+      newArr.sort((a, b) => sortByNewest(a.createdAt, b.createdAt));
+      break;
+    default:
+      newArr.sort((a, b) => sortByNewest(a.createdAt, b.createdAt));
+  }
+
+  return newArr;
+};
+
+export const sortOptions = [
+  { value: SORT_TYPE.earliest, label: "Date (Earliest to Latest)" },
+  { value: SORT_TYPE.latest, label: "Date (Latest to Earliest)" },
+];

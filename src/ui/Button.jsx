@@ -2,6 +2,9 @@ import styled, { css } from "styled-components";
 
 import React from "react";
 
+import { IconButton } from "@mui/material";
+import FilterAltOutlinedIcon from "@mui/icons-material/FilterAltOutlined";
+
 export const Button = styled.button`
   min-width: 180px;
   padding: 14px 16px;
@@ -101,5 +104,23 @@ export const CancelButton = (props) => {
     >
       Cancel
     </Button>
+  );
+};
+
+export const FilterButton = ({ onClick, style, ...remainingProps }) => {
+  return (
+    <>
+      <IconButton
+        sx={{
+          color: "var(--color-primary)",
+          border: "2px solid var(--color-primary)",
+          ...style,
+        }}
+        onClick={onClick}
+        {...remainingProps}
+      >
+        <FilterAltOutlinedIcon sx={{ height: "30px", width: "30px" }} />
+      </IconButton>
+    </>
   );
 };
