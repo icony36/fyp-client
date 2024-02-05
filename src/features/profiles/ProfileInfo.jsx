@@ -65,7 +65,7 @@ const ProfileInfo = () => {
 
           <FormGroup>
             <Info label="Outstanding Fee">
-              {studentProfile?.data?.outstandingFee}
+              $ {studentProfile?.data?.outstandingFee}
             </Info>
             <Info label="Enrolled Modules">
               {studentProfile?.data?.enrollments?.map((el, index) => {
