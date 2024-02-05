@@ -15,8 +15,8 @@ const SearchBar = (props) => {
       <Autocomplete
         sx={{
           ...sx,
-          backgroundColor: "white",
           "& .MuiOutlinedInput-root": {
+            backgroundColor: "white",
             paddingRight: "8px !important",
             padding: "8px",
             height: "48px",

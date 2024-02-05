@@ -16,7 +16,7 @@ import {
 } from "../../constants";
 import HeadingBar from "../../components/HeadingBar";
 import { Button } from "../../ui/Button";
-import Paper, {
+import {
   ContentContainer,
   PaperContainer,
   TitleContainer,
@@ -54,8 +54,6 @@ const TicketInfo = () => {
   const { id } = useParams();
 
   const navigate = useNavigate();
-
-  const { toast } = useToast();
 
   const { tickets, isFetching, ticketsStatus } = useFetchTickets({
     isStudentSession,
@@ -339,6 +337,7 @@ const TicketInfo = () => {
         </PaperContainer>
         {renderResponseForm()}
       </FormGroup>
+
       <Modal openModal={openModal}>
         <CardContainer style={{ margin: 0, height: "100%", minWidth: "780px" }}>
           <CardSubtitleContainer>Priority</CardSubtitleContainer>

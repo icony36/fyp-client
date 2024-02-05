@@ -20,3 +20,8 @@ export const TICKET_PRIORITY = Object.freeze({
   medium: "medium",
   high: "high",
 });
+
+export const SORT_DATE = Object.freeze({
+  earliest: "earliest",
+  latest: "latest",
+});

@@ -67,10 +67,10 @@ export const Input = ({
         </InputLabel>
         <OutlinedInput
           sx={{
-            borderRadius: "8px",
-            backgroundColor: "white",
             height: "48px",
             width: "100%",
+            borderRadius: "8px",
+            backgroundColor: "white",
             "& .MuiOutlinedInput-notchedOutline": {
               border: "2px solid black",
             },
