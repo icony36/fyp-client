@@ -341,7 +341,7 @@ const TicketInfo = () => {
       </FormGroup>
       <Modal openModal={openModal}>
         <CardContainer style={{ margin: 0, height: "100%", minWidth: "780px" }}>
-          <CardSubtitleContainer>Prority</CardSubtitleContainer>
+          <CardSubtitleContainer>Priority</CardSubtitleContainer>
           <CardContentContainer>
             <Radio
               options={priorityOptions}
