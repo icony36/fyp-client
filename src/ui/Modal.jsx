@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import { IconButton } from "@mui/material";
 import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import CloseIcon from "@mui/icons-material/Close";
 import { Button } from "../ui/Button";
 import { Heading } from "../ui/Typography";
@@ -33,6 +34,16 @@ const ConfirmModalContainer = styled.div`
   display: flex;
   justify-content: center;
   max-width: 800px;
+`;
+
+const AlertContainer = styled.div`
+  background-color: #ffdfde;
+  color: var(--color-red);
+  border-radius: 8px;
+  border-left: 4px solid var(--color-red);
+  padding: 20px;
+  display: flex;
+  align-items: flex-start;
 `;
 
 export const Modal = ({ openModal, closeModal, children }) => {
@@ -68,8 +79,10 @@ export const ConfirmModal = ({
   closeModal,
   title,
   subtitle,
-  confirmLabel,
-  cancelLabel,
+  confirmLabel = "Confirm",
+  cancelLabel = "Cancel",
+  isDelete,
+  children,
 }) => {
   return (
     <>
@@ -84,16 +97,27 @@ export const ConfirmModal = ({
               </IconButton>
             </div>
 
-            <div style={{ padding: "0 40px 40px 40px" }}>
-              <ErrorOutlineRoundedIcon
-                sx={{
-                  height: "100px",
-                  width: "100px",
-                  color: "var(--color-red)",
-                  marginBottom: "20px",
-                }}
-              />
+            <div style={{ marginBottom: "20px" }}>
+              {isDelete ? (
+                <DeleteForeverIcon
+                  style={{
+                    height: "100px",
+                    width: "100px",
+                    color: "var(--color-primary)",
+                  }}
+                />
+              ) : (
+                <ErrorOutlineRoundedIcon
+                  style={{
+                    height: "100px",
+                    width: "100px",
+                    color: "var(--color-red)",
+                  }}
+                />
+              )}
+            </div>
 
+            <div style={{ padding: "0 40px 40px 40px" }}>
               <Heading as="h1" style={{ color: "black", marginBottom: "20px" }}>
                 {title}
               </Heading>
@@ -101,29 +125,57 @@ export const ConfirmModal = ({
               <Heading as="h3" style={{ marginBottom: "20px" }}>
                 {subtitle}
               </Heading>
+
+              {isDelete && <Alert />}
+              {children}
             </div>
 
             <div style={{ marginBottom: "20px" }}>
               <Button
                 type="button"
                 outlined="true"
-                onClick={handleConfirm}
+                onClick={closeModal}
                 style={{ marginRight: "20px", width: "280px", height: "46px" }}
               >
-                {confirmLabel}
+                {cancelLabel}
               </Button>
               <Button
                 type="button"
                 primary="true"
-                onClick={closeModal}
+                onClick={handleConfirm}
                 style={{ width: "280px", height: "46px" }}
               >
-                {cancelLabel}
+                {confirmLabel}
               </Button>
             </div>
           </div>
         </ConfirmModalContainer>
       </Modal>
+    </>
+  );
+};
+
+export const Alert = () => {
+  return (
+    <>
+      <AlertContainer>
+        <ErrorOutlineRoundedIcon
+          style={{
+            height: "40px",
+            width: "40px",
+            marginRight: "20px",
+          }}
+        />
+        <div style={{ flex: 1, textAlign: "left" }}>
+          <Heading as="h2" style={{ fontWeight: "bold", marginTop: 0 }}>
+            Warning
+          </Heading>
+          <Heading as="h3">
+            This action is irreversible, and once deleted, the data cannot be
+            retrieved.
+          </Heading>
+        </div>
+      </AlertContainer>
     </>
   );
 };

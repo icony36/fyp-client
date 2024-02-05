@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+import { AuthContext } from "../../contexts";
 import { ROLE } from "../../constants";
 import { useToast } from "../../hooks/useToast";
 import { useFetchUsers } from "./useFetchUsers";
@@ -11,10 +12,13 @@ import { Button } from "../../ui/Button";
 import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { Info } from "../../ui/Info";
+import { ConfirmModal } from "../../ui/Modal";
 
 const UserInfo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const { auth } = useContext(AuthContext);
 
   const { toast } = useToast();
 
@@ -27,6 +31,8 @@ const UserInfo = () => {
 
   const [profile, setProfile] = useState({});
   const [studentProfile, setStudentProfile] = useState({});
+
+  const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
     if (usersStatus === "success") {
@@ -73,6 +79,15 @@ const UserInfo = () => {
     }
   };
 
+  const handleDelete = () => {
+    if (id === auth.id) {
+      toast.error("You cannot delete yourself!");
+      setOpenModal(false);
+    } else {
+      deleteUser(id);
+    }
+  };
+
   return (
     <>
       <HeadingBar title="View Profile" backLink={"/users"}>
@@ -88,7 +103,7 @@ const UserInfo = () => {
           outlined="true"
           style={{ marginLeft: "16px" }}
           disabled={isWorking}
-          onClick={() => deleteUser(id)}
+          onClick={() => setOpenModal(true)}
         >
           Delete
         </Button>
@@ -134,6 +149,17 @@ const UserInfo = () => {
           </FormGroup>
         </Paper>
       )}
+
+      <ConfirmModal
+        openModal={openModal}
+        closeModal={() => setOpenModal(false)}
+        title="Delete user?"
+        subtitle={`Are you sure you want to delete ${profile?.username} ?
+       You cannot undo this action.`}
+        confirmLabel="Delete User"
+        handleConfirm={handleDelete}
+        isDelete
+      />
     </>
   );
 };

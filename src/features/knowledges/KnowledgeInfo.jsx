@@ -11,6 +11,7 @@ import Paper, { Title } from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { Heading } from "../../ui/Typography";
 import { ChipStack, OutlinedChip } from "../../ui/Chip";
+import { ConfirmModal } from "../../ui/Modal";
 
 const KnowledgeInfo = () => {
   const { id } = useParams();
@@ -34,6 +35,8 @@ const KnowledgeInfo = () => {
     updatedAt: new Date(),
   });
 
+  const [openModal, setOpenModal] = useState(false);
+
   useEffect(() => {
     if (knowledgesStatus === "success") {
       const knowledgeData = knowledges.data?.filter((el) => el._id === id)[0];
@@ -52,7 +55,7 @@ const KnowledgeInfo = () => {
         updatedAt: knowledgeData.updatedAt,
       }));
     }
-  }, [knowledgesStatus, knowledges]);
+  }, [knowledgesStatus, knowledges, id, navigate, toast]);
 
   return (
     <>
@@ -69,7 +72,8 @@ const KnowledgeInfo = () => {
           outlined="true"
           style={{ marginLeft: "16px" }}
           disabled={isWorking}
-          onClick={() => deleteKnowledge(id)}
+          // onClick={() => deleteKnowledge(id)}
+          onClick={() => setOpenModal(true)}
         >
           Delete
         </Button>
@@ -115,7 +119,7 @@ const KnowledgeInfo = () => {
       <Paper title="KnowledgeBase Information">
         <div style={{ marginBottom: "20px" }}>
           <Title>Description</Title>
-          <Heading as="h3">{knowledge.description}</Heading>
+          <Heading as="h3">{knowledge?.description}</Heading>
         </div>
 
         <Title style={{ marginBottom: "8px" }}>Tags</Title>
@@ -135,6 +139,17 @@ const KnowledgeInfo = () => {
           })}
         </ChipStack>
       </Paper>
+
+      <ConfirmModal
+        openModal={openModal}
+        closeModal={() => setOpenModal(false)}
+        title="Delete knowledge?"
+        subtitle={`Are you sure you want to delete “${knowledge?.title}” ?
+        You cannot undo this action.`}
+        confirmLabel="Delete Knowledge Base"
+        handleConfirm={() => deleteKnowledge(id)}
+        isDelete
+      />
     </>
   );
 };

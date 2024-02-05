@@ -105,7 +105,7 @@ const KnowledgeForm = ({ isEditSession }) => {
       <form className="register-form" onSubmit={handleSubmit}>
         <HeadingBar
           title={isEditSession ? "Edit Knowledge" : "Create New Knowledge"}
-          backLink={"/knowledges"}
+          backLink={`/knowledges/${id}`}
           checkBack
         >
           <Button disabled={isWorking} primary="true" type="submit">

@@ -1,8 +1,5 @@
 import React, { useState, useContext } from "react";
 
-import { FormControl, TextField } from "@mui/material";
-import { TextareaAutosize } from "@mui/base/TextareaAutosize";
-
 import { AuthContext } from "../../contexts";
 
 import { useCreateTicket } from "./useCreateTicket";
