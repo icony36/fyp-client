@@ -1,14 +1,12 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { Icon, IconButton } from "@mui/material";
+import { IconButton } from "@mui/material";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ErrorOutlineRoundedIcon from "@mui/icons-material/ErrorOutlineRounded";
-import CloseIcon from "@mui/icons-material/Close";
+
 import { Heading } from "../ui/Typography";
 import { HeadingContainer } from "../ui/HeadingContainer";
-import { Modal } from "../ui/Modal";
-import { Button } from "../ui/Button";
+import { ConfirmModal } from "../ui/Modal";
 
 const TitleContainer = styled.div`
   display: flex;
@@ -23,17 +21,6 @@ const ActionContainer = styled.div`
   align-items: center;
   flex: 2;
   justify-content: flex-end;
-`;
-
-const BackModalContainer = styled.div`
-  border-radius: 10px;
-  background-color: white;
-  padding: 20px;
-  text-align: center;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  max-width: 800px;
 `;
 
 const HeadingBar = ({ style, children, title, backLink, checkBack }) => {
@@ -69,73 +56,19 @@ const HeadingBar = ({ style, children, title, backLink, checkBack }) => {
         </TitleContainer>
         <ActionContainer>{children}</ActionContainer>
       </HeadingContainer>
-      <BackModal
+      <ConfirmModal
         openModal={openModal}
-        handleBack={handleBack}
+        handleConfirm={handleBack}
         closeModal={() => setOpenModal(false)}
+        title="Leave Without Saving?"
+        subtitle=" Are you sure you want to leave? Any unsaved changes will be
+        lost. Click 'Stay' to continue editing, or 'Leave' to discard
+        changes."
+        confirmLabel="Leave"
+        cancelLabel="Stay"
       />
     </>
   );
 };
 
 export default HeadingBar;
-
-export const BackModal = ({ handleBack, openModal, closeModal }) => {
-  return (
-    <>
-      <Modal openModal={openModal}>
-        <BackModalContainer>
-          <div>
-            <div style={{ display: "flex", justifyContent: "flex-end" }}>
-              <IconButton onClick={closeModal}>
-                <CloseIcon
-                  sx={{ color: "black", width: "40px", height: "40px" }}
-                />
-              </IconButton>
-            </div>
-
-            <div style={{ padding: "0 40px 40px 40px" }}>
-              <ErrorOutlineRoundedIcon
-                sx={{
-                  height: "100px",
-                  width: "100px",
-                  color: "var(--color-red)",
-                  marginBottom: "20px",
-                }}
-              />
-
-              <Heading as="h1" style={{ color: "black", marginBottom: "20px" }}>
-                Leave Without Saving?
-              </Heading>
-
-              <Heading as="h3" style={{ marginBottom: "20px" }}>
-                Are you sure you want to leave? Any unsaved changes will be
-                lost. Click 'Stay' to continue editing, or 'Leave' to discard
-                changes.
-              </Heading>
-            </div>
-
-            <div style={{ marginBottom: "20px" }}>
-              <Button
-                type="button"
-                outlined="true"
-                onClick={handleBack}
-                style={{ marginRight: "20px", width: "280px", height: "46px" }}
-              >
-                Leave
-              </Button>
-              <Button
-                type="button"
-                primary="true"
-                onClick={closeModal}
-                style={{ width: "280px", height: "46px" }}
-              >
-                Stay
-              </Button>
-            </div>
-          </div>
-        </BackModalContainer>
-      </Modal>
-    </>
-  );
-};

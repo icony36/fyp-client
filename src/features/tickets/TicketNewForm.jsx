@@ -7,7 +7,7 @@ import { AuthContext } from "../../contexts";
 
 import { useCreateTicket } from "./useCreateTicket";
 import HeadingBar from "../../components/HeadingBar";
-import { Button } from "../../ui/Button";
+import { Button, CancelButton } from "../../ui/Button";
 import Paper from "../../ui/Paper";
 import { Input, TextAreaInput } from "../../ui/Input";
 
@@ -47,10 +47,12 @@ const TicketNewForm = () => {
   return (
     <>
       <form className="register-form" onSubmit={handleSubmit}>
-        <HeadingBar title="Create Ticket" backLink={"/tickets"}>
+        <HeadingBar title="Create Ticket" backLink={"/tickets"} checkBack>
           <Button disabled={isCreating} primary type="submit">
             Create
           </Button>
+
+          <CancelButton />
         </HeadingBar>
 
         <Paper title={"Ticket Details"}>

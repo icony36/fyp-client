@@ -7,7 +7,7 @@ import { useToast } from "../../hooks/useToast";
 import { useFetchUsers } from "./useFetchUsers";
 import { useCreateUser } from "./useCreateUser";
 import { useEditUser } from "./useEditUser";
-import HeadingBar, { BackModal } from "../../components/HeadingBar";
+import HeadingBar from "../../components/HeadingBar";
 import { Button, CancelButton } from "../../ui/Button";
 import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
