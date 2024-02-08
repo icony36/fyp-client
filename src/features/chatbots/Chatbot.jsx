@@ -186,6 +186,7 @@ const Chatbot = () => {
               }}
               primary="true"
               type="submit"
+              disabled={isLoading}
             >
               Send
               <SendIcon />
