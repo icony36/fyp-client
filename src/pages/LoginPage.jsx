@@ -83,16 +83,20 @@ const LoginPage = () => {
         </HeroContainer>
 
         <FormContainer>
-          {isLoading && (
-            <LinearProgress
-              sx={{
-                width: "100%",
-                "& .MuiLinearProgress-bar": {
-                  backgroundColor: "var(--color-primary)",
-                },
-              }}
-            />
-          )}
+          <div style={{ width: "100%", height: "4px" }}>
+            {isLoading && (
+              <LinearProgress
+                sx={{
+                  width: "100%",
+                  height: "100%",
+                  "& .MuiLinearProgress-bar": {
+                    backgroundColor: "var(--color-primary)",
+                  },
+                }}
+              />
+            )}
+          </div>
+
           <div style={{ flex: 1, alignItems: "center", display: "flex" }}>
             <LoginForm setIsLoading={setIsLoading} />
           </div>
