@@ -17,6 +17,12 @@ export const Button = styled.button`
   user-select: none;
   -moz-user-select: none;
 
+  &:disabled {
+    background-color: var(--color-light-grey);
+    color: grey;
+    pointer-events: none;
+  }
+
   ${({ small }) =>
     small &&
     css`
