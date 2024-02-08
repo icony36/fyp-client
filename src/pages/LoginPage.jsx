@@ -83,9 +83,14 @@ const LoginPage = () => {
         </HeroContainer>
 
         <FormContainer>
-          {isLoading && (
+          {!isLoading && (
             <LinearProgress
-              sx={{ width: "100%", color: "var(--color-primary)" }}
+              sx={{
+                width: "100%",
+                "& .MuiLinearProgress-bar": {
+                  backgroundColor: "var(--color-primary)",
+                },
+              }}
             />
           )}
           <div style={{ flex: 1, alignItems: "center", display: "flex" }}>
