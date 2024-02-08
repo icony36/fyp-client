@@ -38,6 +38,7 @@ const LoginForm = ({ setIsLoading }) => {
 
       navigate("/", { replace: true });
     } catch (err) {
+      setIsLoading(false);
       toast.error(err.message);
     }
   };
