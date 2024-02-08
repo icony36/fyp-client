@@ -109,7 +109,7 @@ export const CancelButton = (props) => {
       onClick={reload}
       {...props}
     >
-      Cancel
+      Reset
     </Button>
   );
 };
