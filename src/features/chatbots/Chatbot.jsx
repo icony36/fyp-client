@@ -52,7 +52,6 @@ const MessageContainer = styled.div`
 const MessageItem = styled.div`
   background-color: white;
   border-radius: 10px 10px 10px 0;
-  width: max-content;
   margin: 16px 20px 16px 0;
   padding: 10px 16px;
 
@@ -65,7 +64,7 @@ const MessageItem = styled.div`
 
 const Message = ({
   message = { isUser: false, text: "" },
-  isTyping = false,
+  isLoading = false,
 }) => {
   return (
     <MessageContainer isuser={message.isUser ? 1 : undefined}>
@@ -74,8 +73,9 @@ const Message = ({
           <img src={LogoIcon} alt="Chatbot icon" />
         </ProfileImage>
       )}
+
       <MessageItem isuser={message.isUser ? 1 : undefined}>
-        {isTyping ? (
+        {isLoading ? (
           <div style={{ padding: "10px 16px" }}>
             <LoadingTyping />
           </div>
@@ -162,7 +162,7 @@ const Chatbot = () => {
         ></HeadingBar>
         <ChatbotMessageContainer>
           {renderMessages()}
-          {isLoading && <Message isTyping />}
+          {isLoading && <Message isLoading />}
           <div ref={messagesEndRef}></div>
         </ChatbotMessageContainer>
 

@@ -7,8 +7,8 @@ export const ProfileImage = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 48px;
-  width: 48px;
+  min-height: 48px;
+  min-width: 48px;
   margin-right: 12px;
 
   ${({ size }) =>
