@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { Navigate } from "react-router-dom";
 
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import { Heading } from "../ui/Typography";
 import { AuthContext } from "../contexts";
 import LoginForm from "../features/auths/LoginForm";
 import { useToast } from "../hooks/useToast";
+import { LinearProgress } from "@mui/material";
 
 const LoginContainer = styled.div`
   display: flex;
@@ -30,6 +31,7 @@ const FormContainer = styled.div`
   align-items: center;
   justify-content: center;
   display: flex;
+  flex-direction: column;
 `;
 
 const LogoImage = styled.img`
@@ -42,6 +44,8 @@ const LoginPage = () => {
   const { auth } = useContext(AuthContext);
 
   const { Toast } = useToast();
+
+  const [isLoading, setIsLoading] = useState(false);
 
   return auth.isAuth ? (
     <Navigate to="/" />
@@ -79,7 +83,14 @@ const LoginPage = () => {
         </HeroContainer>
 
         <FormContainer>
-          <LoginForm />
+          {isLoading && (
+            <LinearProgress
+              sx={{ width: "100%", color: "var(--color-primary)" }}
+            />
+          )}
+          <div style={{ flex: 1, alignItems: "center", display: "flex" }}>
+            <LoginForm setIsLoading={setIsLoading} />
+          </div>
         </FormContainer>
       </LoginContainer>
     </>

@@ -8,7 +8,7 @@ import { Button } from "../../ui/Button";
 import { AuthContext } from "../../contexts";
 import { useToast } from "../../hooks/useToast";
 
-const LoginForm = () => {
+const LoginForm = ({ setIsLoading }) => {
   const navigate = useNavigate();
 
   const { toast } = useToast();
@@ -32,7 +32,9 @@ const LoginForm = () => {
     event.preventDefault();
 
     try {
+      setIsLoading(true);
       await login(loginData);
+      setIsLoading(false);
 
       navigate("/", { replace: true });
     } catch (err) {
@@ -42,7 +44,7 @@ const LoginForm = () => {
 
   return (
     <>
-      <form name="loginForm" onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}>
         <div style={{ marginBottom: "60px", textAlign: "center" }}>
           <Heading light="true" as="h1">
             Welcome Back
