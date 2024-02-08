@@ -83,7 +83,7 @@ const LoginPage = () => {
         </HeroContainer>
 
         <FormContainer>
-          {!isLoading && (
+          {isLoading && (
             <LinearProgress
               sx={{
                 width: "100%",
