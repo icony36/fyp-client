@@ -24,6 +24,7 @@ export const InputContainer = styled.div`
 export const InputLabel = styled.p`
   font-size: 16px;
   margin: 0 0 8px 0;
+  color: black;
 
   ${({ light }) =>
     light &&
@@ -51,6 +52,33 @@ const TextArea = styled.textarea`
   }
 `;
 
+export const RawInput = ({ style, light, ...remainingProps }) => {
+  return (
+    <OutlinedInput
+      sx={{
+        height: "48px",
+        width: "100%",
+        borderRadius: "8px",
+        backgroundColor: "white",
+        "& .MuiOutlinedInput-notchedOutline": {
+          border: "2px solid black",
+        },
+        "&.Mui-focused": {
+          "& .MuiOutlinedInput-notchedOutline": {
+            border: `2px solid ${
+              light ? "var(--color-primary-darker)" : "var(--color-primary)"
+            }`,
+          },
+        },
+        ...style,
+      }}
+      margin="none"
+      fullWidth
+      {...remainingProps}
+    />
+  );
+};
+
 export const Input = ({
   label,
   light,
@@ -65,29 +93,7 @@ export const Input = ({
         <InputLabel light={light} {...labelProps}>
           {label}
         </InputLabel>
-        <OutlinedInput
-          sx={{
-            height: "48px",
-            width: "100%",
-            borderRadius: "8px",
-            backgroundColor: "white",
-            "& .MuiOutlinedInput-notchedOutline": {
-              border: "2px solid black",
-            },
-            "&.Mui-focused": {
-              "& .MuiOutlinedInput-notchedOutline": {
-                border: `2px solid ${
-                  light ? "var(--color-primary-darker)" : "var(--color-primary)"
-                }`,
-              },
-            },
-            ...sx,
-          }}
-          margin="none"
-          fullWidth
-          // inputLabelProps={{ shrink: false }}
-          {...remainingProps}
-        />
+        <RawInput light={light} style={sx} {...remainingProps} />
       </InputContainer>
     </>
   );
@@ -144,6 +150,7 @@ export const SelectInput = ({
   capitalizeOption,
   containerProps,
   labelProps,
+  itemProps,
   sx,
   ...remainingProps
 }) => {
@@ -173,7 +180,7 @@ export const SelectInput = ({
         {...remainingProps}
       >
         {options?.map((el, i) => (
-          <MenuItem key={i} value={el}>
+          <MenuItem key={i} value={el} {...itemProps}>
             {capitalizeOption ? getCapitalize(el) : el}
           </MenuItem>
         ))}

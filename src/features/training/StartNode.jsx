@@ -2,7 +2,8 @@ import React, { useMemo, useState } from "react";
 import { Handle, Position, getConnectedEdges, useStore } from "reactflow";
 
 import "reactflow/dist/style.css";
-import { Card, CardContent, TextField } from "@mui/material";
+import { NodeContainer } from "../../ui/Node";
+import { Input } from "../../ui/Input";
 
 const selector = (s) => ({
   nodeInternals: s.nodeInternals,
@@ -21,23 +22,20 @@ const StartNode = ({ id, data, isConnectable, selected }) => {
 
   return (
     <>
-      <Card
-        variant="outlined"
-        className={`node ${selected ? "node-selected" : ""}`}
-      >
-        <CardContent>
-          <TextField
-            sx={{ width: "25ch" }}
-            size="small"
-            className="nodrag"
-            variant="outlined"
-            label="Flow Name"
-            name="nodeName"
-            value={nodeName}
-            onChange={(e) => setNodeName(e.target.value)}
-          />
-        </CardContent>
-      </Card>
+      <NodeContainer selected={selected ? 1 : undefined}>
+        <Input
+          className="nodrag"
+          label="Flow Name"
+          name="nodeName"
+          value={nodeName}
+          onChange={(e) => setNodeName(e.target.value)}
+          containerProps={{
+            style: {
+              minWidth: "300px",
+            },
+          }}
+        />
+      </NodeContainer>
 
       <Handle
         type="source"

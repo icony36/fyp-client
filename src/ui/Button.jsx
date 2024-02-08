@@ -14,8 +14,9 @@ export const Button = styled.button`
   border: 2px solid rgba(0, 0, 0, 0);
   cursor: pointer;
   transition: 0.3s;
-  user-select: none;
-  -moz-user-select: none;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
 
   &:disabled {
     background-color: var(--color-light-grey);
@@ -68,6 +69,32 @@ export const Button = styled.button`
         border: 2px solid var(--color-primary);
       }
     `}
+
+    ${({ orange }) =>
+    orange &&
+    css`
+      background-color: var(--color-orange);
+      color: var(--color-white);
+      &:hover {
+        background-color: transparent;
+        color: var(--color-orange);
+        border: 2px solid var(--color-orange);
+      }
+    `}
+
+    ${({ whiteoutlined }) =>
+    whiteoutlined &&
+    css`
+      border: 2px solid var(--color-white);
+      background-color: transparent;
+      color: white;
+      &:hover {
+        background-color: white;
+        color: var(--color-primary);
+        border: 2px solid white;
+      }
+    `}
+  
   
     ${({ outlined }) =>
     outlined &&
@@ -91,6 +118,14 @@ export const Button = styled.button`
         color: var(--color-white);
         border: 2px solid var(--color-white);
       }
+    `}
+
+  ${({ withicon }) =>
+    withicon &&
+    css`
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
     `}
 `;
 

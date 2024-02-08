@@ -1,11 +1,31 @@
 import React from "react";
 import ReactFlow, { Panel } from "reactflow";
 
-import { Paper, Card, IconButton, Typography } from "@mui/material";
-import UndoIcon from "@mui/icons-material/Undo";
-import RedoIcon from "@mui/icons-material/Redo";
+import { IconButton } from "@mui/material";
 import RestoreIcon from "@mui/icons-material/Restore";
 import UpdateIcon from "@mui/icons-material/Update";
+import styled from "styled-components";
+import { Heading } from "../../ui/Typography";
+
+const SidebarContainer = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  border: 4px solid var(--color-primary);
+  padding: 20px;
+`;
+
+const SidebarItem = styled.div`
+  background-color: white;
+  border-radius: 10px;
+  border: 2px solid black;
+  padding: 10px 20px;
+  text-align: center;
+  cursor: pointer;
+
+  &:hover {
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  }
+`;
 
 const FlowSidebar = ({ undo, redo, canUndo, canRedo }) => {
   const onDragStart = (event, nodeType) => {
@@ -16,31 +36,26 @@ const FlowSidebar = ({ undo, redo, canUndo, canRedo }) => {
   return (
     <>
       <Panel position="top-right">
-        <Paper className="flow-sidebar" variant="outlined">
-          <Card
-            variant="outlined"
-            className="flow-sidebar-node"
+        <SidebarContainer>
+          <SidebarItem
+            style={{ marginBottom: "16px" }}
             onDragStart={(e) => onDragStart(e, "startNode")}
-            sx={{ border: 1 }}
             draggable
           >
-            <Typography variant="button">Start Node</Typography>
-          </Card>
+            <Heading as="h3">START NODE</Heading>
+          </SidebarItem>
 
-          <Card
-            variant="outlined"
-            className="flow-sidebar-node"
+          <SidebarItem
             onDragStart={(e) => onDragStart(e, "stepNode")}
-            sx={{ border: 1 }}
             draggable
           >
-            <Typography variant="button">Step Node</Typography>
-          </Card>
+            <Heading as="h3">STEP NODE</Heading>
+          </SidebarItem>
 
           <div
             style={{
               display: "flex",
-              marginTop: "28px",
+              marginTop: "20px",
               justifyContent: "space-evenly",
               alignItems: "center",
             }}
@@ -49,7 +64,7 @@ const FlowSidebar = ({ undo, redo, canUndo, canRedo }) => {
               size="large"
               onClick={() => undo()}
               disabled={!canUndo}
-              color="primary"
+              sx={{ color: "var(--color-primary)" }}
             >
               <RestoreIcon fontSize="inherit" />
             </IconButton>
@@ -57,12 +72,12 @@ const FlowSidebar = ({ undo, redo, canUndo, canRedo }) => {
               size="large"
               onClick={() => redo()}
               disabled={!canRedo}
-              color="primary"
+              sx={{ color: "var(--color-primary)" }}
             >
               <UpdateIcon fontSize="inherit" />
             </IconButton>
           </div>
-        </Paper>
+        </SidebarContainer>
       </Panel>
     </>
   );

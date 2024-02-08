@@ -344,8 +344,16 @@ const FlowEditor = ({
 
   return (
     <>
-      <Paper sx={{ marginTop: "24px", height: "700px" }} ref={reactFlowWrapper}>
+      <div
+        style={{
+          borderRadius: "0 20px 20px 20px",
+          height: "800px",
+          backgroundColor: "white",
+        }}
+        ref={reactFlowWrapper}
+      >
         <ReactFlow
+          style={{ borderRadius: "0 20px 20px 20px" }}
           ref={menuRef}
           onInit={setReactFlowInstance}
           nodes={nodes}
@@ -403,7 +411,7 @@ const FlowEditor = ({
           <Background variant={"lines"} />
           <Controls />
         </ReactFlow>
-      </Paper>
+      </div>
     </>
   );
 };

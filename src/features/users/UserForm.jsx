@@ -184,7 +184,7 @@ const UserForm = ({ isEditSession }) => {
         <Paper title="Account Information">
           <FormGroup>
             <Input
-              containerProps={{ style: { width: "49%" } }}
+              containerProps={{ style: { flex: 1, marginRight: "10px" } }}
               label="Username *"
               id="username"
               name="userData.username"
@@ -194,7 +194,7 @@ const UserForm = ({ isEditSession }) => {
             />
 
             <PasswordInput
-              containerProps={{ style: { width: "49%" } }}
+              containerProps={{ style: { flex: 1 } }}
               label="Password *"
               id="password"
               name="userData.password"
@@ -208,7 +208,7 @@ const UserForm = ({ isEditSession }) => {
         <Paper title="User Information">
           <FormGroup style={{ marginBottom: "20px" }}>
             <Input
-              containerProps={{ style: { width: "49%" } }}
+              containerProps={{ style: { flex: 1, marginRight: "10px" } }}
               id="firstName"
               label="First Name * "
               required
@@ -218,7 +218,7 @@ const UserForm = ({ isEditSession }) => {
             />
 
             <Input
-              containerProps={{ style: { width: "49%" } }}
+              containerProps={{ style: { flex: 1 } }}
               id="lastName"
               label="Last Name *"
               required
@@ -230,7 +230,7 @@ const UserForm = ({ isEditSession }) => {
 
           <FormGroup>
             <Input
-              containerProps={{ style: { width: "49%" } }}
+              containerProps={{ style: { flex: 1, marginRight: "10px" } }}
               id="email"
               label="Email *"
               type="email"
@@ -241,7 +241,7 @@ const UserForm = ({ isEditSession }) => {
             />
 
             <SelectInput
-              containerProps={{ style: { width: "49%" } }}
+              containerProps={{ style: { flex: 1 } }}
               id="role"
               label="Role *"
               name="userData.role"
@@ -257,7 +257,7 @@ const UserForm = ({ isEditSession }) => {
           <Paper title="Student Information">
             <FormGroup style={{ marginBottom: "20px" }}>
               <Input
-                containerProps={{ style: { width: "49%" } }}
+                containerProps={{ style: { flex: 1, marginRight: "10px" } }}
                 id="course"
                 label="Course *"
                 required
@@ -267,7 +267,7 @@ const UserForm = ({ isEditSession }) => {
               />
 
               <Input
-                containerProps={{ style: { width: "49%" } }}
+                containerProps={{ style: { flex: 1 } }}
                 id="outstandingFee"
                 label="Outstanding Fee"
                 type="number"

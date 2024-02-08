@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { Handle, Position } from "reactflow";
 
 import "reactflow/dist/style.css";
-import { Card, CardContent, TextField, MenuItem } from "@mui/material";
+import { NodeContainer } from "../../ui/Node";
+import { SelectInput } from "../../ui/Input";
 
 const StepNode = ({ id, data, isConnectable, selected }) => {
   const { setUpdatedNode, nodeOptions, intentOptions, responseOptions } = data;
@@ -19,39 +20,25 @@ const StepNode = ({ id, data, isConnectable, selected }) => {
     setContentValue("");
   };
 
-  const renderOptions = () => {
+  const getStepOptions = () => {
+    const arr = [];
+
     switch (contentType) {
       case "Intent":
-        if (intentOptions.length <= 0) {
-          return (
-            <MenuItem sx={{ width: "20ch" }} value={""}>
-              None
-            </MenuItem>
-          );
+        if (intentOptions.length > 0) {
+          intentOptions.forEach((el) => arr.push(el.name));
         }
-
-        return intentOptions.map((el, index) => (
-          <MenuItem sx={{ width: "20ch" }} key={index} value={el.name}>
-            {el.name ? el.name : "None"}
-          </MenuItem>
-        ));
+        break;
       case "Response":
-        if (responseOptions.length <= 0) {
-          return <MenuItem value={""}>None</MenuItem>;
+        if (responseOptions.length > 0) {
+          responseOptions.forEach((el) => arr.push(el.name));
         }
-
-        return responseOptions.map((el, index) => (
-          <MenuItem sx={{ width: "20ch" }} key={index} value={el.name}>
-            {el.name ? el.name : "None"}
-          </MenuItem>
-        ));
+        break;
       default:
-        return (
-          <MenuItem sx={{ width: "20ch" }} value={""}>
-            Error
-          </MenuItem>
-        );
+        break;
     }
+
+    return arr;
   };
 
   return (
@@ -63,54 +50,41 @@ const StepNode = ({ id, data, isConnectable, selected }) => {
         isConnectable={isConnectable}
       />
 
-      <Card
-        variant="outlined"
-        className={`node ${selected ? "node-selected" : ""}`}
-      >
-        <CardContent>
-          <div>
-            <TextField
-              select
-              sx={{ width: "15ch" }}
-              size="small"
-              className="nodrag"
-              id="contentType"
-              label="Type"
-              name="contentType"
-              value={contentType}
-              onChange={(e) => handleContentTypeChanged(e.target.value)}
-            >
-              {nodeOptions.map((el, index) => {
-                return (
-                  <MenuItem style={{ width: "20ch" }} key={index} value={el}>
-                    {el}
-                  </MenuItem>
-                );
-              })}
-            </TextField>
-          </div>
+      <NodeContainer selected={selected ? 1 : undefined}>
+        <div>
+          <SelectInput
+            label="Type"
+            className="nodrag"
+            options={nodeOptions}
+            name="contentType"
+            value={contentType}
+            onChange={(e) => handleContentTypeChanged(e.target.value)}
+            containerProps={{
+              style: {
+                minWidth: "300px",
+              },
+            }}
+          />
+        </div>
 
-          <div style={{ marginTop: "8px" }}>
-            {contentType ? (
-              <TextField
-                select
-                sx={{ width: "15ch" }}
-                size="small"
-                className="nodrag"
-                id="step"
-                label={contentType}
-                name="step"
-                value={contentValue}
-                onChange={(e) => setContentValue(e.target.value)}
-              >
-                {renderOptions()}
-              </TextField>
-            ) : (
-              <></>
-            )}
-          </div>
-        </CardContent>
-      </Card>
+        <div style={{ marginTop: "8px" }}>
+          {contentType && (
+            <SelectInput
+              label={contentType}
+              className="nodrag"
+              options={getStepOptions()}
+              name="step"
+              value={contentValue}
+              onChange={(e) => setContentValue(e.target.value)}
+              containerProps={{
+                style: {
+                  minWidth: "300px",
+                },
+              }}
+            />
+          )}
+        </div>
+      </NodeContainer>
 
       <Handle
         type="source"

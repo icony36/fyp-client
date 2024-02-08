@@ -1,15 +1,29 @@
 import React from "react";
 
-import {
-  Paper,
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  IconButton,
-} from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { IconButton } from "@mui/material";
+import AddOutlinedIcon from "@mui/icons-material/AddOutlined";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+
+import { Button } from "../../ui/Button";
+import { RawInput, InputLabel } from "../../ui/Input";
+
+const RemoveButton = ({ onClick }) => {
+  return (
+    <>
+      <IconButton
+        sx={{
+          color: "var(--color-primary)",
+          height: "30px",
+          width: "30px",
+          padding: "0",
+        }}
+        onClick={onClick}
+      >
+        <RemoveCircleIcon sx={{ height: "30px", width: "30px" }} />
+      </IconButton>
+    </>
+  );
+};
 
 const IntentForm = ({
   formData,
@@ -17,7 +31,9 @@ const IntentForm = ({
   initData,
   valueName,
   keyLabel,
+  keyPlaceholder,
   valueLabel,
+  valuePlaceholder,
   addNewGroupLabel,
   addNewValueLabel,
 }) => {
@@ -64,99 +80,94 @@ const IntentForm = ({
 
   const renderGroup = (el, index) => {
     return (
-      <Box key={index} sx={{ marginBottom: "16px" }}>
-        <Box
-          sx={{
+      <div key={index} sx={{ marginBottom: "16px" }}>
+        <div
+          style={{
             display: "flex",
             alignItems: "flex-start",
-            justifyContent: "center",
-            padding: "24px 48px",
-            backgroundColor: "#ebf7fd",
+            justifyContent: "space-between",
+            padding: "10px 20px",
+            backgroundColor: "white",
+            borderRadius: "10px",
           }}
         >
-          <Box sx={{ marginRight: "8px" }}>
-            <FormControl sx={{ display: "flex", flexDirection: "row" }}>
-              <IconButton onClick={() => handleRemoveKey(index)}>
-                <RemoveCircleIcon />
-              </IconButton>
-              <TextField
-                label={keyLabel}
-                variant="outlined"
+          <div style={{ flex: 1, marginRight: "10px" }}>
+            <InputLabel style={{ marginLeft: "30px" }}>{keyLabel}</InputLabel>
+
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <div style={{ marginRight: "10px" }}>
+                <RemoveButton onClick={() => handleRemoveKey(index)} />
+              </div>
+              <RawInput
+                style={{ flex: 1 }}
+                placeholder={keyPlaceholder}
                 value={el.name}
                 onChange={(e) => handleKeyChange(e, index)}
               />
-            </FormControl>
-          </Box>
+            </div>
+          </div>
 
-          <Box>
+          <div style={{ flex: 1 }}>
             {el[valueName]?.map((value, valueIndex) => (
-              <Box key={valueIndex} sx={{ marginBottom: "16px" }}>
-                <div
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-start",
-                    alignItems: "stretch",
-                  }}
-                >
-                  <FormControl sx={{ width: "60ch" }}>
-                    <TextField
-                      label={valueLabel}
-                      variant="outlined"
-                      value={value}
-                      onChange={(e) => handleValueChange(e, index, valueIndex)}
-                    />
-                  </FormControl>
+              <div key={valueIndex} style={{ marginBottom: "10px" }}>
+                <InputLabel>{valueLabel}</InputLabel>
 
-                  <FormControl
-                    style={{
-                      width: "5ch",
-                      height: "56px",
-                      alignSelf: "stretch",
-                    }}
-                  >
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <RawInput
+                    style={{ flex: 1 }}
+                    placeholder={valuePlaceholder}
+                    value={value}
+                    onChange={(e) => handleValueChange(e, index, valueIndex)}
+                  />
+                  <div style={{ marginLeft: "10px", width: "30px" }}>
                     {valueIndex !== 0 && (
-                      <IconButton
-                        sx={{ margin: "auto" }}
+                      <RemoveButton
                         onClick={() => handleRemoveValue(index, valueIndex)}
-                      >
-                        <RemoveCircleIcon />
-                      </IconButton>
+                      />
                     )}
-                  </FormControl>
+                  </div>
                 </div>
-              </Box>
+              </div>
             ))}
-            <Box>
+
+            <div>
               <Button
-                variant="outlined"
-                endIcon={<AddCircleIcon />}
+                style={{
+                  width: "174px",
+                  height: "52px",
+                }}
+                outlined="true"
+                withicon="true"
                 onClick={() => handleAddValue(index)}
               >
                 {addNewValueLabel}
+                <AddOutlinedIcon />
               </Button>
-            </Box>
-          </Box>
-        </Box>
-      </Box>
+            </div>
+          </div>
+        </div>
+      </div>
     );
   };
 
   return (
     <>
-      <Paper
-        sx={{ marginTop: "24px", padding: "24px 48px", minHeight: "500px" }}
-      >
+      <div style={{ padding: "20px 40px" }}>
         {formData.map((el, index) => renderGroup(el, index))}
         <Button
-          sx={{ marginTop: "16px" }}
-          variant="outlined"
-          endIcon={<AddCircleIcon />}
+          style={{
+            marginTop: "16px",
+            height: "52px",
+            width: "174px",
+          }}
+          whiteoutlined="true"
+          withicon="true"
           onClick={handleAddKey}
         >
           {addNewGroupLabel}
+          <AddOutlinedIcon />
         </Button>
-      </Paper>
+      </div>
     </>
   );
 };

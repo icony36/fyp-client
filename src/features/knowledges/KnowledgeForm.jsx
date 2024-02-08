@@ -58,7 +58,7 @@ const KnowledgeForm = ({ isEditSession }) => {
         labels: knowledgeData.labels,
       }));
     }
-  }, [knowledgesStatus, knowledges, id, isEditSession]);
+  }, [knowledgesStatus, knowledges, id, isEditSession, navigate, toast]);
 
   const handleChange = (event) => {
     setFormData((prevState) => ({

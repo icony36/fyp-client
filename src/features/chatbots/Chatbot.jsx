@@ -178,13 +178,12 @@ const Chatbot = () => {
             <Button
               style={{
                 height: "52px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "space-evenly",
+
                 padding: "16px",
                 minWidth: "120px",
               }}
               primary="true"
+              withicon="true"
               type="submit"
               disabled={isLoading}
             >

@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { ReactFlowProvider, useNodesState, useEdgesState } from "reactflow";
+import { ReactFlowProvider } from "reactflow";
 import useUndoable from "use-undoable";
 
-import { Tabs, Tab, Box, Button, Toolbar } from "@mui/material";
-import SaveIcon from "@mui/icons-material/Save";
+import { Tabs, Tab } from "@mui/material";
+import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
 import TextForm from "./TextForm";
 import FlowEditor from "./FlowEditor";
+import { Button } from "../../ui/Button";
+import styled from "styled-components";
+
+const ContentContainer = styled.div`
+  background-color: var(--color-primary-darker);
+  border: 4px solid var(--color-primary);
+  border-radius: 0 20px 20px 20px;
+  min-height: 800px;
+`;
 
 const tabs = ["Intents", "Responses", "Flows"];
 
@@ -59,10 +68,12 @@ const TrainingPanel = () => {
             setFormData={setIntents}
             initData={initIntents}
             valueName="examples"
-            keyLabel="Intent Name"
-            valueLabel="Example"
-            addNewGroupLabel="Add New Intent"
-            addNewValueLabel="Add New Example"
+            keyLabel="Intent *"
+            keyPlaceholder="Intent Name"
+            valueLabel="Example *"
+            valuePlaceholder="Example Value"
+            addNewGroupLabel="Add Intent"
+            addNewValueLabel="Add Example"
           />
         );
       case 1:
@@ -72,10 +83,12 @@ const TrainingPanel = () => {
             setFormData={setResponses}
             initData={initResponses}
             valueName="text"
-            keyLabel="Response Name"
-            valueLabel="Text"
-            addNewGroupLabel="Add New Response"
-            addNewValueLabel="Add New Text"
+            keyLabel="Response *"
+            keyPlaceholder="Response Name"
+            valueLabel="Text *"
+            valuePlaceholder="Response Text"
+            addNewGroupLabel="Add Response"
+            addNewValueLabel="Add Text"
           />
         );
       case 2:
@@ -102,34 +115,61 @@ const TrainingPanel = () => {
 
   return (
     <>
-      <div>
-        <Box sx={{ minWidth: 325, minHeight: 500, padding: "0 70px" }}>
-          <Toolbar
-            sx={{
-              justifyContent: "space-between",
-            }}
-            disableGutters
-          >
-            <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-              <Tabs value={tab} onChange={handleTabChange} centered>
-                {tabs.map((label, index) => (
-                  <Tab key={index} label={label} />
-                ))}
-              </Tabs>
-            </Box>
-
-            <Button
-              sx={{ margin: "0 16px" }}
-              variant="contained"
-              startIcon={<SaveIcon />}
-              onClick={handleSave}
+      <div style={{ minWidth: 325, minHeight: 500, padding: "20px 0" }}>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "flex-end",
+          }}
+          disableGutters
+        >
+          <div>
+            <Tabs
+              value={tab}
+              onChange={handleTabChange}
+              sx={{
+                "& button": {
+                  border: "2px solid var(--color-primary)",
+                  borderRadius: "20px 20px 0 0",
+                  borderBottom: "none",
+                  color: "var(--color-primary)",
+                  transition: "0.3s",
+                  padding: "14px 16px",
+                },
+                "& button:hover": {
+                  backgroundColor: "var(--color-primary) !important",
+                  color: "white",
+                },
+                "& button.Mui-selected": {
+                  backgroundColor: "var(--color-primary) !important",
+                  color: "white",
+                },
+              }}
             >
-              Save
-            </Button>
-          </Toolbar>
+              {tabs.map((label, index) => (
+                <Tab key={index} label={label} />
+              ))}
+            </Tabs>
+          </div>
 
-          {renderTab()}
-        </Box>
+          <Button
+            style={{
+              height: "52px",
+              padding: "16px",
+              minWidth: "200px",
+              marginBottom: "8px",
+            }}
+            withicon="true"
+            orange="true"
+            onClick={handleSave}
+          >
+            Save Changes
+            <SaveOutlinedIcon sx={{ width: "30px", height: "30px" }} />
+          </Button>
+        </div>
+
+        <ContentContainer>{renderTab()}</ContentContainer>
       </div>
     </>
   );

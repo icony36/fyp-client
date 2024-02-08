@@ -1,6 +1,38 @@
 import React, { useCallback } from "react";
 
 import { getNewEdge, getNodeId } from "../../utils/helpers";
+import styled, { css } from "styled-components";
+
+const MenuContainer = styled.div`
+  background-color: white;
+  padding: 0;
+  margin: 0;
+  border: 2px solid var(--color-primary-darker);
+  box-shadow: 10px 19px 20px rgba(0, 0, 0, 10%);
+  position: absolute;
+  z-index: 10;
+  border-radius: 8px;
+  overflow: hidden;
+`;
+
+const MenuButton = styled.button`
+  border: none;
+  display: block;
+  padding: 6px 12px;
+  width: 100%;
+  background-color: transparent;
+  cursor: pointer;
+  color: var(--color-primary-darker);
+  margin: 0;
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+
+  &:hover {
+    background-color: var(--color-primary);
+    color: white;
+  }
+`;
 
 const FlowMenu = ({
   id,
@@ -106,21 +138,21 @@ const FlowMenu = ({
       case "node":
         return (
           <>
-            <button onClick={duplicateNode}>duplicate</button>
-            <button onClick={deleteNode}>delete</button>
+            <MenuButton onClick={duplicateNode}>Duplicate</MenuButton>
+            <MenuButton onClick={deleteNode}>Delete</MenuButton>
           </>
         );
       case "edge":
         return (
           <>
-            <button onClick={deleteEdge}>delete</button>
+            <MenuButton onClick={deleteEdge}>Delete</MenuButton>
           </>
         );
       case "selection":
         return (
           <>
-            <button onClick={duplicateSelection}>duplicate</button>
-            <button onClick={deleteSelection}>delete</button>
+            <MenuButton onClick={duplicateSelection}>Duplicate</MenuButton>
+            <MenuButton onClick={deleteSelection}>Delete</MenuButton>
           </>
         );
       default:
@@ -130,13 +162,9 @@ const FlowMenu = ({
 
   return (
     <>
-      <div
-        style={{ top, left, right, bottom }}
-        className="flow-menu"
-        {...props}
-      >
+      <MenuContainer style={{ top, left, right, bottom }} {...props}>
         {renderButtons()}
-      </div>
+      </MenuContainer>
     </>
   );
 };
