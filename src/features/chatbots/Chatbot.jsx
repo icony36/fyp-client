@@ -14,6 +14,7 @@ import { Button } from "../../ui/Button";
 import HeadingBar from "../../components/HeadingBar";
 import { ProfileImage } from "../../ui/ProfileImage";
 import { getFullName } from "../../utils/helpers";
+import { LoadingTyping } from "../../ui/Loading";
 
 const ChatbotContainer = styled.div`
   display: flex;
@@ -62,16 +63,25 @@ const MessageItem = styled.div`
     `}
 `;
 
-const Message = ({ message }) => {
+const Message = ({
+  message = { isUser: false, text: "" },
+  isTyping = false,
+}) => {
   return (
-    <MessageContainer isuser={message.isUser}>
-      {!message.isUser && (
+    <MessageContainer isuser={message.isUser ? 1 : undefined}>
+      {!message?.isUser && (
         <ProfileImage>
           <img src={LogoIcon} alt="Chatbot icon" />
         </ProfileImage>
       )}
-      <MessageItem isuser={message.isUser}>
-        <Heading as="h3">{message.text}</Heading>
+      <MessageItem isuser={message.isUser ? 1 : undefined}>
+        {isTyping ? (
+          <div style={{ padding: "10px 16px" }}>
+            <LoadingTyping />
+          </div>
+        ) : (
+          <Heading as="h3">{message.text}</Heading>
+        )}
       </MessageItem>
     </MessageContainer>
   );
@@ -88,6 +98,8 @@ const Chatbot = () => {
 
   const [input, setInput] = useState("");
 
+  const [isLoading, setIsLoading] = useState(false);
+
   useEffect(() => {
     messagesEndRef?.current.scrollIntoView({ behavior: "smooth" });
 
@@ -102,7 +114,7 @@ const Chatbot = () => {
         },
       ]);
     }
-  }, [messages, setMessages]);
+  }, [messages, setMessages, auth.firstName, auth.lastName]);
 
   const handleSend = (event) => {
     event.preventDefault();
@@ -116,9 +128,10 @@ const Chatbot = () => {
 
   const handleSendMessage = async (input) => {
     try {
+      setIsLoading(true);
       const res = await sendMessage({ sender: auth.id, message: input });
-
       setMessages((prevState) => [...prevState, ...res]);
+      setIsLoading(false);
     } catch (err) {
       toast.error(err.message);
       console.log(err);
@@ -148,6 +161,7 @@ const Chatbot = () => {
         ></HeadingBar>
         <ChatbotMessageContainer>
           {renderMessages()}
+          {isLoading && <Message isTyping />}
           <div ref={messagesEndRef}></div>
         </ChatbotMessageContainer>
 
@@ -169,8 +183,7 @@ const Chatbot = () => {
                 padding: "16px",
                 minWidth: "120px",
               }}
-              primary
-              endIcon={<SendIcon />}
+              primary="true"
               type="submit"
             >
               Send
