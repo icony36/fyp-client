@@ -134,6 +134,7 @@ const Chatbot = () => {
       setIsLoading(false);
     } catch (err) {
       toast.error(err.message);
+      setIsLoading(false);
       console.log(err);
     }
   };
