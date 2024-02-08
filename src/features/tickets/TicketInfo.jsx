@@ -394,7 +394,7 @@ const TicketInfo = () => {
               value={ticketInfo.priority}
             />
           </CardContentContainer>
-          <CardSubtitleContainer>Type</CardSubtitleContainer>
+          <CardSubtitleContainer>Status</CardSubtitleContainer>
           <CardContentContainer>
             <Radio
               options={typeOptions}
