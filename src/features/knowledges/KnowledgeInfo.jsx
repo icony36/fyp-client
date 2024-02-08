@@ -72,7 +72,6 @@ const KnowledgeInfo = () => {
           outlined="true"
           style={{ marginLeft: "16px" }}
           disabled={isWorking}
-          // onClick={() => deleteKnowledge(id)}
           onClick={() => setOpenModal(true)}
         >
           Delete
@@ -116,7 +115,7 @@ const KnowledgeInfo = () => {
         </FormGroup>
       </Paper>
 
-      <Paper title="KnowledgeBase Information">
+      <Paper title="Knowledge Base Information">
         <div style={{ marginBottom: "20px" }}>
           <Title>Description</Title>
           <Heading as="h3">{knowledge?.description}</Heading>

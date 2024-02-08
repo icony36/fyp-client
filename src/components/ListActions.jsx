@@ -31,11 +31,13 @@ const ListActions = ({
       return;
     }
 
+    console.log(value);
+
     const id = options.find(
       (option) => option[searchKey] === value[searchKey]
     )?._id;
 
-    handleSearchClicked(id);
+    handleSearchClicked(value._id);
   };
 
   return (
