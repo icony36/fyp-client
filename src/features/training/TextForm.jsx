@@ -80,7 +80,7 @@ const IntentForm = ({
 
   const renderGroup = (el, index) => {
     return (
-      <div key={index} sx={{ marginBottom: "16px" }}>
+      <div key={index} style={{ marginBottom: "10px" }}>
         <div
           style={{
             display: "flex",
