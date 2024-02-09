@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import Paper from "../../ui/Paper";
+import Paper, {
+  ContentContainer,
+  PaperContainer,
+  Title,
+  TitleContainer,
+} from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { Info } from "../../ui/Info";
 import styled, { css } from "styled-components";
@@ -38,6 +43,7 @@ const TimetableHeaderCell = styled.div`
   font-size: 20px;
   background-color: var(--color-primary);
   color: white;
+  font-weight: 600;
 `;
 
 const TimetableCell = styled.div`
@@ -48,6 +54,40 @@ const TimetableCell = styled.div`
 
 const StudentProfileInfo = ({ data }) => {
   const [showTimetable, setShowTimetable] = useState(false);
+
+  const renderTimetable = (timetable) => {
+    if (!timetable) {
+      return (
+        <TimetableRow>
+          <TimetableCell>No timetable available</TimetableCell>
+        </TimetableRow>
+      );
+    }
+
+    let arr = [];
+
+    if (!showTimetable) {
+      for (let i = 0; i < 2; i++) {
+        arr.push(timetable[i]);
+      }
+    } else {
+      arr = [...timetable];
+    }
+
+    return arr.map((el, index) => (
+      <TimetableRow
+        key={index}
+        noborder={index === data.timetable.length - 1 ? 1 : undefined}
+      >
+        <TimetableCell>{el.moduleId}</TimetableCell>
+        <TimetableCell>{el.moduleName}</TimetableCell>
+        <TimetableCell>{el.lessonType}</TimetableCell>
+        <TimetableCell>{el.location}</TimetableCell>
+        <TimetableCell>{el.date}</TimetableCell>
+        <TimetableCell>{el.time}</TimetableCell>
+      </TimetableRow>
+    ));
+  };
 
   return (
     <>
@@ -68,52 +108,40 @@ const StudentProfileInfo = ({ data }) => {
             })}
           </Info>
         </FormGroup>
-
-        <FormGroup>
-          <Info label="Timetable">
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "center",
-                marginBottom: "10px",
-              }}
-            >
-              <IconButton
-                sx={{ color: "black" }}
-                onClick={() => setShowTimetable(!showTimetable)}
-              >
-                {showTimetable ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
-              </IconButton>
-            </div>
-
-            {showTimetable && (
-              <TimetableContainer>
-                <TimetableRow header="true">
-                  {header.map((el) => (
-                    <TimetableHeaderCell key={el}>{el}</TimetableHeaderCell>
-                  ))}
-                </TimetableRow>
-
-                {data?.timetable?.map((el, index) => (
-                  <TimetableRow
-                    key={index}
-                    noborder={
-                      index === data.timetable.length - 1 ? 1 : undefined
-                    }
-                  >
-                    <TimetableCell>{el.moduleId}</TimetableCell>
-                    <TimetableCell>{el.moduleName}</TimetableCell>
-                    <TimetableCell>{el.lessonType}</TimetableCell>
-                    <TimetableCell>{el.location}</TimetableCell>
-                    <TimetableCell>{el.date}</TimetableCell>
-                    <TimetableCell>{el.time}</TimetableCell>
-                  </TimetableRow>
-                ))}
-              </TimetableContainer>
-            )}
-          </Info>
-        </FormGroup>
       </Paper>
+
+      <PaperContainer>
+        <TitleContainer
+          style={{ display: "flex", justifyContent: "space-between" }}
+        >
+          <Title>Timetable</Title>
+          <IconButton
+            sx={{ color: "black" }}
+            onClick={() => setShowTimetable(!showTimetable)}
+          >
+            {showTimetable ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+          </IconButton>
+        </TitleContainer>
+
+        <ContentContainer>
+          <TimetableContainer>
+            <TimetableRow header="true">
+              {header.map((el) => (
+                <TimetableHeaderCell key={el}>{el}</TimetableHeaderCell>
+              ))}
+            </TimetableRow>
+
+            {renderTimetable(data?.timetable)}
+            {!showTimetable && (
+              <TimetableRow noborder="true">
+                <TimetableCell style={{ textAlign: "center", fontWeight: 600 }}>
+                  ...
+                </TimetableCell>
+              </TimetableRow>
+            )}
+          </TimetableContainer>
+        </ContentContainer>
+      </PaperContainer>
     </>
   );
 };

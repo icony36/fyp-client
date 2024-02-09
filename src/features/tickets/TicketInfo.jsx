@@ -326,6 +326,7 @@ const TicketInfo = () => {
             {showDetails ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
           </IconButton>
         </TitleContainer>
+
         <ContentContainer>
           <div
             style={{
