@@ -71,7 +71,7 @@ const TrainingPanel = () => {
             keyLabel="Intent *"
             keyPlaceholder="Intent Name"
             valueLabel="Example *"
-            valuePlaceholder="Example Value"
+            valuePlaceholder="Example Text"
             addNewGroupLabel="Add Intent"
             addNewValueLabel="Add Example"
           />
