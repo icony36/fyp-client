@@ -1,8 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { Info } from "../../ui/Info";
 import styled, { css } from "styled-components";
+import { IconButton } from "@mui/material";
+import { KeyboardArrowDown, KeyboardArrowUp } from "@mui/icons-material";
 
 const header = ["Module", "Module Name", "Lesson", "Location", "Date", "Time"];
 
@@ -45,6 +47,8 @@ const TimetableCell = styled.div`
 `;
 
 const StudentProfileInfo = ({ data }) => {
+  const [showTimetable, setShowTimetable] = useState(false);
+
   return (
     <>
       <Paper title="Student Profile">
@@ -67,27 +71,46 @@ const StudentProfileInfo = ({ data }) => {
 
         <FormGroup>
           <Info label="Timetable">
-            <TimetableContainer>
-              <TimetableRow header="true">
-                {header.map((el) => (
-                  <TimetableHeaderCell key={el}>{el}</TimetableHeaderCell>
-                ))}
-              </TimetableRow>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "10px",
+              }}
+            >
+              <IconButton
+                sx={{ color: "black" }}
+                onClick={() => setShowTimetable(!showTimetable)}
+              >
+                {showTimetable ? <KeyboardArrowUp /> : <KeyboardArrowDown />}
+              </IconButton>
+            </div>
 
-              {data?.timetable?.map((el, index) => (
-                <TimetableRow
-                  key={index}
-                  noborder={index === data.timetable.length - 1 ? 1 : undefined}
-                >
-                  <TimetableCell>{el.moduleId}</TimetableCell>
-                  <TimetableCell>{el.moduleName}</TimetableCell>
-                  <TimetableCell>{el.lessonType}</TimetableCell>
-                  <TimetableCell>{el.location}</TimetableCell>
-                  <TimetableCell>{el.date}</TimetableCell>
-                  <TimetableCell>{el.time}</TimetableCell>
+            {showTimetable && (
+              <TimetableContainer>
+                <TimetableRow header="true">
+                  {header.map((el) => (
+                    <TimetableHeaderCell key={el}>{el}</TimetableHeaderCell>
+                  ))}
                 </TimetableRow>
-              ))}
-            </TimetableContainer>
+
+                {data?.timetable?.map((el, index) => (
+                  <TimetableRow
+                    key={index}
+                    noborder={
+                      index === data.timetable.length - 1 ? 1 : undefined
+                    }
+                  >
+                    <TimetableCell>{el.moduleId}</TimetableCell>
+                    <TimetableCell>{el.moduleName}</TimetableCell>
+                    <TimetableCell>{el.lessonType}</TimetableCell>
+                    <TimetableCell>{el.location}</TimetableCell>
+                    <TimetableCell>{el.date}</TimetableCell>
+                    <TimetableCell>{el.time}</TimetableCell>
+                  </TimetableRow>
+                ))}
+              </TimetableContainer>
+            )}
           </Info>
         </FormGroup>
       </Paper>
