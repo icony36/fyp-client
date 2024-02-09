@@ -10,7 +10,6 @@ import {
 } from "../../utils/helpers";
 import { SORT_TYPE, TICKET_PRIORITY, TICKET_TYPE } from "../../constants";
 import { List, ListCell, ListRow } from "../../ui/List";
-import { ColorChip } from "../../ui/Chip";
 import { Button, FilterButton } from "../../ui/Button";
 import { Modal } from "../../ui/Modal";
 import {

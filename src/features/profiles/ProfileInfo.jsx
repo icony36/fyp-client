@@ -10,6 +10,7 @@ import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { Info } from "../../ui/Info";
 import { ROLE } from "../../constants";
+import StudentProfileInfo from "./StudentProfileInfo";
 
 const ProfileInfo = () => {
   const { auth } = useContext(AuthContext);
@@ -58,26 +59,7 @@ const ProfileInfo = () => {
       </Paper>
 
       {auth.role === ROLE.student && (
-        <Paper title="Student Profile">
-          <FormGroup style={{ marginBottom: "20px" }}>
-            <Info label="Course">{studentProfile?.data?.course}</Info>
-          </FormGroup>
-
-          <FormGroup>
-            <Info label="Outstanding Fee">
-              $ {studentProfile?.data?.outstandingFee}
-            </Info>
-            <Info label="Enrolled Modules">
-              {studentProfile?.data?.enrollments?.map((el, index) => {
-                if (index !== studentProfile.data.enrollments.length - 1) {
-                  return `${el}, `;
-                }
-
-                return el;
-              })}
-            </Info>
-          </FormGroup>
-        </Paper>
+        <StudentProfileInfo data={studentProfile?.data} />
       )}
     </>
   );

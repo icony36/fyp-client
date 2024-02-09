@@ -45,7 +45,7 @@ export const ListHeaderCell = ({ children, sx, ...props }) => {
           fontFamily: "Playfair Display",
           fontWeight: "600",
           fontSize: "21px",
-          borderBottom: "2px solid #D9D9D9",
+          borderBottom: "2px solid var(--color-light-grey)",
           ...sx,
         }}
         {...props}
