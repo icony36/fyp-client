@@ -66,12 +66,12 @@ const StudentProfileInfo = ({ data }) => {
 
     let arr = [];
 
-    if (!showTimetable) {
+    if (showTimetable) {
+      arr = [...timetable];
+    } else {
       for (let i = 0; i < 2; i++) {
         arr.push(timetable[i]);
       }
-    } else {
-      arr = [...timetable];
     }
 
     return arr.map((el, index) => (
