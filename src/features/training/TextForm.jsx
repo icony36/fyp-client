@@ -136,7 +136,7 @@ const IntentForm = ({
                   width: "174px",
                   height: "52px",
                 }}
-                outlined="true"
+                $outlined="true"
                 withicon="true"
                 onClick={() => handleAddValue(index)}
               >
@@ -153,7 +153,7 @@ const IntentForm = ({
   return (
     <>
       <div style={{ padding: "20px 40px" }}>
-        {formData.map((el, index) => renderGroup(el, index))}
+        {formData?.map((el, index) => renderGroup(el, index))}
         <Button
           style={{
             marginTop: "16px",

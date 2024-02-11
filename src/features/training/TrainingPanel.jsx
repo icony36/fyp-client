@@ -8,6 +8,8 @@ import TextForm from "./TextForm";
 import FlowEditor from "./FlowEditor";
 import { Button } from "../../ui/Button";
 import styled from "styled-components";
+import { useFetchTrainingData } from "./useFetchTrainingData";
+import { useEditTrainingData } from "./useEditTrainingData";
 
 const ContentContainer = styled.div`
   background-color: var(--color-primary-darker);
@@ -20,43 +22,98 @@ const tabs = ["Intents", "Responses", "Flows"];
 
 const nodeOptions = ["Intent", "Response"];
 
-const initNodes = [];
+const initIntents = {
+  name: "",
+  examples: [""],
+};
 
-const initEdges = [];
+const initResponses = {
+  name: "",
+  text: [""],
+};
 
 const TrainingPanel = () => {
+  const { trainingData, isFetching, trainingDataStatus } =
+    useFetchTrainingData();
+
+  const { editTrainingData, isEditing } = useEditTrainingData();
+
+  const isWorking = isFetching || isEditing;
+
   const [tab, setTab] = useState(0);
 
   const [elements, setElements, { undo, canUndo, redo, canRedo }] = useUndoable(
-    { nodes: initNodes, edges: initEdges },
+    { nodes: [], edges: [] },
     {
       behavior: "destroyFuture",
     }
   );
 
-  const initIntents = {
-    name: "",
-    examples: [""],
-  };
+  const [updatedNode, setUpdatedNode] = useState({
+    id: "",
+    content: { contenType: "", contentValue: "" },
+  });
 
-  const initResponses = {
-    name: "",
-    text: [""],
-  };
+  const [intents, setIntents] = useState([]);
 
-  const [intents, setIntents] = useState([initIntents]);
+  const [responses, setResponses] = useState([]);
 
-  const [responses, setResponses] = useState([initResponses]);
+  useEffect(() => {
+    if (trainingDataStatus === "success") {
+      setIntents(trainingData.data?.intents);
+      setResponses(trainingData.data?.responses);
+      setElements({
+        nodes: trainingData.data?.nodes?.map((el) => {
+          return {
+            ...el,
+            data: {
+              ...el.data,
+              setUpdatedNode,
+            },
+          };
+        }),
+        edges: trainingData.data?.edges,
+      });
+    }
+  }, [trainingDataStatus, trainingData]);
+
+  useEffect(() => {
+    const { id, content } = updatedNode;
+
+    // set node content data
+    setElements((el) => {
+      const updatedNodes = el.nodes.map((node) => {
+        const newNode = { ...node };
+
+        if (node.id === id) {
+          newNode.data = {
+            ...newNode.data,
+            content,
+          };
+        }
+
+        return newNode;
+      });
+
+      return { ...el, nodes: updatedNodes };
+    });
+  }, [updatedNode]);
 
   const handleTabChange = (event, newValue) => {
     setTab(newValue);
   };
 
   const handleSave = () => {
-    console.log("Save:");
-    console.log(intents);
-    console.log(responses);
-    console.log(elements);
+    const toSubmit = {
+      intents,
+      responses,
+      nodes: elements.nodes,
+      edges: elements.edges,
+    };
+
+    console.log(toSubmit);
+
+    editTrainingData(toSubmit);
   };
 
   const renderTab = () => {
@@ -100,11 +157,13 @@ const TrainingPanel = () => {
               responseOptions={responses}
               nodes={elements.nodes}
               edges={elements.edges}
+              elements={elements}
               setElements={setElements}
               undo={undo}
               redo={redo}
               canUndo={canUndo}
               canRedo={canRedo}
+              setUpdatedNode={setUpdatedNode}
             />
           </ReactFlowProvider>
         );
@@ -122,7 +181,6 @@ const TrainingPanel = () => {
             justifyContent: "space-between",
             alignItems: "flex-end",
           }}
-          disableGutters
         >
           <div>
             <Tabs
@@ -163,6 +221,7 @@ const TrainingPanel = () => {
             withicon="true"
             orange="true"
             onClick={handleSave}
+            disabled={isWorking}
           >
             Save Changes
             <SaveOutlinedIcon sx={{ width: "30px", height: "30px" }} />

@@ -13,7 +13,6 @@ import ReactFlow, {
 } from "reactflow";
 
 import "reactflow/dist/style.css";
-import { Paper } from "@mui/material";
 
 import {
   getFlowMenuPosition,
@@ -42,6 +41,7 @@ const FlowEditor = ({
   responseOptions,
   nodes,
   edges,
+  setUpdatedNode,
   setElements,
   undo,
   redo,
@@ -50,34 +50,12 @@ const FlowEditor = ({
 }) => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [menu, setMenu] = useState(null);
-  const [updatedNode, setUpdatedNode] = useState({});
 
   const menuRef = useRef(null);
   const reactFlowWrapper = useRef(null);
   const connectingNodeId = useRef(null);
 
   const { screenToFlowPosition, getEdges } = useReactFlow();
-
-  useEffect(() => {
-    const { id, content } = updatedNode;
-
-    setElements((el) => {
-      const updatedNodes = el.nodes.map((node) => {
-        const newNode = { ...node };
-
-        if (node.id === id) {
-          newNode.data = {
-            ...newNode.data,
-            content,
-          };
-        }
-
-        return newNode;
-      });
-
-      return { ...el, nodes: updatedNodes };
-    });
-  }, [updatedNode]);
 
   const setElementsWithChanges = useCallback(
     (type, updatedElements, ignore = false) => {
