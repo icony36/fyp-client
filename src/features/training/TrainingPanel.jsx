@@ -22,16 +22,6 @@ const tabs = ["Intents", "Responses", "Flows"];
 
 const nodeOptions = ["Intent", "Response"];
 
-const initIntents = {
-  name: "",
-  examples: [""],
-};
-
-const initResponses = {
-  name: "",
-  text: [""],
-};
-
 const TrainingPanel = () => {
   const { trainingData, isFetching, trainingDataStatus } =
     useFetchTrainingData();
@@ -123,7 +113,10 @@ const TrainingPanel = () => {
           <TextForm
             formData={intents}
             setFormData={setIntents}
-            initData={initIntents}
+            initData={{
+              name: "",
+              examples: [""],
+            }}
             valueName="examples"
             keyLabel="Intent *"
             keyPlaceholder="Intent Name"
@@ -131,6 +124,7 @@ const TrainingPanel = () => {
             valuePlaceholder="Example Text"
             addNewGroupLabel="Add Intent"
             addNewValueLabel="Add Example"
+            isWorking={isWorking}
           />
         );
       case 1:
@@ -138,7 +132,10 @@ const TrainingPanel = () => {
           <TextForm
             formData={responses}
             setFormData={setResponses}
-            initData={initResponses}
+            initData={{
+              name: "",
+              text: [""],
+            }}
             valueName="text"
             keyLabel="Response *"
             keyPlaceholder="Response Name"
@@ -146,6 +143,7 @@ const TrainingPanel = () => {
             valuePlaceholder="Response Text"
             addNewGroupLabel="Add Response"
             addNewValueLabel="Add Text"
+            isWorking={isWorking}
           />
         );
       case 2:

@@ -36,6 +36,7 @@ const IntentForm = ({
   valuePlaceholder,
   addNewGroupLabel,
   addNewValueLabel,
+  isWorking,
 }) => {
   const handleAddKey = () => {
     setFormData((prevState) => [...prevState, initData]);
@@ -99,6 +100,7 @@ const IntentForm = ({
                 <RemoveButton onClick={() => handleRemoveKey(index)} />
               </div>
               <RawInput
+                key={index}
                 style={{ flex: 1 }}
                 placeholder={keyPlaceholder}
                 value={el.name}
@@ -163,6 +165,7 @@ const IntentForm = ({
           whiteoutlined="true"
           withicon="true"
           onClick={handleAddKey}
+          disabled={isWorking}
         >
           {addNewGroupLabel}
           <AddOutlinedIcon />
