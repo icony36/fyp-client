@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { Handle, Position, getConnectedEdges, useStore } from "reactflow";
 
 import "reactflow/dist/style.css";
@@ -11,8 +11,18 @@ const selector = (s) => ({
 });
 
 const StartNode = ({ id, data, isConnectable, selected }) => {
+  const { setUpdatedNode } = data;
+
   const [nodeName, setNodeName] = useState("");
   const { nodeInternals, edges } = useStore(selector);
+
+  useEffect(() => {
+    setNodeName(data.content?.nodeName);
+  }, []);
+
+  useEffect(() => {
+    setUpdatedNode({ id, content: { nodeName } });
+  }, [nodeName, id, setUpdatedNode]);
 
   const isHandleConnectable = useMemo(() => {
     const connectedEdges = getConnectedEdges([nodeInternals.get(id)], edges);
