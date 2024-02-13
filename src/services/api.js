@@ -52,7 +52,10 @@ export const rasaYMLCall = (method, path, data) => {
     return axios[method](
       `${process.env.REACT_APP_RASA_API || "http://localhost:5005"}${path}`,
       data,
-      { headers: { "Content-Type": "application/x-yaml" } }
+      {
+        headers: { "Content-Type": "application/x-yaml" },
+        withCredentials: true,
+      }
     )
       .then((res) => {
         return resolve({ data: res.data, headers: res.headers });
