@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { ReactFlowProvider } from "reactflow";
 import useUndoable from "use-undoable";
+import YAML from "yaml";
 
 import { Tabs, Tab } from "@mui/material";
 import SaveOutlinedIcon from "@mui/icons-material/SaveOutlined";
@@ -10,6 +11,15 @@ import { Button } from "../../ui/Button";
 import styled from "styled-components";
 import { useFetchTrainingData } from "./useFetchTrainingData";
 import { useEditTrainingData } from "./useEditTrainingData";
+import {
+  getIntentsArray,
+  getIntentsNLU,
+  getStoriesArray,
+  getResponsesObj,
+} from "../../utils/helpers";
+import { defaultTraining } from "../../utils/training";
+import toast from "react-hot-toast";
+import { rasaTrain } from "../../services/trainingData";
 
 const ContentContainer = styled.div`
   background-color: var(--color-primary-darker);
@@ -54,7 +64,6 @@ const TrainingPanel = () => {
     if (trainingDataStatus === "success" && trainingData.data) {
       setIntents(trainingData.data?.intents);
       setResponses(trainingData.data?.responses);
-      initElements();
     }
   }, [trainingDataStatus, trainingData]);
 
@@ -107,13 +116,57 @@ const TrainingPanel = () => {
     const toSubmit = {
       intents,
       responses,
-      nodes: elements.nodes,
-      edges: elements.edges,
     };
 
-    console.log(toSubmit);
+    const hasNodes = elements.nodes && elements.nodes.length > 0;
+    const hasEdges = elements.edges && elements.edges.length > 0;
 
-    // editTrainingData(toSubmit);
+    if (hasNodes) {
+      toSubmit.nodes = elements.nodes;
+    }
+
+    if (hasEdges) {
+      toSubmit.edges = elements.edges;
+    }
+
+    editTrainingData(toSubmit);
+
+    if (hasNodes && hasEdges) {
+      const storiesArr = getStoriesArray(elements.nodes, elements.edges);
+      const intentArr = getIntentsArray(intents);
+      const intentNLUArr = getIntentsNLU(intents);
+      const responseObj = getResponsesObj(responses);
+      const trainingObj = {
+        pipeline: defaultTraining.pipeline,
+        policies: defaultTraining.policies,
+        intents: [...defaultTraining.intents],
+        entities: defaultTraining.entities,
+        slots: defaultTraining.slots,
+        actions: defaultTraining.actions,
+        forms: defaultTraining.forms,
+        e2e_actions: [],
+        responses: { ...defaultTraining.responses },
+        session_config: defaultTraining.session_config,
+        nlu: [...defaultTraining.nlu],
+        rules: defaultTraining.rules,
+        stories: [...defaultTraining.stories],
+      };
+
+      const result = YAML.stringify(trainingObj);
+      console.log(result);
+      trainBot(result);
+    }
+  };
+
+  const trainBot = async (ymlData) => {
+    try {
+      const res = await rasaTrain(ymlData);
+
+      console.log(res);
+    } catch (err) {
+      // toast.error(err);
+      console.log(err);
+    }
   };
 
   const renderTab = () => {

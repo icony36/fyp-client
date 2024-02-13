@@ -242,3 +242,99 @@ export const getTypeChip = (type) => {
       return <ColorChip>{str}</ColorChip>;
   }
 };
+
+export const keepOnlyAlphanumeric = (str) => {
+  return str.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
+};
+
+export const getUtterResponse = (str) => {
+  return `utter_${keepOnlyAlphanumeric(str)}`;
+};
+
+export const getStoriesArray = (nodes, edges) => {
+  const arr = [];
+
+  nodes.forEach((node) => {
+    if (node.type === "startNode") {
+      let currentNodeId = node.id;
+      let findNextTarget = true;
+
+      const story = `${node.data.content.nodeName} path`.toLowerCase();
+      const steps = [];
+
+      const findEdge = (edge) => {
+        return edge.source === currentNodeId;
+      };
+
+      while (findNextTarget) {
+        const currentEdge = edges.find(findEdge);
+
+        if (currentEdge) {
+          const targetNode = nodes.find(
+            (node) => node.id === currentEdge.target
+          );
+
+          if (targetNode) {
+            const obj = {};
+
+            switch (targetNode.data.content.contentType) {
+              case "Intent":
+                obj.intent = targetNode.data.content.contentValue;
+                break;
+              case "Response":
+                obj.action = getUtterResponse(
+                  targetNode.data.content.contentValue
+                );
+                break;
+              default:
+                break;
+            }
+
+            steps.push(obj);
+          }
+
+          currentNodeId = currentEdge.target;
+        } else {
+          findNextTarget = false;
+        }
+      }
+
+      arr.push({
+        story,
+        steps,
+      });
+    }
+  });
+
+  return arr;
+};
+
+export const getIntentsArray = (intents) => {
+  return intents.map((el) => el.name);
+};
+
+export const getIntentsNLU = (intents) => {
+  const arr = [];
+
+  intents.forEach((el) => {
+    const obj = {
+      intent: el.name,
+      examples: el.examples.map((item) => `- ${item}\n`).join(""),
+    };
+    arr.push(obj);
+  });
+
+  return arr;
+};
+
+export const getResponsesObj = (responses) => {
+  const obj = {};
+
+  responses.forEach((el) => {
+    obj[getUtterResponse(el.name)] = el.text.map((txt) => ({
+      text: txt,
+    }));
+  });
+
+  return obj;
+};

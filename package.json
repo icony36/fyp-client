@@ -26,7 +26,8 @@
     "styled-components": "^6.1.2",
     "use-undoable": "^4.0.0",
     "uuidv4": "^6.2.13",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "yaml": "^2.3.4"
   },
   "scripts": {
     "start": "react-scripts start",
