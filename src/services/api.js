@@ -53,8 +53,10 @@ export const rasaYMLCall = (method, path, data) => {
       `${process.env.REACT_APP_RASA_API || "http://localhost:5005"}${path}`,
       data,
       {
-        headers: { "Content-Type": "application/x-yaml" },
-        withCredentials: true,
+        headers: {
+          "Content-Type": "application/x-yaml",
+          "Access-Control-Allow-Origin": true,
+        },
       }
     )
       .then((res) => {
