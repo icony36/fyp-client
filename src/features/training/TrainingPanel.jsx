@@ -158,7 +158,7 @@ const TrainingPanel = () => {
       };
 
       const result = YAML.stringify(trainingObj);
-      console.log(result);
+
       trainBot(result);
     }
   };

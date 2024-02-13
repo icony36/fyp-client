@@ -258,8 +258,13 @@ export const getStoriesArray = (nodes, edges) => {
     if (node.type === "startNode") {
       let currentNodeId = node.id;
       let findNextTarget = true;
+      const nodeName = node.data.content.nodeName;
 
-      const story = `${node.data.content.nodeName} path`.toLowerCase();
+      if (!nodeName) {
+        return;
+      }
+
+      const story = `${nodeName} path`.toLowerCase();
       const steps = [];
 
       const findEdge = (edge) => {
@@ -317,6 +322,10 @@ export const getIntentsNLU = (intents) => {
   const arr = [];
 
   intents.forEach((el) => {
+    if (!el.name) {
+      return;
+    }
+
     const obj = {
       intent: el.name,
       examples: el.examples.map((item) => `- ${item}\n`).join(""),
@@ -331,6 +340,10 @@ export const getResponsesObj = (responses) => {
   const obj = {};
 
   responses.forEach((el) => {
+    if (!el.name) {
+      return;
+    }
+
     obj[getUtterResponse(el.name)] = el.text.map((txt) => ({
       text: txt,
     }));
