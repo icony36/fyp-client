@@ -17,7 +17,9 @@ const StartNode = ({ id, data, isConnectable, selected }) => {
   const { nodeInternals, edges } = useStore(selector);
 
   useEffect(() => {
-    setNodeName(data.content?.nodeName);
+    if (data.content?.nodeName) {
+      setNodeName(data.content?.nodeName);
+    }
   }, []);
 
   useEffect(() => {

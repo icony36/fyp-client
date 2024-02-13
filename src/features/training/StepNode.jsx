@@ -12,8 +12,13 @@ const StepNode = ({ id, data, isConnectable, selected }) => {
   const [contentValue, setContentValue] = useState("");
 
   useEffect(() => {
-    setContentType(data.content?.contentType);
-    setContentValue(data.content?.contentValue);
+    if (data.content?.contentType) {
+      setContentType(data.content.contentType);
+    }
+
+    if (data.content?.contentValue) {
+      setContentValue(data.content.contentValue);
+    }
   }, []);
 
   useEffect(() => {

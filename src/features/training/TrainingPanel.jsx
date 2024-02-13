@@ -35,7 +35,7 @@ const TrainingPanel = () => {
   const [elements, setElements, { undo, canUndo, redo, canRedo }] = useUndoable(
     { nodes: [], edges: [] },
     {
-      behavior: "destroyFuture",
+      behavior: "keepFuture",
     }
   );
 
@@ -48,10 +48,17 @@ const TrainingPanel = () => {
 
   const [responses, setResponses] = useState([]);
 
+  const [shouldInit, setShouldInit] = useState(true);
+
   useEffect(() => {
-    if (trainingDataStatus === "success") {
+    if (trainingDataStatus === "success" && trainingData.data) {
       setIntents(trainingData.data?.intents);
       setResponses(trainingData.data?.responses);
+    }
+  }, [trainingDataStatus, trainingData]);
+
+  const initElements = () => {
+    if (trainingData && shouldInit) {
       setElements({
         nodes: trainingData.data?.nodes?.map((el) => {
           return {
@@ -64,8 +71,10 @@ const TrainingPanel = () => {
         }),
         edges: trainingData.data?.edges,
       });
+
+      setShouldInit(false);
     }
-  }, [trainingDataStatus, trainingData]);
+  };
 
   useEffect(() => {
     const { id, content } = updatedNode;
@@ -162,6 +171,7 @@ const TrainingPanel = () => {
               canUndo={canUndo}
               canRedo={canRedo}
               setUpdatedNode={setUpdatedNode}
+              onInit={initElements}
             />
           </ReactFlowProvider>
         );

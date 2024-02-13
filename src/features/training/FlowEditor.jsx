@@ -47,6 +47,7 @@ const FlowEditor = ({
   redo,
   canUndo,
   canRedo,
+  onInit,
 }) => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [menu, setMenu] = useState(null);
@@ -56,6 +57,11 @@ const FlowEditor = ({
   const connectingNodeId = useRef(null);
 
   const { screenToFlowPosition, getEdges } = useReactFlow();
+
+  const handleInit = (flowInstance) => {
+    onInit();
+    setReactFlowInstance(flowInstance);
+  };
 
   const setElementsWithChanges = useCallback(
     (type, updatedElements, ignore = false) => {
@@ -333,7 +339,7 @@ const FlowEditor = ({
         <ReactFlow
           style={{ borderRadius: "0 20px 20px 20px" }}
           ref={menuRef}
-          onInit={setReactFlowInstance}
+          onInit={handleInit}
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}

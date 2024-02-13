@@ -138,7 +138,7 @@ const IntentForm = ({
                   width: "174px",
                   height: "52px",
                 }}
-                $outlined="true"
+                outlined="true"
                 withicon="true"
                 onClick={() => handleAddValue(index)}
               >
