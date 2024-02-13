@@ -382,7 +382,7 @@ const TicketInfo = () => {
           </TitleContainer>
           <ContentContainer>{renderResponses()}</ContentContainer>
         </PaperContainer>
-        {renderResponseForm()}
+        {ticketInfo.type === TICKET_TYPE.open && renderResponseForm()}
       </FormGroup>
 
       <Modal openModal={openModal}>
