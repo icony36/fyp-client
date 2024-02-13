@@ -19,7 +19,7 @@ const StepNode = ({ id, data, isConnectable, selected }) => {
     if (data.content?.contentValue) {
       setContentValue(data.content.contentValue);
     }
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     setUpdatedNode({ id, content: { contentType, contentValue } });

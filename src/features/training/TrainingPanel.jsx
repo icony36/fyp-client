@@ -54,6 +54,7 @@ const TrainingPanel = () => {
     if (trainingDataStatus === "success" && trainingData.data) {
       setIntents(trainingData.data?.intents);
       setResponses(trainingData.data?.responses);
+      initElements();
     }
   }, [trainingDataStatus, trainingData]);
 
@@ -112,7 +113,7 @@ const TrainingPanel = () => {
 
     console.log(toSubmit);
 
-    editTrainingData(toSubmit);
+    // editTrainingData(toSubmit);
   };
 
   const renderTab = () => {

@@ -20,7 +20,7 @@ const StartNode = ({ id, data, isConnectable, selected }) => {
     if (data.content?.nodeName) {
       setNodeName(data.content?.nodeName);
     }
-  }, []);
+  }, [data]);
 
   useEffect(() => {
     setUpdatedNode({ id, content: { nodeName } });
