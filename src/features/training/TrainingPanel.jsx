@@ -18,8 +18,9 @@ import {
   getResponsesObj,
 } from "../../utils/helpers";
 import { defaultTraining } from "../../utils/training";
-import toast from "react-hot-toast";
-import { rasaTrain } from "../../services/trainingData";
+import { useToast } from "../../hooks/useToast";
+import { rasaLoadModels, rasaTrain } from "../../services/trainingData";
+import { LoadingTyping } from "../../ui/Loading";
 
 const ContentContainer = styled.div`
   background-color: var(--color-primary-darker);
@@ -33,6 +34,8 @@ const tabs = ["Intents", "Responses", "Flows"];
 const nodeOptions = ["Intent", "Response"];
 
 const TrainingPanel = () => {
+  const { toast } = useToast();
+
   const { trainingData, isFetching, trainingDataStatus } =
     useFetchTrainingData();
 
@@ -41,6 +44,8 @@ const TrainingPanel = () => {
   const isWorking = isFetching || isEditing;
 
   const [tab, setTab] = useState(0);
+
+  const [isTraining, setIsTraining] = useState(false);
 
   const [elements, setElements, { undo, canUndo, redo, canRedo }] = useUndoable(
     { nodes: [], edges: [] },
@@ -160,11 +165,17 @@ const TrainingPanel = () => {
 
   const trainBot = async (ymlData) => {
     try {
+      setIsTraining(true);
       const res = await rasaTrain(ymlData);
 
-      console.log(res);
+      console.log(res.headers.filename);
+
+      await rasaLoadModels(res.headers.filename);
+      toast.success("Model is trained and loaded.");
+      setIsTraining(false);
     } catch (err) {
-      // toast.error(err);
+      setIsTraining(false);
+      toast.error("Training Error.");
       console.log(err);
     }
   };
@@ -273,23 +284,55 @@ const TrainingPanel = () => {
             </Tabs>
           </div>
 
-          <Button
-            style={{
-              height: "52px",
-              padding: "16px",
-              minWidth: "200px",
-              marginBottom: "8px",
-            }}
-            withicon="true"
-            orange="true"
-            onClick={handleSave}
-            disabled={isWorking}
-          >
-            Save Changes
-            <SaveOutlinedIcon sx={{ width: "30px", height: "30px" }} />
-          </Button>
+          {isTraining ? (
+            <div
+              style={{
+                height: "52px",
+                minWidth: "200px",
+                marginBottom: "8px",
+                borderRadius: "40px",
+                background: "white",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "14px",
+                  textTransform: "uppercase",
+                  fontWeight: "bold",
+                  textAlign: "center",
+                  color: "var(--color-light-grey)",
+                  marginRight: "30px",
+                }}
+              >
+                Training
+              </div>
+              <div>
+                <LoadingTyping />
+              </div>
+            </div>
+          ) : (
+            <Button
+              style={{
+                height: "52px",
+                padding: "16px",
+                minWidth: "200px",
+                marginBottom: "8px",
+              }}
+              withicon="true"
+              orange="true"
+              onClick={handleSave}
+              disabled={isWorking}
+            >
+              <>
+                Save Changes
+                <SaveOutlinedIcon sx={{ width: "30px", height: "30px" }} />
+              </>
+            </Button>
+          )}
         </div>
-
         <ContentContainer>{renderTab()}</ContentContainer>
       </div>
     </>

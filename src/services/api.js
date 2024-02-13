@@ -55,7 +55,7 @@ export const rasaYMLCall = (method, path, data) => {
       { headers: { "Content-Type": "application/x-yaml" } }
     )
       .then((res) => {
-        return resolve(res.data);
+        return resolve({ data: res.data, headers: res.headers });
       })
       .catch((err) => {
         if (err.response) {

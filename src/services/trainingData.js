@@ -1,5 +1,4 @@
-import { apiCall } from "./api";
-import { rasaYMLCall } from "./api";
+import { apiCall, rasaYMLCall, rasaApiCall } from "./api";
 
 export const fetchTrainingData = async () => {
   try {
@@ -44,6 +43,18 @@ export const deleteTrainingData = async () => {
 export const rasaTrain = async (ymlData) => {
   try {
     const res = await rasaYMLCall("post", `/model/train`, ymlData);
+
+    return res;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const rasaLoadModels = async (fileName) => {
+  try {
+    const res = await rasaApiCall("put", `/model`, {
+      model_file: `models/${fileName}`,
+    });
 
     return res;
   } catch (err) {
