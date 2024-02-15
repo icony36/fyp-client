@@ -6,13 +6,14 @@ import { useFetchProfile } from "./useFetchProfile";
 import { useEditProfile } from "./useEditProfile";
 import { useFetchStudentProfile } from "./useFetchStudentProfile";
 import { useEditStudentProfile } from "./useEditStudentProfile";
-import { ROLE } from "../../constants";
+import { PASSWORD_VALID_MSG, ROLE } from "../../constants";
 import HeadingBar from "../../components/HeadingBar";
 import { Button } from "../../ui/Button";
 import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { AddInput, Input, PasswordInput } from "../../ui/Input";
 import { ChipStack, ChipWithDelete } from "../../ui/Chip";
+import { checkIsValidPassword } from "../../utils/helpers";
 
 const ProfileEditForm = () => {
   const { auth } = useContext(AuthContext);
@@ -123,8 +124,8 @@ const ProfileEditForm = () => {
       ...profileData,
     };
 
-    if (toSubmit.password && toSubmit.password.length < 8) {
-      toast.error("Password must be at least 8 characters.");
+    if (toSubmit.password && !checkIsValidPassword(toSubmit.password)) {
+      toast.error(PASSWORD_VALID_MSG);
       return;
     }
 

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 import { fetchStudentProfileByUser } from "../../services/studentProfile";
-import { ROLE } from "../../constants";
+import { ROLE, PASSWORD_VALID_MSG } from "../../constants";
 import { useToast } from "../../hooks/useToast";
 import { useFetchUsers } from "./useFetchUsers";
 import { useCreateUser } from "./useCreateUser";
@@ -13,6 +13,7 @@ import Paper from "../../ui/Paper";
 import { FormGroup } from "../../ui/FormGroup";
 import { AddInput, Input, PasswordInput, SelectInput } from "../../ui/Input";
 import { ChipStack, ChipWithDelete } from "../../ui/Chip";
+import { checkIsValidPassword } from "../../utils/helpers";
 
 const roles = Object.values(ROLE);
 
@@ -155,8 +156,11 @@ const UserForm = ({ isEditSession }) => {
       studentData: formData.studentData,
     };
 
-    if (toSubmit.userData.password && toSubmit.userData.password.length < 8) {
-      toast.error("Password must be at least 8 characters.");
+    if (
+      toSubmit.userData.password &&
+      !checkIsValidPassword(toSubmit.userData.password)
+    ) {
+      toast.error(PASSWORD_VALID_MSG);
       return;
     }
 

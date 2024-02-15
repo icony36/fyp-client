@@ -368,3 +368,13 @@ export const checkIsURL = (str) => {
 };
 
 export const delay = (ms) => new Promise((res) => setTimeout(res, ms));
+
+export const checkIsValidPassword = (password) => {
+  const regex = /[!@#$%^&*()\-+={}[\]:;"'<>,.?\/|\\]/;
+
+  if (password.length >= 8 && regex.test(password)) {
+    return true;
+  }
+
+  return false;
+};

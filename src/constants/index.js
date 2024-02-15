@@ -25,3 +25,6 @@ export const SORT_TYPE = Object.freeze({
   earliest: "earliest",
   latest: "latest",
 });
+
+export const PASSWORD_VALID_MSG =
+  "Password must be at least 8 characters and include at least one special character.";
