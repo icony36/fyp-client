@@ -145,17 +145,17 @@ const TrainingPanel = () => {
       const trainingObj = {
         pipeline: defaultTraining.pipeline,
         policies: defaultTraining.policies,
-        intents: [...defaultTraining.intents],
+        intents: [...defaultTraining.intents, intentArr],
         entities: defaultTraining.entities,
         slots: defaultTraining.slots,
         actions: defaultTraining.actions,
         forms: defaultTraining.forms,
         e2e_actions: [],
-        responses: { ...defaultTraining.responses },
+        responses: { ...defaultTraining.responses, responseObj },
         session_config: defaultTraining.session_config,
-        nlu: [...defaultTraining.nlu],
+        nlu: [...defaultTraining.nlu, intentNLUArr],
         rules: defaultTraining.rules,
-        stories: [...defaultTraining.stories],
+        stories: [...defaultTraining.stories, storiesArr],
       };
 
       const result = YAML.stringify(trainingObj);
@@ -169,12 +169,11 @@ const TrainingPanel = () => {
   const trainBot = async (ymlData) => {
     try {
       setIsTraining(true);
-      // const res = await rasaTrain(ymlData);
+      const res = await rasaTrain(ymlData);
 
-      // console.log(res.headers.filename);
-      // await rasaLoadModels(res.headers.filename);
+      await rasaLoadModels(res.headers.filename);
 
-      await delay(5000);
+      // await delay(5000);
 
       toast.success("Model is trained and loaded.");
       setIsTraining(false);
