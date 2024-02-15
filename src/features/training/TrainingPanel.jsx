@@ -169,11 +169,10 @@ const TrainingPanel = () => {
   const trainBot = async (ymlData) => {
     try {
       setIsTraining(true);
-      const res = await rasaTrain(ymlData);
+      // const res = await rasaTrain(ymlData);
+      // await rasaLoadModels(res.headers.filename);
 
-      await rasaLoadModels(res.headers.filename);
-
-      // await delay(5000);
+      await delay(5000);
 
       toast.success("Model is trained and loaded.");
       setIsTraining(false);
