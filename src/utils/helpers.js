@@ -366,3 +366,5 @@ export const checkIsURL = (str) => {
   // validate fragment locator
   return !!urlPattern.test(str);
 };
+
+export const delay = (ms) => new Promise((res) => setTimeout(res, ms));

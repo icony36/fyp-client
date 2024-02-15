@@ -16,6 +16,7 @@ import {
   getIntentsNLU,
   getStoriesArray,
   getResponsesObj,
+  delay,
 } from "../../utils/helpers";
 import { defaultTraining } from "../../utils/training";
 import { useToast } from "../../hooks/useToast";
@@ -171,8 +172,10 @@ const TrainingPanel = () => {
       // const res = await rasaTrain(ymlData);
 
       // console.log(res.headers.filename);
-
       // await rasaLoadModels(res.headers.filename);
+
+      await delay(5000);
+
       toast.success("Model is trained and loaded.");
       setIsTraining(false);
     } catch (err) {
