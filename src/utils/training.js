@@ -63,8 +63,8 @@ export const defaultTraining = {
     "nlu_fallbacka",
     "stop",
     "thank",
-    "ask_joke",
-    "feel_stressed",
+    "ask_google",
+    "ask_direction",
   ],
   entities: ["knowledge"],
   slots: {
@@ -108,6 +108,7 @@ export const defaultTraining = {
     "utter_ask_ticket_detail",
     "submit_ticket_form",
     "cancel_ticket_form",
+    "action_map_direction",
   ],
   forms: {
     ticket_form: {
@@ -365,135 +366,6 @@ export const defaultTraining = {
       },
       {
         text: "I am a chatbot. I'm here to help and provide information to the best of my ability. If you have any questions, feel free to ask!",
-      },
-    ],
-    utter_here_joke: [
-      {
-        text: "Here is a joke for you.",
-      },
-    ],
-    utter_joke: [
-      {
-        text: "Why don't scientists trust atoms? Because they make up everything!",
-      },
-      {
-        text: "I only know 25 letters of the alphabet. I don't know y.",
-      },
-      {
-        text: "How do you organize a space party? You planet!",
-      },
-      {
-        text: "What's a skeleton's least favorite room in the house? The living room!",
-      },
-      {
-        text: "Did you hear about the mathematician who's afraid of negative numbers? He'll stop at nothing to avoid them!",
-      },
-      {
-        text: "Why don't seagulls fly over the bay? Because then they'd be bagels!",
-      },
-      {
-        text: "What's orange and sounds like a parrot? A carrot!",
-      },
-      {
-        text: "I told my wife she should embrace her mistakes. She gave me a hug.",
-      },
-      {
-        text: "What do you call fake spaghetti? An impasta!",
-      },
-      {
-        text: "How do you catch a squirrel? Climb a tree and act like a nut!",
-      },
-      {
-        text: "Did you hear about the cheese factory explosion? There was nothing left but d- text:brie.",
-      },
-      {
-        text: "Why did the scarecrow win an award? Because he was outstanding in his field!",
-      },
-      {
-        text: "What did the grape do when it got stepped on? Nothing, but it let out a little wine!",
-      },
-      {
-        text: "I used to play piano by ear, but now I use my hands and fingers.",
-      },
-      {
-        text: "How do you organize a fantastic space party? You planet!",
-      },
-      {
-        text: "Why did the coffee file a police report? It got mugged.",
-      },
-      {
-        text: "Why couldn't the bicycle stand up by itself? Because it was tw- text:tired!",
-      },
-      {
-        text: "What did the janitor say when he jumped out of the closet? Supplies!",
-      },
-      {
-        text: "I told my wife she should embrace her mistakes. She gave me a hug.",
-      },
-      {
-        text: "Why did the golfer bring two pairs of pants? In case he got a hole in one!",
-      },
-    ],
-    utter_overwhelmed: [
-      {
-        text: "I'm sorry to hear that you're feeling overwhelmed with tasks. It's a challenging situation, but you can take steps to manage it.",
-      },
-      {
-        text: "Break down your tasks into smaller, more manageable steps. Tackling one thing at a time can make it less overwhelming.",
-      },
-      {
-        text: "Prioritize your tasks based on urgency and importance. Focus on what needs to be done first.",
-      },
-      {
-        text: "Consider asking for help or delegating tasks if possible. You don't have to do everything on your own.",
-      },
-      {
-        text: "Take short breaks to clear your mind. Even a few minutes of deep breathing or stretching can make a difference.",
-      },
-      {
-        text: "Create a to-do list to help you organize your tasks and track your progress.",
-      },
-      {
-        text: "Set realistic expectations for yourself. It's okay if you can't do everything at once.",
-      },
-      {
-        text: "Communicate with others about your workload. They may be able to offer support or adjust expectations.",
-      },
-      {
-        text: "Practice self-compassion. Understand that it's okay not to be perfect, and everyone experiences overwhelm at times.",
-      },
-      {
-        text: "Break your day into focused work sessions with short breaks in between to maintain productivity.",
-      },
-      {
-        text: "Identify any unnecessary tasks that can be postponed or eliminated to lighten your load.",
-      },
-      {
-        text: "Consider using productivity tools or apps to help you stay organized and on track.",
-      },
-      {
-        text: "Celebrate small victories along the way. Recognizing your achievements, no matter how small, can boost your mood.",
-      },
-      {
-        text: "Reach out to friends, family, or colleagues for encouragement and moral support.",
-      },
-      {
-        text: "Take care of your physical well-being by getting enough sleep, eating nourishing meals, and staying hydrated.",
-      },
-      {
-        text: "If the workload is consistently overwhelming, discuss it with your supervisor or manager to explore potential solutions.",
-      },
-      {
-        text: "Practice mindfulness or meditation to help calm your mind and reduce stress.",
-      },
-      {
-        text: "Focus on what you can control and let go of things beyond your control.",
-      },
-      {
-        text: "Consider setting boundaries to protect your time and prevent additional tasks from piling up.",
-      },
-      {
-        text: "Remember that it's okay to ask for help, whether it's from colleagues, friends, or professionals. Taking care of your mental health is crucial.",
       },
     ],
     utter_cant_answer: [
@@ -800,16 +672,6 @@ export const defaultTraining = {
         "- r u a bot?\n- are you real?\n- you're not human, right?\n- am I speaking to a real person?\n- are u a human?\n- are you AI?\n- u a bot?\n- am I chatting with a person?\n- are you a person or bot?\n- am I talking to a real human?\n- are you a human or machine?\n- r u human?\n- u a real person?\n- am I speaking with a bot?\n- are you an AI?\n- u human or bot?\n- am I talking to a real human or AI?\n- r u a human or AI?\n- am I talking to a bot or human?\n- are you a person or machine?\n- u a real human?\n- am I speaking to a human or bot?\n- r u a real person?\n- are you human or AI?\n- am I talking to a human or AI?\n- r u a person or bot?\n- are u a real human?\n- am I speaking with a human or bot?\n- r u human or machine?\n- are you a person or AI?\n- am I chatting with a human or bot?\n- are u human or machine?\n- am I talking to a real person or machine?\n- are you a person or not?\n- am I speaking to a human or a robot?\n- r u human or not?\n- are you a human or not?\n- u a real person or not?\n- am I talking to a bot or not?\n- r u a person or not?\n- are you a human or a machine?\n- am I talking to a human or a AI?\n",
     },
     {
-      intent: "ask_joke",
-      examples:
-        "- Tell me a joke.\n- I need a joke.\n- I am sad, tell me a joke.\n- Joke?\n- I need joke.\n- Tell joke, please.\n- Can you share joke?\n- Want joke.\n- I like joke.\n- Joke, please!\n- I want to hear joke.\n- Please tell joke.\n- Give me joke.\n- Tell funny story.\n- Share funny joke.\n- Joke for me?\n- Can you joke?\n- I need funny joke.\n",
-    },
-    {
-      intent: "feel_stressed",
-      examples:
-        "- Hi, I’m feeling stressed out\n- I'm stressed\n- Feeling overwhelmed\n- Stress is getting to me\n- Feeling anxious\n- I'm under a lot of pressure\n- It's all too much right now\n- Feeling tense\n- I'm really stressed\n- Feeling a bit frazzled\n- I'm getting worked up\n- Feeling strained\n",
-    },
-    {
       intent: "ask_services",
       examples:
         "- How can you help me?\n- What services do you offer?\n- What kind of stuff do you guys do?\n- Can you help me out with something?\n- I need some info about what you offer\n- Can you assist me with anything?\n- What exactly does this service cover?\n- Can you tell me what services you've got?\n- Could you help me with stuff from your service?\n- I need some help, what do you guys offer?\n- Just wondering, what's your service all about?\n- What's the deal with your service's offerings?\n",
@@ -871,31 +733,6 @@ export const defaultTraining = {
       ],
     },
     {
-      rule: "ask for joke path",
-      steps: [
-        {
-          intent: "ask_joke",
-        },
-        {
-          action: "utter_here_joke",
-        },
-        {
-          action: "utter_joke",
-        },
-      ],
-    },
-    {
-      rule: "feeling stess path",
-      steps: [
-        {
-          intent: "feel_stressed",
-        },
-        {
-          action: "utter_overwhelmed",
-        },
-      ],
-    },
-    {
       rule: "ask for services path",
       steps: [
         {
@@ -914,6 +751,28 @@ export const defaultTraining = {
         },
         {
           action: "action_default_fallback",
+        },
+      ],
+    },
+    {
+      rule: "pass to google",
+      steps: [
+        {
+          intent: "ask_google",
+        },
+        {
+          action: "action_default_fallback",
+        },
+      ],
+    },
+    {
+      rule: " give direction",
+      steps: [
+        {
+          intent: "ask_direction",
+        },
+        {
+          action: "action_map_direction",
         },
       ],
     },
