@@ -1,4 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
+import { useToast } from "../../hooks/useToast";
 
 import { AuthContext } from "../../contexts";
 import { useFetchProfile } from "./useFetchProfile";
@@ -15,6 +16,8 @@ import { ChipStack, ChipWithDelete } from "../../ui/Chip";
 
 const ProfileEditForm = () => {
   const { auth } = useContext(AuthContext);
+
+  const { toast } = useToast();
 
   const {
     profile,
@@ -119,6 +122,11 @@ const ProfileEditForm = () => {
     const toSubmit = {
       ...profileData,
     };
+
+    if (toSubmit.password && toSubmit.password.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
 
     if (!toSubmit.password) {
       delete toSubmit.password;

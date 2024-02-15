@@ -155,6 +155,11 @@ const UserForm = ({ isEditSession }) => {
       studentData: formData.studentData,
     };
 
+    if (toSubmit.userData.password && toSubmit.userData.password.length < 8) {
+      toast.error("Password must be at least 8 characters.");
+      return;
+    }
+
     if (isEditSession) {
       if (!toSubmit.userData.password) {
         delete toSubmit.userData.password;
