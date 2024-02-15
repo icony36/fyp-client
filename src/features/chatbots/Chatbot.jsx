@@ -13,7 +13,7 @@ import { Input } from "../../ui/Input";
 import { Button } from "../../ui/Button";
 import HeadingBar from "../../components/HeadingBar";
 import { ProfileImage } from "../../ui/ProfileImage";
-import { getFullName } from "../../utils/helpers";
+import { checkIsURL, getFullName } from "../../utils/helpers";
 import { LoadingTyping } from "../../ui/Loading";
 
 const ChatbotContainer = styled.div`
@@ -80,7 +80,15 @@ const Message = ({
             <LoadingTyping />
           </div>
         ) : (
-          <Heading as="h3">{message.text}</Heading>
+          <Heading as="h3">
+            {checkIsURL(message.text) ? (
+              <a href={message.text} style={{ color: "blue" }} target="_blank">
+                {message.text}
+              </a>
+            ) : (
+              message.text
+            )}
+          </Heading>
         )}
       </MessageItem>
     </MessageContainer>

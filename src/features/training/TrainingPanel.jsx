@@ -159,6 +159,8 @@ const TrainingPanel = () => {
 
       const result = YAML.stringify(trainingObj);
 
+      console.log(result);
+
       trainBot(result);
     }
   };
@@ -166,11 +168,11 @@ const TrainingPanel = () => {
   const trainBot = async (ymlData) => {
     try {
       setIsTraining(true);
-      const res = await rasaTrain(ymlData);
+      // const res = await rasaTrain(ymlData);
 
-      console.log(res.headers.filename);
+      // console.log(res.headers.filename);
 
-      await rasaLoadModels(res.headers.filename);
+      // await rasaLoadModels(res.headers.filename);
       toast.success("Model is trained and loaded.");
       setIsTraining(false);
     } catch (err) {
