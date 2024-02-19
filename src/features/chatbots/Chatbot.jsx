@@ -53,7 +53,7 @@ const MessageContainer = styled.div`
 const MessageItem = styled.div`
   background-color: white;
   border-radius: 10px 10px 10px 0;
-  margin: 0 20px 0 0;
+  margin-right: 20px;
   padding: 10px 16px;
 
   ${({ isuser }) =>
