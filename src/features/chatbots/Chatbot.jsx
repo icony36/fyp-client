@@ -158,8 +158,6 @@ const Chatbot = () => {
     }
 
     return messages.map((message, index) => {
-      console.log(message);
-
       return <Message key={index} message={message} />;
     });
   };
