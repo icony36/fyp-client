@@ -41,7 +41,7 @@ const ChatbotActionArea = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
   ${({ isuser }) =>
     isuser &&
     css`
@@ -52,7 +52,7 @@ const MessageContainer = styled.div`
 const MessageItem = styled.div`
   background-color: white;
   border-radius: 10px 10px 10px 0;
-  margin: 16px 20px 16px 0;
+  margin: 0 20px 30px 0;
   padding: 10px 16px;
 
   ${({ isuser }) =>
@@ -157,6 +157,8 @@ const Chatbot = () => {
     }
 
     return messages.map((message, index) => {
+      console.log(message);
+
       return <Message key={index} message={message} />;
     });
   };

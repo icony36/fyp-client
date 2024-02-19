@@ -3,6 +3,7 @@ import styled, { css } from "styled-components";
 export const Heading = styled.h1`
   text-overflow: ellipsis;
   overflow: hidden;
+  white-space: pre-wrap;
 
   ${(props) =>
     props.as === "h1" &&
