@@ -41,7 +41,8 @@ const ChatbotActionArea = styled.div`
 const MessageContainer = styled.div`
   display: flex;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: flex-end;
+  margin-bottom: 30px;
   ${({ isuser }) =>
     isuser &&
     css`
@@ -52,7 +53,7 @@ const MessageContainer = styled.div`
 const MessageItem = styled.div`
   background-color: white;
   border-radius: 10px 10px 10px 0;
-  margin: 0 20px 30px 0;
+  margin: 0 20px 0 0;
   padding: 10px 16px;
 
   ${({ isuser }) =>
