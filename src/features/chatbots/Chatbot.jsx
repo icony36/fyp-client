@@ -63,6 +63,21 @@ const MessageItem = styled.div`
     `}
 `;
 
+const Linkify = ({ children }) => {
+  const addMarkup = (word, index) => {
+    return checkIsURL(word)
+      ? `<a href="${word}" style="color: blue; margin: 0" target="_blank" rel="noreferrer">${word}</a>`
+      : word;
+  };
+
+  const words = children.split("\n").join("\n ").split(" ");
+
+  const formatedWords = words.map((w, i) => addMarkup(w, i));
+  const html = formatedWords.join(" ");
+
+  return <Heading as="h3" dangerouslySetInnerHTML={{ __html: html }} />;
+};
+
 const Message = ({
   message = { isUser: false, text: "" },
   isLoading = false,
@@ -81,15 +96,7 @@ const Message = ({
             <LoadingTyping />
           </div>
         ) : (
-          <Heading as="h3">
-            {checkIsURL(message.text) ? (
-              <a href={message.text} style={{ color: "blue" }} target="_blank">
-                {message.text}
-              </a>
-            ) : (
-              message.text
-            )}
-          </Heading>
+          <Linkify>{message.text}</Linkify>
         )}
       </MessageItem>
     </MessageContainer>
