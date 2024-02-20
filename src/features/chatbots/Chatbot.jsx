@@ -73,7 +73,7 @@ const Linkify = ({ children }) => {
   const words = children.split("\n").join("\n ").split(" ");
 
   const formatedWords = words.map((w, i) => addMarkup(w, i));
-  const html = formatedWords.join(" ");
+  const html = formatedWords.join(" ").replace("\n ", "\n");
 
   return <Heading as="h3" dangerouslySetInnerHTML={{ __html: html }} />;
 };
