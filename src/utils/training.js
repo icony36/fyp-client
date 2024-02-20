@@ -60,13 +60,23 @@ export const defaultTraining = {
     "get_knowledges",
     "goodbye",
     "greet",
-    "nlu_fallbacka",
+    "nlu_fallback",
     "stop",
     "thank",
     "ask_google",
     "ask_direction",
+    "ask_campus_direction",
+    "ask_where_is_campus",
+    "ask_timetable",
+    "ask_fee",
+    "ask_career_path",
+    "get_career_path",
+    "ask_student_id",
+    "ask_course",
+    "ask_enrollments",
+    "ask_name",
   ],
-  entities: ["knowledge"],
+  entities: ["knowledge", "course"],
   slots: {
     ticket_subject: {
       type: "text",
@@ -109,6 +119,14 @@ export const defaultTraining = {
     "submit_ticket_form",
     "cancel_ticket_form",
     "action_map_direction",
+    "action_campus_direction",
+    "action_get_timetable",
+    "action_get_fee",
+    "action_get_career_path",
+    "action_get_student_id",
+    "action_get_enrollments",
+    "action_get_course",
+    "action_get_name",
   ],
   forms: {
     ticket_form: {
@@ -600,6 +618,11 @@ export const defaultTraining = {
         text: "We offer a wide range of services from academic support, enrollment guidance to counseling sessions. How can I help you?",
       },
     ],
+    utter_campus_located: [
+      {
+        text: "The school is located at 461 Clementi Rd, Singapore 599491.",
+      },
+    ],
     utter_create_ticket: [
       {
         text: "Do you want to create ticket to ask the staff directly?",
@@ -679,12 +702,72 @@ export const defaultTraining = {
     {
       intent: "get_knowledges",
       examples:
-        "- What are the [library hours](knowledge)?\n- How can I [access my grades](knowledge)?\n- Where can I find information about [student housing](knowledge)?\n- Tell me about the available [scholarships](knowledge).\n- Can you help with [course registration](knowledge)?\n- How do I contact the [career services office](knowledge)?\n- How can I get involved in [student clubs](knowledge)?\n- Any advice for [financial aid](knowledge)?\n- Can you guide me on [study abroad programs](knowledge)?\n- How to apply for [graduation](knowledge)?\n- What's the [housing application process](knowledge)?\n- Where can I find [career development resources](knowledge)?\n- How can I get [campus event updates](knowledge)?\n- Can you provide info about [internship opportunities](knowledge)?\n- How to join the [student government](knowledge)?\n- What are the available [language courses](knowledge)?\n- How to access [fitness centers](knowledge) on campus?\n- Tell me about the [public transportation options](knowledge).\n- Where can I find [faculty office hours](knowledge)\n- I want to know about [accommodation](knowledge)\n- Where is the [cafeteria](knowledge)\n- I need [tech support](knowledge)\n",
+        "- How can I make [payment](knowledge)?\n- How to make [payment](knowledge)?\n- How do I [enroll](knowledge) for classes?\n- How can I [apply for financial aid](knowledge)?\n- Where can I find the [library](knowledge) and its resources?\n- What [clubs and organizations](knowledge) are available on campus?\n- Where is the [student center](knowledge) located, and what services do they offer?\n- How do I [schedule an appointment](knowledge) with an academic advisor?\n- Can you provide information about [career services](knowledge) available to students?\n- What are the [academic support resources](knowledge) available on campus?\n- Where can I find [internship](knowledge) opportunities related to my field of study?\n- What are the [transportation](knowledge) options to the school?\n- How do I access campus [wifi](knowledge)?\n- How do I access campus [wi-fi](knowledge)?\n- Can you provide information about [study abroad](knowledge) programs offered by the university?\n- What [events](knowledge) and activities are happening on campus this week?\n- Where can I find [tutoring services](knowledge) for my courses?\n- What [academic and career workshops](knowledge) are offered by the university?\n- How can I request academic [accommodations](knowledge) for disabilities?\n- Where can I find information about [graduation](knowledge) and commencement ceremonies?\n- How do I access the [gym](knowledge) and recreational facilities on campus?\n- How do I [report](knowledge) a problem to school?\n",
     },
     {
       intent: "create_ticket",
       examples:
-        "- I want to create a ticket\n- I want to talk with the staff\n- I want to talk with a human\n- How can I talk to a staff\n- Help me write a ticket\n",
+        "- I want to create a ticket\n- I want to talk with the staff\n- I want to talk with a human\n- I want to talk to real person\n- Talk with a real person\n- I want a live chat\n- I need to talk with real person\n- I need to talk with a human\n- I need live chat\n- How can I talk to a staff\n- Help me write a ticket\n",
+    },
+    {
+      intent: "ask_google",
+      examples:
+        "- pass this question to Gemini\n- transfer this query to Gemini\n- forward to Gemini for clarification\n- I want to talk with Gemini\n- connect me with Gemini\n- can you help me speak with Gemini?\n- please get Gemini's input on this\n- initiate a conversation with Gemini\n- direct this to Gemini for assistance\n- I am sad\n- feeling down\n- experiencing sadness\n- I'm feeling blue\n- feeling a bit low\n- help me with mathematics\n- I need assistance with math\n- can you assist me with mathematical problems?\n- struggling with a math concept\n- could you help me understand this math problem?\n- I have some math questions\n- I need help with programming\n- Can you assist me with coding?\n- struggling with a programming assignment\n- I have a coding problem to solve\n- I'm having trouble with my computer\n- need assistance with troubleshooting\n- I have a problem with my internet connection\n",
+    },
+    {
+      intent: "ask_direction",
+      examples:
+        "- how to go to my tutorial room\n- where is my tutor room\n- where is my lecture room\n- how to go to A206\n- where is my class\n- where is the student service\n- where is the atm\n- how to go to the bus stop\n- direct me\n- how do I get to the library\n- where can I find the cafeteria\n- how do I reach the gym\n- where is the nearest restroom\n- how to get to the parking lot\n- where can I find the nearest elevator\n- how to reach the faculty office\n- where is the main entrance\n",
+    },
+    {
+      intent: "ask_timetable",
+      examples:
+        "- what is my timetable\n- can I know my timetable?\n- how do I access my timetable?\n- could you provide me with my course schedule?\n- I'm looking for information on my timetable\n- where can I check my class timings?\n- how can I view my schedule for the week?\n- can you help me locate my timetable?\n- I need to know my timetable for this semester\n",
+    },
+    {
+      intent: "ask_fee",
+      examples:
+        "- what is my fee\n- how is my fee\n- where is my fee\n- what is my outstanding fee\n- can I know my tuition fee?\n- how much do I owe in fees?\n- where can I check my tuition balance?\n- what is the status of my fee payment?\n- could you provide me with information about my outstanding fees?\n- I'm curious about my current tuition fee status\n- where can I find details about my semester fees?\n- can you help me understand my financial obligations to the university?\n- I need information about my fees for this semester\n",
+    },
+    {
+      intent: "ask_career_path",
+      examples:
+        "- Could you suggest me a career path?\n- What is my career path for my course?\n- What is my career path?\n- Can you provide guidance on career options related to my field of study?\n- I'm interested in exploring potential career paths. Where should I start?\n- How can I plan my career after completing my course?\n- Can you recommend career paths based on my academic background?\n- What are the typical career trajectories for students in my program?\n- I'm unsure about my career direction. Can you offer some advice?\n- What job opportunities can I expect after graduation in my field?\n",
+    },
+    {
+      intent: "ask_student_id",
+      examples:
+        "- What is my student ID?\n- How can I find out my student ID?\n- Can you provide me with my student ID?\n- Where can I locate my student ID?\n- I need to know my student identification number.\n- How do I access my student ID?\n- Could you help me retrieve my student ID?\n- What is the process for obtaining my student ID?\n- Can you assist me in locating my student identification?\n- I'm looking for information on my student ID. Can you help?\n",
+    },
+    {
+      intent: "ask_name",
+      examples:
+        "- What is my name?\n- Do you know my name?\n- How can I get my name?\n- Can you provide me with my name?\n- Tell me my name\n- I forgot my name, can you remind me?\n- I need to know my name\n- My name, can you tell me?\n- Could you please tell me my name?\n- Please provide me with my name\n- What name do you have on record for me?\n- I'm curious, what's my name?\n- I'm trying to remember, what's my name again?\n- Can you confirm my name?\n- Is my name in your system?\n- How do I find out my name?\n- I need to find out my name\n- Where can I find my name?\n- My name, do you have it?\n- Can you help me find my name?\n- What do you know about my name?\n- Am I registered under a name?\n- Am I using my correct name?\n- Is my name on file?\n- I need to check my name\n- What's the name you have for me?\n- How do I access my name?\n- Can you assist me with my name?\n",
+    },
+    {
+      intent: "ask_course",
+      examples:
+        "- what is my course?\n- can you provide me with my course?\n- what course am I currently studying?\n- what course am I taking?\n- what course am I studying?\n- tell me about my course\n- which course am I enrolled in?\n- can you remind me of my course?\n- please tell me my course\n- I forgot, what course am I in?\n- could you inform me about my course?\n",
+    },
+    {
+      intent: "ask_enrollments",
+      examples:
+        "- what modules am I taking?\n- what is my enrollment status?\n- what are my enrolled modules?\n- can you list the modules I am taking?\n- which modules have I enrolled in?\n- provide me with details of my enrollments\n- show me my current module enrollments\n- give me information about my enrolled modules\n- please inform me about my module enrollments\n- could you tell me the modules I have enrolled in?\n",
+    },
+    {
+      intent: "get_career_path",
+      examples:
+        "- Could you suggest me a career path for [business admin](course)?\n- Can you suggest a career path for [finance and economic](course)?\n- What is the career path for [art](course)?\n- Can you provide guidance on career options related to [bioscience](course)?\n- I'm interested in exploring career paths for [computer science](course). Can you help?\n- What are the potential career trajectories for [engineering](course) graduates?\n- Can you recommend career paths for [psychology](course) majors?\n- I'm curious about the career opportunities for [nursing](course) students. Can you provide information?\n- What career paths are available for [finance](course) professionals?\n- How can I plan my career after completing [marketing](course) studies?\n- Can you provide insights into career paths for [architecture](course) students?\n",
+    },
+    {
+      intent: "ask_campus_direction",
+      examples:
+        "- how to get to sim?\n- how to get to sim ge?\n- how to get to sim university?\n- how to go to school?\n- how to go to university?\n- how to go to the campus?\n- How do I get to the school?\n- What's the best way to reach the campus?\n- Can you provide directions to the campus?\n- I'm not sure how to get to the university. Can you help?\n- Could you guide me on reaching the campus?\n- I need directions to the school campus. Can you assist?\n- What's the nearest transportation option to the campus?\n- How far is the university from here?\n- Can you give me directions to the university campus?\n- What's the easiest way to reach the school?\n- Can you give me directions to the campus from the nearest subway station?\n- Are there any specific instructions for reaching the campus from the highway?\n",
+    },
+    {
+      intent: "ask_where_is_campus",
+      examples:
+        "- where is the school?\n- where is the campus?\n- Where is the campus located?\n- I'm not familiar with the area. Can you tell me where the campus is?\n- Could you provide information on the location of the university campus?\n- Can you tell me the address of the school campus?\n",
     },
   ],
   rules: [
@@ -773,6 +856,116 @@ export const defaultTraining = {
         },
         {
           action: "action_map_direction",
+        },
+      ],
+    },
+    {
+      rule: "give campus direction",
+      steps: [
+        {
+          intent: "ask_campus_direction",
+        },
+        {
+          action: "action_campus_direction",
+        },
+      ],
+    },
+    {
+      rule: "give campus location",
+      steps: [
+        {
+          intent: "ask_where_is_campus",
+        },
+        {
+          action: "utter_campus_located",
+        },
+      ],
+    },
+    {
+      rule: "give timetable",
+      steps: [
+        {
+          intent: "ask_timetable",
+        },
+        {
+          action: "action_get_timetable",
+        },
+      ],
+    },
+    {
+      rule: "give fee",
+      steps: [
+        {
+          intent: "ask_fee",
+        },
+        {
+          action: "action_get_fee",
+        },
+      ],
+    },
+    {
+      rule: "give course",
+      steps: [
+        {
+          intent: "ask_course",
+        },
+        {
+          action: "action_get_course",
+        },
+      ],
+    },
+    {
+      rule: "give enrollments",
+      steps: [
+        {
+          intent: "ask_enrollments",
+        },
+        {
+          action: "action_get_enrollments",
+        },
+      ],
+    },
+    {
+      rule: "give career path",
+      steps: [
+        {
+          intent: "ask_career_path",
+        },
+        {
+          action: "action_get_career_path",
+        },
+      ],
+    },
+    {
+      rule: "give specific career path",
+      steps: [
+        {
+          intent: "get_career_path",
+        },
+        {
+          action: "action_get_career_path",
+        },
+      ],
+    },
+    {
+      rule: "give student id",
+      steps: [
+        {
+          intent: "ask_student_id",
+        },
+        {
+          action: "action_get_student_id",
+        },
+      ],
+    },
+    {
+      rule: "give name",
+      steps: [
+        {
+          intent: "ask_name",
+        },
+        {
+          action: "action_get_name",
         },
       ],
     },

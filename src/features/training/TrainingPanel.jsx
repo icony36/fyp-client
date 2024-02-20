@@ -145,17 +145,17 @@ const TrainingPanel = () => {
       const trainingObj = {
         pipeline: defaultTraining.pipeline,
         policies: defaultTraining.policies,
-        intents: [...defaultTraining.intents, intentArr],
+        intents: [...defaultTraining.intents, ...intentArr],
         entities: defaultTraining.entities,
         slots: defaultTraining.slots,
         actions: defaultTraining.actions,
         forms: defaultTraining.forms,
         e2e_actions: [],
-        responses: { ...defaultTraining.responses, responseObj },
+        responses: { ...defaultTraining.responses, ...responseObj },
         session_config: defaultTraining.session_config,
-        nlu: [...defaultTraining.nlu, intentNLUArr],
+        nlu: [...defaultTraining.nlu, ...intentNLUArr],
         rules: defaultTraining.rules,
-        stories: [...defaultTraining.stories, storiesArr],
+        stories: [...defaultTraining.stories, ...storiesArr],
       };
 
       const result = YAML.stringify(trainingObj);

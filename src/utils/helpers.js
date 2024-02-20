@@ -247,8 +247,16 @@ export const keepOnlyAlphanumeric = (str) => {
   return str.replace(/[^a-zA-Z0-9]/g, "").toLowerCase();
 };
 
-export const getUtterResponse = (str) => {
-  return `utter_${keepOnlyAlphanumeric(str)}`;
+export const getResponseName = (str) => {
+  return `utter_custom_${keepOnlyAlphanumeric(str)}`;
+};
+
+export const getIntentName = (str) => {
+  return `intent_custom_${keepOnlyAlphanumeric(str)}`;
+};
+
+export const getStoryName = (str) => {
+  return `story custom ${keepOnlyAlphanumeric(str)}`;
 };
 
 export const getStoriesArray = (nodes, edges) => {
@@ -264,7 +272,7 @@ export const getStoriesArray = (nodes, edges) => {
         return;
       }
 
-      const story = `${nodeName} path`.toLowerCase();
+      const story = `${getStoryName(nodeName)} path`;
       const steps = [];
 
       const findEdge = (edge) => {
@@ -284,10 +292,12 @@ export const getStoriesArray = (nodes, edges) => {
 
             switch (targetNode.data.content.contentType) {
               case "Intent":
-                obj.intent = targetNode.data.content.contentValue;
+                obj.intent = getIntentName(
+                  targetNode.data.content.contentValue
+                );
                 break;
               case "Response":
-                obj.action = getUtterResponse(
+                obj.action = getResponseName(
                   targetNode.data.content.contentValue
                 );
                 break;
@@ -315,7 +325,7 @@ export const getStoriesArray = (nodes, edges) => {
 };
 
 export const getIntentsArray = (intents) => {
-  return intents.map((el) => el.name);
+  return intents.map((el) => getIntentName(el.name));
 };
 
 export const getIntentsNLU = (intents) => {
@@ -327,7 +337,7 @@ export const getIntentsNLU = (intents) => {
     }
 
     const obj = {
-      intent: el.name,
+      intent: getIntentName(el.name),
       examples: el.examples.map((item) => `- ${item}\n`).join(""),
     };
     arr.push(obj);
@@ -344,7 +354,7 @@ export const getResponsesObj = (responses) => {
       return;
     }
 
-    obj[getUtterResponse(el.name)] = el.text.map((txt) => ({
+    obj[getResponseName(el.name)] = el.text.map((txt) => ({
       text: txt,
     }));
   });
