@@ -71,13 +71,13 @@ const LoginPage = () => {
             <Heading
               as="p"
               style={{
-                fontSize: "12px",
+                fontSize: "14px",
                 fontStyle: "italic",
               }}
             >
-              * By continuing to use our services, you consent to the collection
-              and utilization of your information in accordance with the
-              Personal Data Protection Act (PDPA)
+              * This application is solely for demo purposes; you may log in
+              with the following username: admin/staff/student for each
+              respective role, with the password '12345678?' for all.
             </Heading>
           </div>
         </HeroContainer>
